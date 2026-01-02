@@ -18,6 +18,10 @@ This website is built with:
 - [TailwindCSS](https://tailwindcss.com)
 - [DaisyUI](https://daisyui.com)
 
+## Deployment
+
+This site is automatically deployed to GitHub Pages via GitHub Actions.
+
 ## License
 
 MIT
