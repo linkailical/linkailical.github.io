@@ -11,11 +11,14 @@ const { sideBarActiveItemID } = Astro.props;
     <div class="w-fit mx-auto mt-5 mb-6">
       <a href="/">
         <div class="avatar transition ease-in-out hover:scale-[102%] block m-auto">
-          <div class="w-[11rem]">
+          <div class="w-[14rem]">
             <Image class="rounded-lg" format="jpg" width={300} height={300} src="/profile.jpg" alt="Profile image" />
           </div>
         </div>
       </a>
+      <div class="text-center mt-3 text-sm text-base-content/70">
+        我和我的小弟
+      </div>
     </div>
     <SideBarMenu sideBarActiveItemID={sideBarActiveItemID} />
     <SideBarFooter />
