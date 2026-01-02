@@ -34,7 +34,7 @@ const last_posts = posts.slice(0, 3);
 
   <HorizontalCard
     title="Varsity Golf Team Captain"
-    img="/post_img.webp"
+    img="/golf_match.jpg"
     desc="Leading the school team in regional tournaments. Responsible for team morale and practice coordination."
     url="/cv"
     badge="Leadership"
@@ -42,7 +42,7 @@ const last_posts = posts.slice(0, 3);
   <div class="divider my-0"></div>
   <HorizontalCard
     title="Community Service Initiative"
-    img="/post_img.webp"
+    img="/volunteering.jpg"
     desc="Organizing local events to give back to the community and promote youth sports."
     url="/projects"
     badge="Volunteer"
@@ -57,7 +57,7 @@ const last_posts = posts.slice(0, 3);
       <>
         <HorizontalCard
           title={post.data.title}
-          img={post.data.heroImage}
+          img="/study.jpg"
           desc={post.data.description}
           url={"/blog/" + createSlug(post.data.title, post.slug)}
           target="_self"
