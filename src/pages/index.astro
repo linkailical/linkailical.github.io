@@ -10,51 +10,46 @@ const last_posts = posts.slice(0, 3);
 ---
 
 <BaseLayout sideBarActiveItemID="home">
-    <div class="pb-12 mt-5">
-      <div class="text-xl py-1">Hey there 👋</div>
-      <div class="text-5xl font-bold">I'm Linkaili</div>
-      <div class="text-3xl py-3 font-bold">Student Athlete & Golfer</div>
-      <div class="py-2">
-        <text class="text-lg">
-          目前在美国高中就读，17岁。将于 2027 年 9 月入学大学。
-          <br/>
-          我是高尔夫校队的队员，热爱体育竞技与团队合作。
-        </text>
-      </div>
-      <div class="mt-8">
-        <a class="btn" href="mailto:linkaili.2008@gmail.com" target="_blank"> Contact Me</a>
-      </div>
+  <div class="pb-12 mt-5">
+    <div class="text-xl py-1">Hello world 👋</div>
+    <div class="text-5xl font-bold">I'm Linkaili</div>
+    <div class="text-3xl py-3 font-bold">Student Athlete & Golfer</div>
+    <div class="py-2">
+      <text class="text-lg">
+        <b>Class of 2027</b> student based in the US, passionate about balancing the rigor of academics with the discipline of competitive golf.
+        <br/><br/>
+        On the course, I strive for precision and focus; in the classroom, I pursue knowledge in Science and Humanities.
+        This website documents my journey, projects, and growth as I prepare for university.
+      </text>
     </div>
+    <div class="mt-8">
+      <a class="btn" href="mailto:linkaili.2008@gmail.com" target="_blank"> Contact Me</a>
+      <a class="btn btn-outline ml-5" href="/cv"> View My Resume</a>
+    </div>
+  </div>
 
   <div>
-    <div class="text-3xl w-full font-bold mb-2">My last projects {"</>"}</div>
+    <div class="text-3xl w-full font-bold mb-2">Featured Activities</div>
   </div>
 
   <HorizontalCard
-    title="Demo Project 1"
+    title="Varsity Golf Team Captain"
     img="/post_img.webp"
-    desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    url="#"
-    badge="NEW"
+    desc="Leading the school team in regional tournaments. Responsible for team morale and practice coordination."
+    url="/cv"
+    badge="Leadership"
   />
   <div class="divider my-0"></div>
   <HorizontalCard
-    title="Demo Project 2"
+    title="Community Service Initiative"
     img="/post_img.webp"
-    desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    url="#"
-  />
-  <div class="divider my-0"></div>
-  <HorizontalCard
-    title="Demo Project 3"
-    img="/post_img.webp"
-    desc="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
-    url="#"
-    badge="FOSS"
+    desc="Organizing local events to give back to the community and promote youth sports."
+    url="/projects"
+    badge="Volunteer"
   />
 
   <div>
-    <div class="text-3xl w-full font-bold mb-5 mt-10">Latest from blog</div>
+    <div class="text-3xl w-full font-bold mb-5 mt-10">Recent Essays & Thoughts</div>
   </div>
 
   {
