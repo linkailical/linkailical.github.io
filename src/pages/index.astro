@@ -5,51 +5,58 @@ import { getCollection } from "astro:content";
 import createSlug from "../lib/createSlug"
 
 const posts = (await getCollection("blog")).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
-
 const last_posts = posts.slice(0, 3);
 ---
 
 <BaseLayout sideBarActiveItemID="home">
   <div class="pb-12 mt-5">
-    <div class="text-xl py-1">Hello world 👋</div>
-    <div class="text-5xl font-bold">I'm Linkaili</div>
-    <div class="text-3xl py-3 font-bold">Student Athlete & Golfer</div>
-    <div class="py-2">
-      <text class="text-lg">
-        <b>Class of 2027</b> student based in the US, passionate about balancing the rigor of academics with the discipline of competitive golf.
-        <br/><br/>
-        On the course, I strive for precision and focus; in the classroom, I pursue knowledge in Science and Humanities.
-        This website documents my journey, projects, and growth as I prepare for university.
-      </text>
+    <div class="text-xl py-1 font-serif italic text-gray-500">Biography</div>
+    <div class="text-5xl font-bold font-serif mb-4">Linkaili</div>
+    <div class="text-2xl py-2 font-light text-base-content/80">
+      Student-Athlete (Golf) & Academic Scholar | Class of 2027
     </div>
-    <div class="mt-8">
-      <a class="btn" href="mailto:linkaili.2008@gmail.com" target="_blank"> Contact Me</a>
-      <a class="btn btn-outline ml-5" href="/cv"> View My Resume</a>
+    
+    <div class="py-6 text-lg leading-relaxed text-justify">
+      <p class="mb-4">
+        Linkaili is a dedicated high school student based in the United States, currently pursuing a rigorous academic curriculum alongside competitive varsity athletics. With a graduation target of 2027, she embodies the <strong>scholar-athlete</strong> ideal—demonstrating discipline on the golf course and intellectual curiosity in the classroom.
+      </p>
+      <p>
+        Her academic interests lie at the intersection of <strong>Science and Social Impact</strong>, exploring how analytical thinking can solve community challenges. As a Varsity Golf team captain, she applies strategic planning and resilience learned from sport to her leadership roles.
+      </p>
+    </div>
+
+    <div class="mt-4 flex gap-4">
+      <a class="btn btn-primary" href="/cv">View Academic Profile</a>
+      <a class="btn btn-outline" href="mailto:linkaili.2008@gmail.com">Contact for Admissions</a>
     </div>
   </div>
 
+  <div class="divider my-10"></div>
+
   <div>
-    <div class="text-3xl w-full font-bold mb-2">Featured Activities</div>
+    <div class="text-3xl w-full font-bold mb-5 font-serif">Research & Leadership Highlights</div>
   </div>
 
   <HorizontalCard
-    title="Varsity Golf Team Captain"
+    title="Varsity Golf Leadership"
     img="/golf_match.jpg"
-    desc="Leading the school team in regional tournaments. Responsible for team morale and practice coordination."
+    desc="Serving as Team Captain to foster a culture of excellence and sportsmanship. Analyzing performance metrics to improve team strategy."
     url="/cv"
-    badge="Leadership"
+    badge="Athletics"
   />
   <div class="divider my-0"></div>
   <HorizontalCard
-    title="Community Service Initiative"
-    img="/volunteering.jpg"
-    desc="Organizing local events to give back to the community and promote youth sports."
+    title="Environmental Impact Study"
+    img="/study.jpg"
+    desc="Independent research investigating sustainable water management practices in local golf courses, bridging athletic interest with environmental science."
     url="/projects"
-    badge="Volunteer"
+    badge="Research"
   />
 
+  <div class="divider my-10"></div>
+
   <div>
-    <div class="text-3xl w-full font-bold mb-5 mt-10">Recent Essays & Thoughts</div>
+    <div class="text-3xl w-full font-bold mb-5 font-serif">Selected Essays</div>
   </div>
 
   {
@@ -57,7 +64,7 @@ const last_posts = posts.slice(0, 3);
       <>
         <HorizontalCard
           title={post.data.title}
-          img="/study.jpg"
+          img="/volunteering.jpg" 
           desc={post.data.description}
           url={"/blog/" + createSlug(post.data.title, post.slug)}
           target="_self"

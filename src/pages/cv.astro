@@ -3,86 +3,126 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import TimeLineElement from "../components/cv/TimeLine.astro";
 ---
 
-<BaseLayout title="Resume | Linkaili" sideBarActiveItemID="cv">
+<BaseLayout title="Academic Profile | Linkaili" sideBarActiveItemID="cv">
+  
+  <!-- Academic Overview Section -->
   <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Profile</div>
+    <div class="text-3xl w-full font-bold font-serif">Education & Academics</div>
   </div>
 
-  <div class="mb-10 text-justify">
-    I am a disciplined and motivated high school student (Class of 2027) combining academic rigor with competitive athletics. As a Varsity Golf team member, I have learned the value of patience, strategy, and resilience. I am looking for a university program that challenges me intellectually and allows me to contribute to the campus community.
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+    <div class="bg-base-200 p-6 rounded-xl">
+      <h3 class="text-xl font-bold mb-2">High School Diploma</h3>
+      <p class="text-sm opacity-75">Expected Graduation: 2027</p>
+      <p class="mt-2">[Your High School Name], USA</p>
+      <div class="mt-4">
+        <span class="badge badge-primary mr-2">GPA: 3.8/4.0 (Unweighted)</span>
+        <span class="badge badge-outline">Class Rank: Top 10%</span>
+      </div>
+    </div>
+    <div class="bg-base-200 p-6 rounded-xl">
+      <h3 class="text-xl font-bold mb-2">Standardized Testing</h3>
+      <ul class="list-disc ml-5 text-sm">
+        <li><strong>SAT/ACT:</strong> [To be taken / Score]</li>
+        <li><strong>TOEFL/Duolingo:</strong> [Score if applicable]</li>
+        <li><strong>AP Scholar Award:</strong> (Candidate)</li>
+      </ul>
+    </div>
   </div>
 
+  <div class="mb-10">
+    <h3 class="text-2xl font-bold mb-4">Rigorous Coursework</h3>
+    <div class="overflow-x-auto">
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th>Subject</th>
+            <th>Course Level</th>
+            <th>Status/Score</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Calculus AB</td>
+            <td>Advanced Placement (AP)</td>
+            <td>In Progress</td>
+          </tr>
+          <tr>
+            <td>Physics 1</td>
+            <td>Advanced Placement (AP)</td>
+            <td>Score: 5</td>
+          </tr>
+          <tr>
+            <td>English Literature</td>
+            <td>Honors</td>
+            <td>A</td>
+          </tr>
+          <tr>
+            <td>World History</td>
+            <td>Honors</td>
+            <td>A</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Honors & Awards -->
   <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Education</div>
+    <div class="text-3xl w-full font-bold font-serif">Honors & Awards</div>
   </div>
 
   <div class="time-line-container grid gap-4 mb-10">
     <TimeLineElement
-      title="High School Diploma (Candidate)"
-      subtitle="2023 to 2027 at [Your High School Name], USA"
+      title="Academic Excellence Award"
+      subtitle="2024 - [School Name]"
+    >
+      Awarded to top 5% of students demonstrating outstanding performance in STEM subjects.
+    </TimeLineElement>
+    <TimeLineElement
+      title="MVP (Most Valuable Player)"
+      subtitle="2025 - Varsity Golf Team"
+    >
+      Recognized for exceptional performance and leadership during the regional championship season.
+    </TimeLineElement>
+  </div>
+
+  <!-- Athletics Section -->
+  <div class="mb-5">
+    <div class="text-3xl w-full font-bold font-serif">Athletic Profile (Golf)</div>
+  </div>
+
+  <div class="time-line-container grid gap-4 mb-10">
+    <TimeLineElement
+      title="Varsity Team Captain"
+      subtitle="2024 - Present"
+    >
+      Leading weekly practices, mentoring junior players, and coordinating with coaching staff.
+    </TimeLineElement>
+    <TimeLineElement
+      title="Tournament Achievements"
+      subtitle="Regional & State Level"
     >
       <ul class="list-disc ml-5">
-        <li><strong>GPA:</strong> 3.8/4.0 (Target/Current)</li>
-        <li><strong>Relevant Coursework:</strong> AP Calculus AB, AP Physics 1, Honors English, World History.</li>
-        <li><strong>Activities:</strong> Varsity Golf Team, Math Club, Student Government.</li>
+        <li>Top 5 Finish: [Tournament Name] (2025)</li>
+        <li>Qualifying Score: [Score] at [Course Name]</li>
+        <li>Handicap Index: [Number] (Verified by USGA)</li>
       </ul>
     </TimeLineElement>
   </div>
 
+  <!-- Extracurriculars -->
   <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Athletics (Golf)</div>
+    <div class="text-3xl w-full font-bold font-serif">Leadership & Service</div>
   </div>
 
   <div class="time-line-container grid gap-4 mb-10">
     <TimeLineElement
-      title="Varsity Golf Team Member"
-      subtitle="2023 - Present at [Your High School]"
+      title="Community Golf Initiative Founder"
+      subtitle="2024 - Present"
     >
-      Represents the school in regional tournaments. Consistently demonstrates sportsmanship and teamwork.
-    </TimeLineElement>
-    <TimeLineElement
-      title="Key Achievements"
-      subtitle="Recent Tournaments"
-    >
-      <ul class="list-disc ml-5">
-        <li>Top 10 Finish at [Tournament Name] (2025)</li>
-        <li>Current Handicap: [Your Index]</li>
-        <li>Team Captain / Leading Scorer (Optional: Add your specific role)</li>
-      </ul>
+      Founded a non-profit initiative to provide free golf clinics to underrepresented youth in the local community.
     </TimeLineElement>
   </div>
 
-  <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Extracurricular Activities</div>
-  </div>
-
-  <div class="time-line-container grid gap-4 mb-10">
-    <TimeLineElement
-      title="Volunteer / Community Service"
-      subtitle="2024 - Present at [Organization Name]"
-    >
-      Organized charity golf events to raise funds for local shelters. Tutored junior students in Mathematics and Chinese.
-    </TimeLineElement>
-    <TimeLineElement
-      title="Summer Program / Internship"
-      subtitle="Summer 2025 at [Location]"
-    >
-      Participated in [Name of Program] to deepen understanding of [Subject, e.g., Environmental Science / Business].
-    </TimeLineElement>
-  </div>
-
-  <div class="mb-5">
-    <div class="text-3xl w-full font-bold">Skills & Languages</div>
-  </div>
-
-  <ul class="list-disc md:columns-5 columns-2 mx-6">
-    <li>English (Fluent)</li>
-    <li>Chinese (Native)</li>
-    <li>Golf (Competitive)</li>
-    <li>Team Leadership</li>
-    <li>Public Speaking</li>
-    <li>Python (Basic)</li>
-    <li>Photography</li>
-    <li>Time Management</li>
-  </ul>
 </BaseLayout>

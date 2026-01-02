@@ -3,43 +3,41 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import HorizontalCard from "../components/HorizontalCard.astro";
 ---
 
-<BaseLayout title="Projects | Linkaili" sideBarActiveItemID="projects">
-  <div>
-    <div class="text-3xl w-full font-bold mb-5">Athletic Journey</div>
+<BaseLayout title="Research & Projects | Linkaili" sideBarActiveItemID="projects">
+  
+  <div class="mb-8">
+    <div class="text-3xl w-full font-bold font-serif mb-2">Research & Inquiry</div>
+    <div class="text-lg opacity-80">
+      Exploring the intersection of Athletics, Environmental Science, and Data Analysis.
+    </div>
   </div>
 
+  <div class="divider text-xl font-bold">Independent Research</div>
+
   <HorizontalCard
-    title="2025 Season Retrospective"
-    img="/golf_match.jpg"
-    desc="A detailed analysis of my performance during the 2025 High School Golf Season. Includes stroke analysis, tournament results, and lessons learned about mental toughness under pressure."
+    title="Paper: Sustainable Course Management"
+    img="/study.jpg"
+    desc="ABSTRACT: This research investigates water conservation techniques in local golf courses. METHODOLOGY: Conducted field surveys and interviewed course superintendents. RESULTS: Proposed a new irrigation schedule that could reduce water usage by 15%."
     url="#"
-    badge="Golf"
+    badge="Environmental Science"
   />
   <div class="divider my-0"></div>
   <HorizontalCard
-    title="Training Routine & Fitness Plan"
-    img="/profile.jpg"
-    desc="My personalized training schedule balancing academic workload and athletic development. Focuses on core strength, flexibility, and consistency."
+    title="Data Analysis: Golf Swing Biomechanics"
+    img="/golf_match.jpg"
+    desc="Using high-speed camera data to analyze the kinematic sequence of the golf swing. Applied physics principles to optimize torque and reduce injury risk."
     url="#"
+    badge="Physics / Kinesiology"
   />
 
-  <div>
-    <div class="text-3xl w-full font-bold mb-5 mt-10">Academic & Community Projects</div>
-  </div>
+  <div class="divider text-xl font-bold mt-10">Leadership Projects</div>
 
   <HorizontalCard
     title="Community Junior Golf Clinic"
     img="/volunteering.jpg"
-    desc="Founded a weekend workshop introducing golf basics to underprivileged children in the community. Managed logistics, recruited 5 student coaches, and taught 20+ kids."
+    desc="Founded a weekend workshop introducing golf basics to underprivileged children. Created a scalable curriculum and recruited 5 student coaches."
     url="#"
-    badge="Leadership"
+    badge="Service Leadership"
   />
-  <div class="divider my-0"></div>
-  <HorizontalCard
-    title="Environmental Science Research Paper"
-    img="/study.jpg"
-    desc="Research project on 'Sustainable Course Management: Water Conservation in Golf Courses'. Presented findings at the school science fair."
-    url="#"
-    badge="Academic"
-  />
+
 </BaseLayout>
