@@ -1,0 +1,280 @@
+---
+import BookLayout from "../layouts/BookLayout.astro";
+
+const bookTitle = "Fun with C++: Games and Graphics";
+const bookSubtitle = "A beginner-friendly journey into creative programming";
+
+const chapters = [
+  { title: "Getting Started with C++" },
+  { title: "Your First Graphics Window" },
+  { title: "Drawing Shapes and Colors" },
+  { title: "Animation Basics" },
+  { title: "User Input and Interaction" },
+  { title: "Building a Pong Game" },
+  { title: "Sprite Graphics" },
+  { title: "Collision Detection" },
+  { title: "Sound and Music" },
+  { title: "Creating a Platformer Game" },
+  { title: "Advanced Graphics Techniques" },
+  { title: "Game Physics Fundamentals" },
+  { title: "Publishing Your Game" },
+];
+---
+
+<BookLayout bookTitle={bookTitle} bookSubtitle={bookSubtitle} chapters={chapters}>
+  <!-- Chapter 1 -->
+  <section id="chapter-1" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 1: Getting Started with C++</h2>
+
+    <p class="mb-4">
+      Welcome to the exciting world of C++ programming! This book is designed to make learning C++
+      fun and engaging by focusing on creating games and graphics from the very beginning.
+    </p>
+
+    <h3 class="text-2xl font-semibold mt-6 mb-3">Why C++?</h3>
+    <p class="mb-4">
+      C++ is one of the most powerful programming languages used in game development today. From AAA
+      titles to indie games, C++ provides the performance and control needed to create amazing
+      interactive experiences.
+    </p>
+
+    <h3 class="text-2xl font-semibold mt-6 mb-3">What You'll Need</h3>
+    <ul class="list-disc ml-6 mb-4">
+      <li>A C++ compiler (Visual Studio, Code::Blocks, or g++)</li>
+      <li>A graphics library (we'll use SDL2 or SFML)</li>
+      <li>Enthusiasm and curiosity!</li>
+    </ul>
+
+    <p class="mb-4">
+      Throughout this book, you'll build real projects that you can show to friends and family.
+      Each chapter builds on the previous one, gradually introducing new concepts through hands-on examples.
+    </p>
+  </section>
+
+  <!-- Chapter 2 -->
+  <section id="chapter-2" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 2: Your First Graphics Window</h2>
+
+    <p class="mb-4">
+      Creating a window is the first step in any graphics application. In this chapter, you'll learn
+      how to initialize a graphics system and create your first window.
+    </p>
+
+    <h3 class="text-2xl font-semibold mt-6 mb-3">Setting Up SDL2</h3>
+    <p class="mb-4">
+      SDL (Simple DirectMedia Layer) is a cross-platform library that makes it easy to handle graphics,
+      audio, and input in C++. Let's start by creating a simple window.
+    </p>
+
+    <div class="mockup-code mb-4">
+      <pre><code>{`#include <SDL2/SDL.h>
+
+int main(int argc, char* argv[]) {
+    SDL_Init(SDL_INIT_VIDEO);
+
+    SDL_Window* window = SDL_CreateWindow(
+        "My First Window",
+        SDL_WINDOWPOS_CENTERED,
+        SDL_WINDOWPOS_CENTERED,
+        800, 600,
+        SDL_WINDOW_SHOWN
+    );
+
+    SDL_Delay(3000); // Keep window open for 3 seconds
+
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    return 0;
+}`}</code></pre>
+    </div>
+
+    <p class="mb-4">
+      Congratulations! You've just created your first graphics window. In the next chapter,
+      we'll learn how to draw shapes and colors inside this window.
+    </p>
+  </section>
+
+  <!-- Chapter 3 -->
+  <section id="chapter-3" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 3: Drawing Shapes and Colors</h2>
+
+    <p class="mb-4">
+      Now that we have a window, let's make it colorful! In this chapter, you'll learn how to
+      draw basic shapes like rectangles, circles, and lines.
+    </p>
+
+    <h3 class="text-2xl font-semibold mt-6 mb-3">Understanding the Coordinate System</h3>
+    <p class="mb-4">
+      In computer graphics, the origin (0, 0) is typically at the top-left corner of the window.
+      The x-axis extends to the right, and the y-axis extends downward.
+    </p>
+
+    <h3 class="text-2xl font-semibold mt-6 mb-3">Drawing Your First Rectangle</h3>
+    <p class="mb-4">
+      Let's draw a red rectangle in the center of our window:
+    </p>
+
+    <div class="alert alert-info mb-4">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" class="stroke-current shrink-0 w-6 h-6"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      <span>Tip: Experiment with different colors by changing the RGB values!</span>
+    </div>
+  </section>
+
+  <!-- Chapter 4 -->
+  <section id="chapter-4" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 4: Animation Basics</h2>
+
+    <p class="mb-4">
+      Animation brings your graphics to life! In this chapter, you'll learn the fundamentals of
+      creating smooth movement and animation in your programs.
+    </p>
+
+    <h3 class="text-2xl font-semibold mt-6 mb-3">The Game Loop</h3>
+    <p class="mb-4">
+      Every game and animated program uses a game loop - a continuous cycle that updates the game
+      state and renders graphics. Here's the basic structure:
+    </p>
+
+    <ol class="list-decimal ml-6 mb-4">
+      <li class="mb-2"><strong>Process Input:</strong> Check for keyboard, mouse, or controller input</li>
+      <li class="mb-2"><strong>Update:</strong> Change positions, velocities, and game state</li>
+      <li class="mb-2"><strong>Render:</strong> Draw everything to the screen</li>
+      <li class="mb-2"><strong>Repeat:</strong> Go back to step 1</li>
+    </ol>
+  </section>
+
+  <!-- Chapter 5 -->
+  <section id="chapter-5" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 5: User Input and Interaction</h2>
+
+    <p class="mb-4">
+      Interactive programs respond to user actions. Let's learn how to handle keyboard and mouse
+      input to make our programs truly interactive.
+    </p>
+
+    <p class="mb-4">
+      <em>Full content coming soon...</em>
+    </p>
+  </section>
+
+  <!-- Chapter 6 -->
+  <section id="chapter-6" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 6: Building a Pong Game</h2>
+
+    <p class="mb-4">
+      It's time to put everything together! In this chapter, we'll build a complete Pong game
+      from scratch, incorporating all the concepts you've learned so far.
+    </p>
+
+    <p class="mb-4">
+      <em>Full content coming soon...</em>
+    </p>
+  </section>
+
+  <!-- Chapter 7 -->
+  <section id="chapter-7" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 7: Sprite Graphics</h2>
+
+    <p class="mb-4">
+      Sprites are 2D images used in games. Learn how to load, display, and manipulate sprite
+      graphics to create visually appealing games.
+    </p>
+
+    <p class="mb-4">
+      <em>Full content coming soon...</em>
+    </p>
+  </section>
+
+  <!-- Chapter 8 -->
+  <section id="chapter-8" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 8: Collision Detection</h2>
+
+    <p class="mb-4">
+      Collision detection is essential for games. We'll explore different techniques for detecting
+      when objects collide with each other.
+    </p>
+
+    <p class="mb-4">
+      <em>Full content coming soon...</em>
+    </p>
+  </section>
+
+  <!-- Chapter 9 -->
+  <section id="chapter-9" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 9: Sound and Music</h2>
+
+    <p class="mb-4">
+      Audio adds another dimension to your games. Learn how to play sound effects and background
+      music to enhance the player experience.
+    </p>
+
+    <p class="mb-4">
+      <em>Full content coming soon...</em>
+    </p>
+  </section>
+
+  <!-- Chapter 10 -->
+  <section id="chapter-10" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 10: Creating a Platformer Game</h2>
+
+    <p class="mb-4">
+      Platformers are a classic game genre. In this chapter, we'll build a simple platformer with
+      jumping, platforms, and enemies.
+    </p>
+
+    <p class="mb-4">
+      <em>Full content coming soon...</em>
+    </p>
+  </section>
+
+  <!-- Chapter 11 -->
+  <section id="chapter-11" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 11: Advanced Graphics Techniques</h2>
+
+    <p class="mb-4">
+      Take your graphics to the next level with particle effects, lighting, and other advanced
+      visual techniques.
+    </p>
+
+    <p class="mb-4">
+      <em>Full content coming soon...</em>
+    </p>
+  </section>
+
+  <!-- Chapter 12 -->
+  <section id="chapter-12" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 12: Game Physics Fundamentals</h2>
+
+    <p class="mb-4">
+      Understanding basic physics makes games feel more realistic. Learn about gravity, friction,
+      and momentum in game development.
+    </p>
+
+    <p class="mb-4">
+      <em>Full content coming soon...</em>
+    </p>
+  </section>
+
+  <!-- Chapter 13 -->
+  <section id="chapter-13" class="chapter-section mb-16">
+    <h2 class="text-3xl font-bold mb-4">Chapter 13: Publishing Your Game</h2>
+
+    <p class="mb-4">
+      You've built amazing games - now learn how to package and share them with the world!
+    </p>
+
+    <h3 class="text-2xl font-semibold mt-6 mb-3">Next Steps</h3>
+    <ul class="list-disc ml-6 mb-4">
+      <li>Creating executables for different platforms</li>
+      <li>Including necessary libraries and assets</li>
+      <li>Sharing your game on itch.io or GitHub</li>
+      <li>Getting feedback and iterating</li>
+    </ul>
+
+    <div class="alert alert-success mt-6">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <span>Congratulations on completing this journey! Keep creating and learning!</span>
+    </div>
+  </section>
+</BookLayout>

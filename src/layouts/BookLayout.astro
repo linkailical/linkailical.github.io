@@ -1,0 +1,184 @@
+---
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import SideBar from "../components/SideBar.astro";
+import { ViewTransitions } from "astro:transitions";
+import { SITE_TITLE, TRANSITION_API } from "../config";
+
+const {
+  bookTitle,
+  bookSubtitle,
+  chapters = [],
+  sideBarActiveItemID = "book",
+} = Astro.props;
+
+const pageTitle = `${bookTitle} | ${SITE_TITLE}`;
+---
+
+<!doctype html>
+<html lang="en" data-theme="lofi">
+  <head>
+    <BaseHead title={pageTitle} description={bookSubtitle || bookTitle} />
+    {TRANSITION_API && <ViewTransitions />}
+    <style>
+      .toc {
+        position: sticky;
+        top: 2rem;
+        max-height: calc(100vh - 4rem);
+        overflow-y: auto;
+      }
+
+      .toc::-webkit-scrollbar {
+        width: 6px;
+      }
+
+      .toc::-webkit-scrollbar-track {
+        background: transparent;
+      }
+
+      .toc::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 3px;
+      }
+
+      .toc a {
+        transition: all 0.2s ease;
+      }
+
+      .toc a:hover {
+        background-color: rgba(0, 0, 0, 0.05);
+      }
+
+      .toc a.active {
+        background-color: rgba(0, 0, 0, 0.1);
+        font-weight: 600;
+      }
+
+      .chapter-section {
+        scroll-margin-top: 2rem;
+      }
+
+      @media (max-width: 1024px) {
+        .toc {
+          position: relative;
+          max-height: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bg-base-100 drawer lg:drawer-open">
+      <input id="my-drawer" type="checkbox" class="drawer-toggle" />
+      <div class="drawer-content bg-base-100">
+        <Header title={SITE_TITLE} />
+        <div class="md:flex md:justify-center">
+          <main class="p-6 pt-10 w-full max-w-[1400px]">
+            <!-- Book Header -->
+            <div class="mb-10">
+              <h1 class="text-4xl md:text-5xl font-bold font-serif mb-3">{bookTitle}</h1>
+              {bookSubtitle && (
+                <p class="text-xl text-base-content/70 italic">{bookSubtitle}</p>
+              )}
+            </div>
+
+            <!-- Book Content with TOC -->
+            <div class="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8">
+              <!-- Table of Contents - Left Side -->
+              <aside class="toc">
+                <div class="bg-base-200 rounded-lg p-4">
+                  <h2 class="text-lg font-bold mb-4 font-serif">Table of Contents</h2>
+                  <nav>
+                    <ul class="menu menu-sm p-0">
+                      {chapters.map((chapter, index) => (
+                        <li>
+                          <a
+                            href={`#chapter-${index + 1}`}
+                            class="toc-link py-2 px-3 text-sm rounded-md"
+                            data-chapter={index + 1}
+                          >
+                            <span class="opacity-60 mr-2">{index + 1}.</span>
+                            {chapter.title}
+                          </a>
+                        </li>
+                      ))}
+                    </ul>
+                  </nav>
+                </div>
+              </aside>
+
+              <!-- Main Content - Right Side -->
+              <article class="prose prose-lg max-w-none">
+                <slot />
+              </article>
+            </div>
+          </main>
+        </div>
+        <Footer />
+      </div>
+      <SideBar sideBarActiveItemID={sideBarActiveItemID} />
+    </div>
+
+    <!-- TOC Active State Script -->
+    <script>
+      document.addEventListener('DOMContentLoaded', () => {
+        const tocLinks = document.querySelectorAll('.toc-link');
+        const sections = document.querySelectorAll('.chapter-section');
+
+        // Smooth scroll behavior
+        tocLinks.forEach(link => {
+          link.addEventListener('click', (e) => {
+            e.preventDefault();
+            const targetId = link.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+
+            if (targetSection) {
+              targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+              // Update URL without jumping
+              history.pushState(null, '', targetId);
+
+              // Update active state
+              updateActiveLink(link);
+            }
+          });
+        });
+
+        // Update active link on scroll
+        const observerOptions = {
+          rootMargin: '-100px 0px -66%',
+          threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              const id = entry.target.getAttribute('id');
+              const activeLink = document.querySelector(`.toc-link[href="#${id}"]`);
+              if (activeLink) {
+                updateActiveLink(activeLink);
+              }
+            }
+          });
+        }, observerOptions);
+
+        sections.forEach(section => observer.observe(section));
+
+        function updateActiveLink(activeLink) {
+          tocLinks.forEach(link => link.classList.remove('active'));
+          activeLink.classList.add('active');
+        }
+
+        // Set initial active state
+        if (window.location.hash) {
+          const initialLink = document.querySelector(`.toc-link[href="${window.location.hash}"]`);
+          if (initialLink) {
+            updateActiveLink(initialLink);
+          }
+        } else if (tocLinks.length > 0) {
+          tocLinks[0].classList.add('active');
+        }
+      });
+    </script>
+  </body>
+</html>
