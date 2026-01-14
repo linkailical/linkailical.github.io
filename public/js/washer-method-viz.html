@@ -251,6 +251,68 @@
         }
         .compare-item.wrong .compare-label { color: #c0392b; }
         .compare-item.correct .compare-label { color: #27ae60; }
+
+        /* 动画控制按钮 */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 16px;
+        }
+        .anim-btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .anim-btn.play {
+            background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+            color: white;
+        }
+        .anim-btn.play:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(39, 174, 96, 0.4);
+        }
+        .anim-btn.pause {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+        .anim-btn.reset {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+        }
+        .anim-btn.rotate {
+            background: linear-gradient(135deg, #9b59b6 0%, #8e44ad 100%);
+            color: white;
+        }
+        .anim-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 12px;
+        }
+        .speed-control label {
+            font-weight: 600;
+            color: #555;
+        }
+        .speed-select {
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: 2px solid #e0e0e0;
+            font-size: 14px;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -290,6 +352,30 @@
                     <div class="radius-value" id="innerR">6</div>
                     <div style="font-size: 12px; color: #888; margin-top: 4px;" id="innerFormula">= 8 - 2(1)²</div>
                 </div>
+            </div>
+
+            <div class="btn-group">
+                <button class="anim-btn play" id="playBtn" onclick="toggleSliceAnimation()">
+                    <span id="playIcon">▶</span> <span id="playText">播放切片动画</span>
+                </button>
+                <button class="anim-btn reset" onclick="resetAnimation()">
+                    ↺ 重置
+                </button>
+                <button class="anim-btn rotate" id="rotateBtn" onclick="toggle3DRotation()">
+                    <span id="rotateIcon">🔄</span> <span id="rotateText">开启3D旋转</span>
+                </button>
+                <button class="anim-btn play" id="buildBtn" onclick="toggleBuildAnimation()" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
+                    <span id="buildIcon">▶</span> <span id="buildText">堆叠动画</span>
+                </button>
+            </div>
+            <div class="speed-control">
+                <label>动画速度：</label>
+                <select class="speed-select" id="speedSelect" onchange="updateSpeed()">
+                    <option value="0.5">0.5x 慢速</option>
+                    <option value="1" selected>1x 正常</option>
+                    <option value="2">2x 快速</option>
+                    <option value="3">3x 极速</option>
+                </select>
             </div>
         </div>
 
@@ -409,9 +495,155 @@
         const washerCtx = washerCanvas.getContext('2d');
         const ctx3d = canvas3d.getContext('2d');
 
+        // 动画状态
+        let sliceAnimating = false;
+        let sliceAnimationId = null;
+        let rotating3D = false;
+        let rotation3DId = null;
+        let rotationAngle = 0;
+        let buildAnimating = false;
+        let buildAnimationId = null;
+        let buildProgress = 0;
+        let animSpeed = 1;
+
         // 曲线函数
         function f(x) {
             return 2 * x * x;
+        }
+
+        // 更新动画速度
+        function updateSpeed() {
+            animSpeed = parseFloat(document.getElementById('speedSelect').value);
+        }
+
+        // 切片动画控制
+        function toggleSliceAnimation() {
+            const playBtn = document.getElementById('playBtn');
+            const playIcon = document.getElementById('playIcon');
+            const playText = document.getElementById('playText');
+
+            if (sliceAnimating) {
+                // 暂停
+                sliceAnimating = false;
+                cancelAnimationFrame(sliceAnimationId);
+                playBtn.classList.remove('pause');
+                playBtn.classList.add('play');
+                playIcon.textContent = '▶';
+                playText.textContent = '播放切片动画';
+            } else {
+                // 播放
+                sliceAnimating = true;
+                playBtn.classList.remove('play');
+                playBtn.classList.add('pause');
+                playIcon.textContent = '⏸';
+                playText.textContent = '暂停';
+                animateSlice();
+            }
+        }
+
+        function animateSlice() {
+            if (!sliceAnimating) return;
+
+            let currentValue = parseInt(slicePos.value);
+            currentValue += 1 * animSpeed;
+
+            if (currentValue > 200) {
+                currentValue = 0;
+            }
+
+            slicePos.value = currentValue;
+            update();
+
+            sliceAnimationId = requestAnimationFrame(animateSlice);
+        }
+
+        // 3D旋转控制
+        function toggle3DRotation() {
+            const rotateBtn = document.getElementById('rotateBtn');
+            const rotateIcon = document.getElementById('rotateIcon');
+            const rotateText = document.getElementById('rotateText');
+
+            if (rotating3D) {
+                rotating3D = false;
+                cancelAnimationFrame(rotation3DId);
+                rotateText.textContent = '开启3D旋转';
+            } else {
+                rotating3D = true;
+                rotateText.textContent = '停止旋转';
+                animate3DRotation();
+            }
+        }
+
+        function animate3DRotation() {
+            if (!rotating3D) return;
+
+            rotationAngle += 0.02 * animSpeed;
+            draw3DView();
+
+            rotation3DId = requestAnimationFrame(animate3DRotation);
+        }
+
+        // 堆叠动画控制
+        function toggleBuildAnimation() {
+            const buildBtn = document.getElementById('buildBtn');
+            const buildIcon = document.getElementById('buildIcon');
+            const buildText = document.getElementById('buildText');
+
+            if (buildAnimating) {
+                buildAnimating = false;
+                cancelAnimationFrame(buildAnimationId);
+                buildIcon.textContent = '▶';
+                buildText.textContent = '堆叠动画';
+                buildProgress = 0;
+            } else {
+                buildAnimating = true;
+                buildProgress = 0;
+                buildIcon.textContent = '⏸';
+                buildText.textContent = '停止';
+                animateBuild();
+            }
+        }
+
+        function animateBuild() {
+            if (!buildAnimating) return;
+
+            buildProgress += 0.005 * animSpeed;
+
+            if (buildProgress > 1) {
+                buildProgress = 0;
+            }
+
+            draw3DView();
+
+            buildAnimationId = requestAnimationFrame(animateBuild);
+        }
+
+        // 重置动画
+        function resetAnimation() {
+            // 停止所有动画
+            sliceAnimating = false;
+            rotating3D = false;
+            buildAnimating = false;
+
+            cancelAnimationFrame(sliceAnimationId);
+            cancelAnimationFrame(rotation3DId);
+            cancelAnimationFrame(buildAnimationId);
+
+            // 重置状态
+            slicePos.value = 100;
+            rotationAngle = 0;
+            buildProgress = 0;
+
+            // 重置按钮状态
+            document.getElementById('playBtn').classList.remove('pause');
+            document.getElementById('playBtn').classList.add('play');
+            document.getElementById('playIcon').textContent = '▶';
+            document.getElementById('playText').textContent = '播放切片动画';
+            document.getElementById('rotateText').textContent = '开启3D旋转';
+            document.getElementById('buildIcon').textContent = '▶';
+            document.getElementById('buildText').textContent = '堆叠动画';
+
+            update();
         }
 
         // 更新显示
@@ -429,7 +661,9 @@
 
             drawSideView(x);
             drawWasherView(x, R, r);
-            draw3DView();
+            if (!rotating3D && !buildAnimating) {
+                draw3DView();
+            }
         }
 
         // 绘制侧视图
@@ -667,12 +901,19 @@
             ctx.fillText('内圆 (到 y=2x²)', 40, h - 28);
         }
 
-        // 3D投影函数
+        // 3D投影函数（支持旋转）
         function project3D(x, y, z, cx, cy, scale) {
-            const angleX = Math.PI / 6;
+            const angleX = Math.PI / 6 + rotationAngle;
             const angleZ = Math.PI / 5;
-            const px = cx + (x * Math.cos(angleX) - z * Math.sin(angleZ)) * scale;
-            const py = cy - y * scale + (x * Math.sin(angleX) + z * Math.cos(angleZ)) * scale * 0.3;
+
+            // 绕Y轴旋转
+            const cosR = Math.cos(rotationAngle);
+            const sinR = Math.sin(rotationAngle);
+            const rx = x * cosR - z * sinR;
+            const rz = x * sinR + z * cosR;
+
+            const px = cx + (rx * Math.cos(Math.PI / 6) - rz * Math.sin(angleZ)) * scale;
+            const py = cy - y * scale + (rx * Math.sin(Math.PI / 6) + rz * Math.cos(angleZ)) * scale * 0.3;
             return { x: px, y: py };
         }
 
@@ -699,13 +940,20 @@
             ctx.fillStyle = '#333';
             ctx.font = 'bold 18px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText('旋转体3D预览（绕 y = 8 旋转）', cx, 25);
+            let titleText = '旋转体3D预览（绕 y = 8 旋转）';
+            if (buildAnimating) {
+                titleText = `垫圈堆叠动画 - 进度: ${Math.floor(buildProgress * 100)}%`;
+            } else if (rotating3D) {
+                titleText = '旋转体3D预览 - 旋转中...';
+            }
+            ctx.fillText(titleText, cx, 25);
 
             // 绘制多个垫圈来形成旋转体
             const numSlices = 40;
+            const maxSlice = buildAnimating ? Math.floor(numSlices * buildProgress) : numSlices;
 
             // 从后往前绘制（画家算法）
-            for (let i = 0; i <= numSlices; i++) {
+            for (let i = 0; i <= maxSlice; i++) {
                 const t = i / numSlices;
                 const x = t * 2;  // x from 0 to 2
                 const yVal = f(x);
@@ -714,10 +962,11 @@
 
                 // 绘制垫圈的3D表示
                 const alpha = 0.3 + 0.4 * t;
+                const isCurrentSlice = buildAnimating && i === maxSlice;
 
                 // 外圆轮廓
-                ctx.strokeStyle = `rgba(52, 152, 219, ${alpha})`;
-                ctx.lineWidth = 1;
+                ctx.strokeStyle = isCurrentSlice ? 'rgba(39, 174, 96, 1)' : `rgba(52, 152, 219, ${alpha})`;
+                ctx.lineWidth = isCurrentSlice ? 3 : 1;
                 ctx.beginPath();
                 for (let angle = 0; angle <= Math.PI * 2; angle += 0.1) {
                     const py = R * Math.cos(angle);
@@ -727,11 +976,16 @@
                     else ctx.lineTo(p.x, p.y);
                 }
                 ctx.closePath();
+                if (isCurrentSlice) {
+                    ctx.fillStyle = 'rgba(39, 174, 96, 0.3)';
+                    ctx.fill();
+                }
                 ctx.stroke();
 
                 // 内圆轮廓
                 if (r > 0.1) {
-                    ctx.strokeStyle = `rgba(231, 76, 60, ${alpha})`;
+                    ctx.strokeStyle = isCurrentSlice ? 'rgba(231, 76, 60, 1)' : `rgba(231, 76, 60, ${alpha})`;
+                    ctx.lineWidth = isCurrentSlice ? 3 : 1;
                     ctx.beginPath();
                     for (let angle = 0; angle <= Math.PI * 2; angle += 0.1) {
                         const py = r * Math.cos(angle);
@@ -746,53 +1000,55 @@
             }
 
             // 绘制外表面（半透明）
-            ctx.fillStyle = 'rgba(52, 152, 219, 0.15)';
-            ctx.strokeStyle = 'rgba(52, 152, 219, 0.6)';
-            ctx.lineWidth = 2;
+            if (!buildAnimating || buildProgress > 0.1) {
+                ctx.fillStyle = 'rgba(52, 152, 219, 0.15)';
+                ctx.strokeStyle = 'rgba(52, 152, 219, 0.6)';
+                ctx.lineWidth = 2;
 
-            // 上半部分外表面
-            ctx.beginPath();
-            for (let i = 0; i <= numSlices; i++) {
-                const t = i / numSlices;
-                const x = t * 2;
-                const R = 8;
-                const p = project3D(x, R, 0, cx, cy, scale);
-                if (i === 0) ctx.moveTo(p.x, p.y);
-                else ctx.lineTo(p.x, p.y);
-            }
-            for (let i = numSlices; i >= 0; i--) {
-                const t = i / numSlices;
-                const x = t * 2;
-                const R = 8;
-                const p = project3D(x, -R, 0, cx, cy, scale);
-                ctx.lineTo(p.x, p.y);
-            }
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
+                // 上半部分外表面
+                ctx.beginPath();
+                for (let i = 0; i <= maxSlice; i++) {
+                    const t = i / numSlices;
+                    const x = t * 2;
+                    const R = 8;
+                    const p = project3D(x, R, 0, cx, cy, scale);
+                    if (i === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                }
+                for (let i = maxSlice; i >= 0; i--) {
+                    const t = i / numSlices;
+                    const x = t * 2;
+                    const R = 8;
+                    const p = project3D(x, -R, 0, cx, cy, scale);
+                    ctx.lineTo(p.x, p.y);
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
 
-            // 内表面
-            ctx.fillStyle = 'rgba(231, 76, 60, 0.2)';
-            ctx.strokeStyle = 'rgba(231, 76, 60, 0.7)';
-            ctx.beginPath();
-            for (let i = 0; i <= numSlices; i++) {
-                const t = i / numSlices;
-                const x = t * 2;
-                const r = 8 - f(x);
-                const p = project3D(x, r, 0, cx, cy, scale);
-                if (i === 0) ctx.moveTo(p.x, p.y);
-                else ctx.lineTo(p.x, p.y);
+                // 内表面
+                ctx.fillStyle = 'rgba(231, 76, 60, 0.2)';
+                ctx.strokeStyle = 'rgba(231, 76, 60, 0.7)';
+                ctx.beginPath();
+                for (let i = 0; i <= maxSlice; i++) {
+                    const t = i / numSlices;
+                    const x = t * 2;
+                    const r = 8 - f(x);
+                    const p = project3D(x, r, 0, cx, cy, scale);
+                    if (i === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                }
+                for (let i = maxSlice; i >= 0; i--) {
+                    const t = i / numSlices;
+                    const x = t * 2;
+                    const r = 8 - f(x);
+                    const p = project3D(x, -r, 0, cx, cy, scale);
+                    ctx.lineTo(p.x, p.y);
+                }
+                ctx.closePath();
+                ctx.fill();
+                ctx.stroke();
             }
-            for (let i = numSlices; i >= 0; i--) {
-                const t = i / numSlices;
-                const x = t * 2;
-                const r = 8 - f(x);
-                const p = project3D(x, -r, 0, cx, cy, scale);
-                ctx.lineTo(p.x, p.y);
-            }
-            ctx.closePath();
-            ctx.fill();
-            ctx.stroke();
 
             // 绘制旋转轴指示
             ctx.fillStyle = '#9b59b6';
