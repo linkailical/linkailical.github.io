@@ -1,0 +1,33 @@
+---
+import { CollectionEntry, getCollection } from "astro:content";
+import { NotesSchema } from "../../content/config";
+import PostLayout from "../../layouts/PostLayout.astro";
+
+export async function getStaticPaths() {
+  const noteEntries = await getCollection("notes");
+  return noteEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<"notes">;
+}
+
+const { entry } = Astro.props;
+const note: NotesSchema = entry.data;
+const { Content } = await entry.render();
+---
+
+<PostLayout
+  title={note.title}
+  description={note.description}
+  pubDate={note.pubDate}
+  heroImage={note.heroImage}
+  updatedDate={note.updatedDate}
+  badge={note.badge}
+  tags={note.tags}
+>
+  <Content />
+</PostLayout>
