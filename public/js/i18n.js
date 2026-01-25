@@ -83,13 +83,34 @@ function updateLanguage(lang) {
   const notesNoContentDesc = document.querySelector('[data-i18n="notes-no-content-desc"]');
   const notesNewer = document.querySelector('[data-i18n="notes-newer"]');
   const notesOlder = document.querySelector('[data-i18n="notes-older"]');
-  
+
   if (notesTitle && translations[lang]) notesTitle.textContent = translations[lang].notes.title;
   if (notesDesc && translations[lang]) notesDesc.textContent = translations[lang].notes.description;
   if (notesNoContent && translations[lang]) notesNoContent.textContent = translations[lang].notes.noContent;
   if (notesNoContentDesc && translations[lang]) notesNoContentDesc.textContent = translations[lang].notes.noContentDesc;
   if (notesNewer && translations[lang]) notesNewer.textContent = translations[lang].notes.newerNotes;
   if (notesOlder && translations[lang]) notesOlder.textContent = translations[lang].notes.olderNotes;
+
+  // Filter notes list by language
+  const notesList = document.getElementById('notes-list');
+  const emptyState = document.getElementById('notes-empty-state');
+  if (notesList) {
+    const noteItems = notesList.querySelectorAll('.note-item');
+    let visibleCount = 0;
+    noteItems.forEach(item => {
+      const itemLang = item.getAttribute('data-lang');
+      if (itemLang === lang) {
+        item.style.display = 'block';
+        visibleCount++;
+      } else {
+        item.style.display = 'none';
+      }
+    });
+    // Show empty state if no notes visible
+    if (emptyState) {
+      emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+    }
+  }
   
   // Update language toggle buttons
   const langDisplay = document.getElementById('lang-display');
@@ -104,42 +125,22 @@ function updateLanguage(lang) {
 
 // Initialize language function
 function initLanguage() {
-  // Default to English - always start with English
-  // Only apply Chinese if user explicitly toggles in this session
   const stored = localStorage.getItem('language');
-  
-  // Always default to English on page load
-  // Keep the default English text from HTML, don't modify it
-  const langDisplay = document.getElementById('lang-display');
-  const langDisplayMobile = document.getElementById('lang-display-mobile');
-  if (langDisplay) {
-    langDisplay.textContent = '中文';
-  }
-  if (langDisplayMobile) {
-    langDisplayMobile.textContent = '中文';
-  }
-  document.documentElement.lang = 'en';
-  
-  // Only apply stored language if it was explicitly set to Chinese
-  // and user wants to keep it (we'll respect their choice after they toggle)
-  // For now, always start with English
-  if (stored === 'zh') {
-    // User previously chose Chinese, but we'll start with English
-    // They can toggle to Chinese if they want
-    // Uncomment the line below if you want to respect previous choice:
-    // updateLanguage('zh');
-  }
-  
+  const currentLang = (stored === 'en' || stored === 'zh') ? stored : 'en';
+
+  // Apply the stored language (or default to English)
+  updateLanguage(currentLang);
+
   // Set up language toggle buttons
   const langToggle = document.getElementById('lang-toggle');
   const langToggleMobile = document.getElementById('lang-toggle-mobile');
-  
+
   function setupToggle(button) {
     if (button) {
       // Remove existing listeners by cloning and replacing
       const newToggle = button.cloneNode(true);
       button.parentNode?.replaceChild(newToggle, button);
-      
+
       newToggle.addEventListener('click', () => {
         const currentLang = getLanguage();
         const newLang = currentLang === 'en' ? 'zh' : 'en';
@@ -149,7 +150,7 @@ function initLanguage() {
       });
     }
   }
-  
+
   setupToggle(langToggle);
   setupToggle(langToggleMobile);
 }

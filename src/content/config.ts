@@ -34,6 +34,7 @@ const notesSchema = z.object({
     tags: z.array(z.string()).refine(items => new Set(items).size === items.length, {
         message: 'tags must be unique',
     }).optional(),
+    lang: z.enum(['en', 'zh']).default('en'),
 });
 
 export type BlogSchema = z.infer<typeof blogSchema>;

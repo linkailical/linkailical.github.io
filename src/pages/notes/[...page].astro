@@ -18,31 +18,27 @@ const { page } = Astro.props;
     <div class="text-base text-gray-500 mt-2" data-i18n="notes-desc">Mathematics, Physics, and other study materials with problem-solving methods</div>
   </div>
 
-  {
-    page.data.length === 0 ? (
-      <div class="bg-base-200 border-l-4 border-secondary w-full p-4 min-w-full">
-        <p class="font-bold" data-i18n="notes-no-content">No Content</p>
-        <p data-i18n="notes-no-content-desc">There are no study notes yet. Please check back later!</p>
+  <div class="bg-base-200 border-l-4 border-secondary w-full p-4 min-w-full" id="notes-empty-state" style="display: none;">
+    <p class="font-bold" data-i18n="notes-no-content">No Content</p>
+    <p data-i18n="notes-no-content-desc">There are no study notes yet. Please check back later!</p>
+  </div>
+
+  <ul id="notes-list">
+    {page.data.map((note) => (
+      <div class="note-item" data-lang={note.data.lang || 'en'}>
+        <HorizontalCard
+          title={note.data.title}
+          img={note.data.heroImage}
+          desc={note.data.description}
+          url={"/notes/" + note.slug}
+          target="_self"
+          badge={note.data.badge}
+          tags={note.data.tags}
+        />
+        <div class="divider my-0" />
       </div>
-    ) : (
-      <ul>
-        {page.data.map((note) => (
-          <>
-            <HorizontalCard
-              title={note.data.title}
-              img={note.data.heroImage}
-              desc={note.data.description}
-              url={"/notes/" + note.slug}
-              target="_self"
-              badge={note.data.badge}
-              tags={note.data.tags}
-            />
-            <div class="divider my-0" />
-          </>
-        ))}
-      </ul>
-    )
-  }
+    ))}
+  </ul>
 
   <div class="flex justify-between">
     {
