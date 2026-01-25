@@ -164,7 +164,7 @@
         .radius-card.outer .radius-value { color: #3498db; }
         .radius-card.inner .radius-value { color: #e74c3c; }
 
-        /* 知识点样式 */
+        /* Knowledge point styles */
         .knowledge-section {
             margin-bottom: 24px;
         }
@@ -252,7 +252,7 @@
         .compare-item.wrong .compare-label { color: #c0392b; }
         .compare-item.correct .compare-label { color: #27ae60; }
 
-        /* 动画控制按钮 */
+        /* Animation control buttons */
         .btn-group {
             display: flex;
             gap: 10px;
@@ -322,11 +322,11 @@
         <div class="card">
             <h2>Problem</h2>
             <div class="problem-box">
-                <p><strong>问题：</strong>求由 y = 2x²、y = 0、x = 2 围成的Region绕直线 y = 8 旋转所得旋转体的体积。</p>
-                <p><strong>边界条件：</strong></p>
+                <p><strong>Question：</strong>findby y = 2x²、y = 0、x = 2 bounded byRegionrotate aboutline y = 8 rotationresultingSolid of revolution volume。</p>
+                <p><strong>boundarycondition：</strong></p>
                 <ul style="margin-left: 20px;">
                     <li>Top boundary：y = 2x²（Parabola）</li>
-                    <li>Bottom boundary：y = 0（x轴）</li>
+                    <li>Bottom boundary：y = 0（xaxis）</li>
                     <li>Right boundary：x = 2</li>
                     <li>Axis of rotation：y = 8</li>
                 </ul>
@@ -337,7 +337,7 @@
             <h2>Control Panel</h2>
             <div class="controls">
                 <div class="control-group">
-                    <label>切片位置 x：<span class="slider-value" id="posValue">1.0</span></label>
+                    <label>Sliceposition x：<span class="slider-value" id="posValue">1.0</span></label>
                     <input type="range" id="slicePos" min="0" max="200" value="100">
                 </div>
             </div>
@@ -356,25 +356,25 @@
 
             <div class="btn-group">
                 <button class="anim-btn play" id="playBtn" onclick="toggleSliceAnimation()">
-                    <span id="playIcon">▶</span> <span id="playText">播放切片动画</span>
+                    <span id="playIcon">▶</span> <span id="playText">PlaySliceAnimation</span>
                 </button>
                 <button class="anim-btn reset" onclick="resetAnimation()">
-                    ↺ 重置
+                    ↺ Reset
                 </button>
                 <button class="anim-btn rotate" id="rotateBtn" onclick="toggle3DRotation()">
-                    <span id="rotateIcon">🔄</span> <span id="rotateText">开启3D旋转</span>
+                    <span id="rotateIcon">🔄</span> <span id="rotateText">Enable3Drotation</span>
                 </button>
                 <button class="anim-btn play" id="buildBtn" onclick="toggleBuildAnimation()" style="background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);">
-                    <span id="buildIcon">▶</span> <span id="buildText">堆叠动画</span>
+                    <span id="buildIcon">▶</span> <span id="buildText">Stack animation</span>
                 </button>
             </div>
             <div class="speed-control">
-                <label>动画速度：</label>
+                <label>Animation speed：</label>
                 <select class="speed-select" id="speedSelect" onchange="updateSpeed()">
-                    <option value="0.5">0.5x 慢速</option>
-                    <option value="1" selected>1x 正常</option>
-                    <option value="2">2x 快速</option>
-                    <option value="3">3x 极速</option>
+                    <option value="0.5">0.5x slow</option>
+                    <option value="1" selected>1x Normal</option>
+                    <option value="2">2x fast</option>
+                    <option value="3">3x very fast</option>
                 </select>
             </div>
         </div>
@@ -383,7 +383,7 @@
             <h2>Visualization</h2>
             <div class="canvas-container">
                 <div class="canvas-box">
-                    <h3>侧视图（Region and Axis of Rotation）</h3>
+                    <h3>Side view（Region and Axis of Rotation）</h3>
                     <canvas id="sideView" width="400" height="350"></canvas>
                 </div>
                 <div class="canvas-box">
@@ -403,13 +403,13 @@
         <div class="card">
             <h2>Calculation Process</h2>
             <div class="info-box">
-                <h3 style="color: #e74c3c; margin-bottom: 16px;">垫圈法公式</h3>
+                <h3 style="color: #e74c3c; margin-bottom: 16px;">Washer method formula</h3>
                 <div class="formula">V = π ∫<sub>a</sub><sup>b</sup> [R² - r²] dx</div>
 
-                <h3 style="color: #e74c3c; margin: 16px 0;">代入本题</h3>
+                <h3 style="color: #e74c3c; margin: 16px 0;">Substitute into this problem</h3>
                 <div class="formula correct">V = π ∫<sub>0</sub><sup>2</sup> [8² - (8-2x²)²] dx</div>
 
-                <h3 style="color: #e74c3c; margin: 16px 0;">展开计算</h3>
+                <h3 style="color: #e74c3c; margin: 16px 0;">Expand calculation</h3>
                 <div class="formula">= π ∫<sub>0</sub><sup>2</sup> [64 - (64 - 32x² + 4x⁴)] dx</div>
                 <div class="formula">= π ∫<sub>0</sub><sup>2</sup> (32x² - 4x⁴) dx</div>
                 <div class="formula">= π [32x³/3 - 4x⁵/5]<sub>0</sub><sup>2</sup></div>
@@ -418,61 +418,61 @@
         </div>
 
         <div class="card">
-            <h2>⚠️ 常见Error</h2>
+            <h2>⚠️ commonError</h2>
             <div class="error-box">
                 <div class="error-title">Error：Radius direction reversed</div>
-                <p>Inner radius应该是 <strong>轴 - 曲线</strong>，不是 <strong>曲线 + 轴</strong></p>
+                <p>Inner radiusshould be <strong>axis - curve</strong>，not <strong>curve + axis</strong></p>
                 <div class="compare-row">
                     <div class="compare-item wrong">
-                        <div class="compare-label">❌ Error写法</div>
+                        <div class="compare-label">❌ Errorformat</div>
                         <div style="font-family: serif;">r = 2x² + 8</div>
-                        <div style="font-size: 12px; margin-top: 4px;">结果：1664π/15</div>
+                        <div style="font-size: 12px; margin-top: 4px;">result：1664π/15</div>
                     </div>
                     <div class="compare-item correct">
-                        <div class="compare-label">✅ Correct写法</div>
+                        <div class="compare-label">✅ Correctformat</div>
                         <div style="font-family: serif;">r = 8 - 2x²</div>
-                        <div style="font-size: 12px; margin-top: 4px;">结果：896π/15</div>
+                        <div style="font-size: 12px; margin-top: 4px;">result：896π/15</div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="card">
-            <h2>📚 知识点总结</h2>
+            <h2>📚 Knowledge summary</h2>
             <div class="knowledge-section">
-                <h3>解题步骤</h3>
+                <h3>Problem solving steps</h3>
                 <div class="step-box">
                     <div class="step-item">
                         <div class="step-num">1</div>
-                        <div>画图标Region</div>
+                        <div>Draw iconRegion</div>
                     </div>
                     <div class="step-item">
                         <div class="step-num">2</div>
-                        <div>确定Axis of rotation位置</div>
+                        <div>DetermineAxis of rotationposition</div>
                     </div>
                     <div class="step-item">
                         <div class="step-num">3</div>
-                        <div>求Outer radius R</div>
+                        <div>findOuter radius R</div>
                     </div>
                     <div class="step-item">
                         <div class="step-num">4</div>
-                        <div>求Inner radius r</div>
+                        <div>findInner radius r</div>
                     </div>
                     <div class="step-item">
                         <div class="step-num">5</div>
-                        <div>套公式积分</div>
+                        <div>applyformulaIntegral</div>
                     </div>
                 </div>
             </div>
 
             <div class="knowledge-section">
-                <h3>口诀记忆</h3>
+                <h3>Memory tips</h3>
                 <div style="background: #fff5f5; padding: 16px; border-radius: 10px; text-align: center;">
                     <p style="font-size: 18px; color: #c0392b; font-weight: bold; margin: 8px 0;">
-                        "轴在上，轴减曲；轴在下，曲减轴"
+                        "axisattop，axisminus curve；axisatbottom，curve minusaxis"
                     </p>
                     <p style="font-size: 18px; color: #c0392b; font-weight: bold; margin: 8px 0;">
-                        "外到远，内到近；大减小，得正值"
+                        "outer to far，inner to near；big minus small，get positive value"
                     </p>
                 </div>
             </div>
@@ -480,7 +480,7 @@
     </div>
 
     <script>
-        // 获取元素
+        // Get elements
         const slicePos = document.getElementById('slicePos');
         const posValue = document.getElementById('posValue');
         const outerR = document.getElementById('outerR');
@@ -495,7 +495,7 @@
         const washerCtx = washerCanvas.getContext('2d');
         const ctx3d = canvas3d.getContext('2d');
 
-        // 动画状态
+        // Animation state
         let sliceAnimating = false;
         let sliceAnimationId = null;
         let rotating3D = false;
@@ -506,37 +506,37 @@
         let buildProgress = 0;
         let animSpeed = 1;
 
-        // 曲线函数
+        // Curve function
         function f(x) {
             return 2 * x * x;
         }
 
-        // 更新动画速度
+        // Update animation speed
         function updateSpeed() {
             animSpeed = parseFloat(document.getElementById('speedSelect').value);
         }
 
-        // 切片动画控制
+        // Slice animation control
         function toggleSliceAnimation() {
             const playBtn = document.getElementById('playBtn');
             const playIcon = document.getElementById('playIcon');
             const playText = document.getElementById('playText');
 
             if (sliceAnimating) {
-                // 暂停
+                // Pause
                 sliceAnimating = false;
                 cancelAnimationFrame(sliceAnimationId);
                 playBtn.classList.remove('pause');
                 playBtn.classList.add('play');
                 playIcon.textContent = '▶';
-                playText.textContent = '播放切片动画';
+                playText.textContent = 'PlaySliceAnimation';
             } else {
-                // 播放
+                // Play
                 sliceAnimating = true;
                 playBtn.classList.remove('play');
                 playBtn.classList.add('pause');
                 playIcon.textContent = '⏸';
-                playText.textContent = '暂停';
+                playText.textContent = 'Pause';
                 animateSlice();
             }
         }
@@ -557,7 +557,7 @@
             sliceAnimationId = requestAnimationFrame(animateSlice);
         }
 
-        // 3D旋转控制
+        // 3DrotationControl
         function toggle3DRotation() {
             const rotateBtn = document.getElementById('rotateBtn');
             const rotateIcon = document.getElementById('rotateIcon');
@@ -566,10 +566,10 @@
             if (rotating3D) {
                 rotating3D = false;
                 cancelAnimationFrame(rotation3DId);
-                rotateText.textContent = '开启3D旋转';
+                rotateText.textContent = 'Enable3Drotation';
             } else {
                 rotating3D = true;
-                rotateText.textContent = '停止旋转';
+                rotateText.textContent = 'Stoprotation';
                 animate3DRotation();
             }
         }
@@ -583,7 +583,7 @@
             rotation3DId = requestAnimationFrame(animate3DRotation);
         }
 
-        // 堆叠动画控制
+        // Stack animation control
         function toggleBuildAnimation() {
             const buildBtn = document.getElementById('buildBtn');
             const buildIcon = document.getElementById('buildIcon');
@@ -593,13 +593,13 @@
                 buildAnimating = false;
                 cancelAnimationFrame(buildAnimationId);
                 buildIcon.textContent = '▶';
-                buildText.textContent = '堆叠动画';
+                buildText.textContent = 'Stack animation';
                 buildProgress = 0;
             } else {
                 buildAnimating = true;
                 buildProgress = 0;
                 buildIcon.textContent = '⏸';
-                buildText.textContent = '停止';
+                buildText.textContent = 'Stop';
                 animateBuild();
             }
         }
@@ -618,9 +618,9 @@
             buildAnimationId = requestAnimationFrame(animateBuild);
         }
 
-        // 重置动画
+        // ResetAnimation
         function resetAnimation() {
-            // 停止所有动画
+            // StopAll animations
             sliceAnimating = false;
             rotating3D = false;
             buildAnimating = false;
@@ -629,26 +629,26 @@
             cancelAnimationFrame(rotation3DId);
             cancelAnimationFrame(buildAnimationId);
 
-            // 重置状态
+            // Reset state
             slicePos.value = 100;
             rotationAngle = 0;
             buildProgress = 0;
 
-            // 重置按钮状态
+            // Reset button state
             document.getElementById('playBtn').classList.remove('pause');
             document.getElementById('playBtn').classList.add('play');
             document.getElementById('playIcon').textContent = '▶';
-            document.getElementById('playText').textContent = '播放切片动画';
-            document.getElementById('rotateText').textContent = '开启3D旋转';
+            document.getElementById('playText').textContent = 'PlaySliceAnimation';
+            document.getElementById('rotateText').textContent = 'Enable3Drotation';
             document.getElementById('buildIcon').textContent = '▶';
-            document.getElementById('buildText').textContent = '堆叠动画';
+            document.getElementById('buildText').textContent = 'Stack animation';
 
             update();
         }
 
-        // 更新显示
+        // Update display
         function update() {
-            const x = slicePos.value / 100;  // 0 到 2
+            const x = slicePos.value / 100;  // 0 to 2
             posValue.textContent = x.toFixed(2);
 
             const y = f(x);
@@ -666,7 +666,7 @@
             }
         }
 
-        // 绘制侧视图
+        // DrawSide view
         function drawSideView(xPos) {
             const ctx = sideCtx;
             const w = sideCanvas.width;
@@ -679,7 +679,7 @@
             const scaleX = 140;
             const scaleY = 30;
 
-            // 绘制坐标轴
+            // DrawCoordinate axes
             ctx.strokeStyle = '#ccc';
             ctx.lineWidth = 1;
             ctx.beginPath();
@@ -688,14 +688,14 @@
             ctx.lineTo(w - 20, originY);
             ctx.stroke();
 
-            // 坐标轴标签
+            // Coordinate axesLabel
             ctx.fillStyle = '#666';
             ctx.font = '12px Arial';
             ctx.fillText('y', originX - 15, 30);
             ctx.fillText('x', w - 30, originY + 15);
             ctx.fillText('0', originX - 15, originY + 15);
 
-            // y轴刻度
+            // yaxisscale
             for (let i = 2; i <= 8; i += 2) {
                 const y = originY - i * scaleY;
                 ctx.fillText(i, originX - 20, y + 4);
@@ -705,13 +705,13 @@
                 ctx.stroke();
             }
 
-            // x轴刻度
+            // xaxisscale
             for (let i = 1; i <= 2; i++) {
                 const x = originX + i * scaleX;
                 ctx.fillText(i, x - 3, originY + 15);
             }
 
-            // 绘制Axis of rotation y = 8
+            // DrawAxis of rotation y = 8
             ctx.strokeStyle = '#9b59b6';
             ctx.lineWidth = 3;
             ctx.setLineDash([10, 5]);
@@ -726,7 +726,7 @@
             ctx.font = 'bold 14px Arial';
             ctx.fillText('y = 8 (Axis of rotation)', w - 120, axisY - 10);
 
-            // 绘制Parabola y = 2x²
+            // DrawParabola y = 2x²
             ctx.strokeStyle = '#e74c3c';
             ctx.lineWidth = 3;
             ctx.beginPath();
@@ -740,7 +740,7 @@
             ctx.fillStyle = '#e74c3c';
             ctx.fillText('y = 2x²', originX + 2.1 * scaleX - 50, originY - f(2) * scaleY - 10);
 
-            // 绘制边界 x = 2
+            // Drawboundary x = 2
             ctx.strokeStyle = '#3498db';
             ctx.lineWidth = 2;
             ctx.beginPath();
@@ -750,7 +750,7 @@
             ctx.fillStyle = '#3498db';
             ctx.fillText('x = 2', originX + 2 * scaleX + 5, originY - f(2) * scaleY / 2);
 
-            // 填充Region
+            // fillRegion
             ctx.fillStyle = 'rgba(231, 76, 60, 0.2)';
             ctx.beginPath();
             ctx.moveTo(originX, originY);
@@ -763,13 +763,13 @@
             ctx.closePath();
             ctx.fill();
 
-            // 绘制切片位置
+            // Draw slice position
             if (xPos > 0 && xPos <= 2) {
                 const sliceX = originX + xPos * scaleX;
                 const yVal = f(xPos);
                 const yOnCurve = originY - yVal * scaleY;
 
-                // 切片线
+                // Slice line
                 ctx.strokeStyle = '#27ae60';
                 ctx.lineWidth = 2;
                 ctx.setLineDash([5, 5]);
@@ -795,14 +795,14 @@
                 ctx.lineTo(sliceX, axisY);
                 ctx.stroke();
 
-                // 标注
+                // Label
                 ctx.font = 'bold 12px Arial';
                 ctx.fillStyle = '#3498db';
                 ctx.fillText('R = 8', sliceX + 8, (originY + axisY) / 2);
                 ctx.fillStyle = '#e74c3c';
                 ctx.fillText(`r = ${(8 - yVal).toFixed(1)}`, sliceX + 8, (yOnCurve + axisY) / 2);
 
-                // 点标记
+                // Point marker
                 ctx.fillStyle = '#27ae60';
                 ctx.beginPath();
                 ctx.arc(sliceX, yOnCurve, 6, 0, Math.PI * 2);
@@ -812,7 +812,7 @@
             }
         }
 
-        // 绘制Washer Cross-Section
+        // DrawWasher Cross-Section
         function drawWasherView(x, R, r) {
             const ctx = washerCtx;
             const w = washerCanvas.width;
@@ -824,13 +824,13 @@
             const cy = h / 2;
             const scale = 18;
 
-            // 标题
+            // Title
             ctx.fillStyle = '#333';
             ctx.font = 'bold 14px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText(`x = ${x.toFixed(2)} 处的Washer Cross-Section`, cx, 25);
+            ctx.fillText(`x = ${x.toFixed(2)} at Washer Cross-Section`, cx, 25);
 
-            // 绘制外圆（R = 8）
+            // DrawOuter circle（R = 8）
             ctx.strokeStyle = '#3498db';
             ctx.lineWidth = 3;
             ctx.fillStyle = 'rgba(52, 152, 219, 0.2)';
@@ -839,7 +839,7 @@
             ctx.fill();
             ctx.stroke();
 
-            // 绘制内圆（r = 8 - 2x²）- 挖空部分
+            // DrawInner circle（r = 8 - 2x²）- Hollow part
             if (r > 0) {
                 ctx.fillStyle = 'white';
                 ctx.strokeStyle = '#e74c3c';
@@ -850,10 +850,10 @@
                 ctx.stroke();
             }
 
-            // 标注半径
+            // Labelradius
             ctx.textAlign = 'left';
 
-            // Outer radius标注
+            // Outer radiusLabel
             ctx.strokeStyle = '#3498db';
             ctx.lineWidth = 2;
             ctx.beginPath();
@@ -864,7 +864,7 @@
             ctx.font = 'bold 14px Arial';
             ctx.fillText(`R = 8`, cx + R * scale / 2 - 15, cy - 10);
 
-            // Inner radius标注
+            // Inner radiusLabel
             if (r > 0) {
                 ctx.strokeStyle = '#e74c3c';
                 ctx.beginPath();
@@ -875,38 +875,38 @@
                 ctx.fillText(`r = ${r.toFixed(2)}`, cx + 10, cy - r * scale / 2);
             }
 
-            // 中心点
+            // Center point
             ctx.fillStyle = '#333';
             ctx.beginPath();
             ctx.arc(cx, cy, 4, 0, Math.PI * 2);
             ctx.fill();
 
-            // 面积公式
+            // areaformula
             ctx.textAlign = 'center';
             ctx.fillStyle = '#666';
             ctx.font = '14px Arial';
             const area = Math.PI * (R * R - r * r);
-            ctx.fillText(`垫圈面积 = π(R² - r²) = π(64 - ${(r*r).toFixed(2)}) = ${area.toFixed(2)}`, cx, h - 30);
+            ctx.fillText(`Washer area = π(R² - r²) = π(64 - ${(r*r).toFixed(2)}) = ${area.toFixed(2)}`, cx, h - 30);
 
-            // 图例
+            // Legend
             ctx.textAlign = 'left';
             ctx.fillStyle = '#3498db';
             ctx.fillRect(20, h - 60, 15, 15);
             ctx.fillStyle = '#333';
-            ctx.fillText('外圆 (到 y=0)', 40, h - 48);
+            ctx.fillText('Outer circle (to y=0)', 40, h - 48);
 
             ctx.fillStyle = '#e74c3c';
             ctx.fillRect(20, h - 40, 15, 15);
             ctx.fillStyle = '#333';
-            ctx.fillText('内圆 (到 y=2x²)', 40, h - 28);
+            ctx.fillText('Inner circle (to y=2x²)', 40, h - 28);
         }
 
-        // 3D投影函数（支持旋转）
+        // 3DProjection function（Support rotation）
         function project3D(x, y, z, cx, cy, scale) {
             const angleX = Math.PI / 6 + rotationAngle;
             const angleZ = Math.PI / 5;
 
-            // 绕Y轴旋转
+            // rotate aboutYaxisrotation
             const cosR = Math.cos(rotationAngle);
             const sinR = Math.sin(rotationAngle);
             const rx = x * cosR - z * sinR;
@@ -917,7 +917,7 @@
             return { x: px, y: py };
         }
 
-        // 绘制3D视图
+        // Draw3DView
         function draw3DView() {
             const ctx = ctx3d;
             const w = canvas3d.width;
@@ -925,7 +925,7 @@
 
             ctx.clearRect(0, 0, w, h);
 
-            // 背景
+            // background
             const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
             bgGrad.addColorStop(0, '#f8f9fa');
             bgGrad.addColorStop(1, '#e9ecef');
@@ -936,23 +936,23 @@
             const cy = h / 2 + 50;
             const scale = 18;
 
-            // 标题
+            // Title
             ctx.fillStyle = '#333';
             ctx.font = 'bold 18px Arial';
             ctx.textAlign = 'center';
-            let titleText = '旋转体3D预览（绕 y = 8 旋转）';
+            let titleText = 'Solid of revolution3DPreview（rotate about y = 8 rotation）';
             if (buildAnimating) {
-                titleText = `垫圈堆叠动画 - 进度: ${Math.floor(buildProgress * 100)}%`;
+                titleText = `Washer stack animation - progress: ${Math.floor(buildProgress * 100)}%`;
             } else if (rotating3D) {
-                titleText = '旋转体3D预览 - 旋转中...';
+                titleText = 'Solid of revolution3DPreview - rotationin...';
             }
             ctx.fillText(titleText, cx, 25);
 
-            // 绘制多个垫圈来形成旋转体
+            // Draw multiple washers to form solid
             const numSlices = 40;
             const maxSlice = buildAnimating ? Math.floor(numSlices * buildProgress) : numSlices;
 
-            // 从后往前绘制（画家算法）
+            // Draw from back to front（Painter algorithm）
             for (let i = 0; i <= maxSlice; i++) {
                 const t = i / numSlices;
                 const x = t * 2;  // x from 0 to 2
@@ -960,11 +960,11 @@
                 const R = 8;
                 const r = 8 - yVal;
 
-                // 绘制垫圈的3D表示
+                // Drawwasher3Drepresents
                 const alpha = 0.3 + 0.4 * t;
                 const isCurrentSlice = buildAnimating && i === maxSlice;
 
-                // 外圆轮廓
+                // Outer circleOutline
                 ctx.strokeStyle = isCurrentSlice ? 'rgba(39, 174, 96, 1)' : `rgba(52, 152, 219, ${alpha})`;
                 ctx.lineWidth = isCurrentSlice ? 3 : 1;
                 ctx.beginPath();
@@ -982,7 +982,7 @@
                 }
                 ctx.stroke();
 
-                // 内圆轮廓
+                // Inner circleOutline
                 if (r > 0.1) {
                     ctx.strokeStyle = isCurrentSlice ? 'rgba(231, 76, 60, 1)' : `rgba(231, 76, 60, ${alpha})`;
                     ctx.lineWidth = isCurrentSlice ? 3 : 1;
@@ -999,13 +999,13 @@
                 }
             }
 
-            // 绘制外表面（半透明）
+            // DrawOuter surface（Semi-transparent）
             if (!buildAnimating || buildProgress > 0.1) {
                 ctx.fillStyle = 'rgba(52, 152, 219, 0.15)';
                 ctx.strokeStyle = 'rgba(52, 152, 219, 0.6)';
                 ctx.lineWidth = 2;
 
-                // 上半部分外表面
+                // tophalfOuter surface
                 ctx.beginPath();
                 for (let i = 0; i <= maxSlice; i++) {
                     const t = i / numSlices;
@@ -1026,7 +1026,7 @@
                 ctx.fill();
                 ctx.stroke();
 
-                // 内表面
+                // Inner surface
                 ctx.fillStyle = 'rgba(231, 76, 60, 0.2)';
                 ctx.strokeStyle = 'rgba(231, 76, 60, 0.7)';
                 ctx.beginPath();
@@ -1050,17 +1050,17 @@
                 ctx.stroke();
             }
 
-            // 绘制Axis of rotation指示
+            // DrawAxis of rotationindicator
             ctx.fillStyle = '#9b59b6';
             ctx.font = '14px Arial';
             ctx.textAlign = 'left';
-            ctx.fillText('Axis of rotation y = 8 穿过圆心', 20, h - 20);
+            ctx.fillText('Axis of rotation y = 8 through center', 20, h - 20);
 
-            // 坐标轴
+            // Coordinate axes
             ctx.strokeStyle = '#666';
             ctx.lineWidth = 1.5;
 
-            // x轴
+            // xaxis
             let p1 = project3D(0, 0, 0, cx, cy, scale);
             let p2 = project3D(3, 0, 0, cx, cy, scale);
             ctx.beginPath();
@@ -1071,10 +1071,10 @@
             ctx.fillText('x', p2.x + 5, p2.y);
         }
 
-        // 事件监听
+        // Event listeners
         slicePos.addEventListener('input', update);
 
-        // 初始化
+        // Initialize
         update();
     </script>
 </body>

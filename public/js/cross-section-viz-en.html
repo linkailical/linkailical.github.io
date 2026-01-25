@@ -137,7 +137,7 @@
             border-radius: 4px;
         }
 
-        /* 知识点样式 */
+        /* Knowledge point styles */
         .knowledge-section {
             margin-bottom: 24px;
         }
@@ -199,7 +199,7 @@
             margin-top: 8px;
         }
 
-        /* 公式卡片 */
+        /* formulacard */
         .formula-cards {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -260,7 +260,7 @@
             color: #888;
         }
 
-        /* 步骤框 */
+        /* Step box */
         .steps-box {
             display: flex;
             gap: 16px;
@@ -353,7 +353,7 @@
             padding-left: 22px;
         }
 
-        /* 知识框动画 */
+        /* Knowledge box animation */
         .knowledge-box {
             transition: all 0.3s ease;
         }
@@ -433,7 +433,7 @@
         <div class="card">
             <h2>Calculation Process</h2>
             <div class="info-box" id="calcInfo">
-                <!-- 动态填充 -->
+                <!-- Dynamic fill -->
             </div>
         </div>
 
@@ -441,14 +441,14 @@
             <h2>📚 Knowledge Points</h2>
 
             <div class="knowledge-section">
-                <h3>一、什么是Cross-Section法？</h3>
+                <h3>1、What isCross-Sectionmethod？</h3>
                 <div class="knowledge-box">
                     <p><strong>Core Idea:</strong>Slice the solid into infinitely thin pieces, know the area of each piece, add them all up to get the volume.</p>
                     <div class="formula">V = ∫<sub>a</sub><sup>b</sup> A(x) dx</div>
                     <p class="formula-explain">
-                        <span class="highlight">A(x)</span> = 在位置 x 处的Cross-Section面积<br>
+                        <span class="highlight">A(x)</span> = atposition x at Cross-Sectionarea<br>
                         <span class="highlight">dx</span> = Thickness of each slice (infinitely thin)<br>
-                        <span class="highlight">∫</span> = 把所有薄片"加起来"
+                        <span class="highlight">∫</span> = add all slices"add up"
                     </p>
                 </div>
             </div>
@@ -518,7 +518,7 @@
                     <div class="step">
                         <div class="step-num">1</div>
                         <div class="step-content">
-                            <strong>找Cross-Section的"边"</strong><br>
+                            <strong>findCross-Section "side"</strong><br>
                             side = chord length of ellipse at that position
                         </div>
                     </div>
@@ -544,14 +544,14 @@
                 <div class="faq-box">
                     <div class="faq-item">
                         <div class="faq-q">Q: How to determine whether to integrate with x or y?</div>
-                        <div class="faq-a">A: 看题目说"垂直于哪个轴"。垂直于 x 轴 → 对 x 积分；垂直于 y 轴 → 对 y 积分。</div>
+                        <div class="faq-a">A: Check the problem statement"perpendicular to whichaxis"。perpendicular to x axis → for x integral；perpendicular to y axis → for y integral。</div>
                     </div>
                     <div class="faq-item">
                         <div class="faq-q">Q: How to determine integration limits?</div>
                         <div class="faq-a">A: Check the range of the ellipse in that direction. x direction is [-5, 5], y direction is [-2, 2].</div>
                     </div>
                     <div class="faq-item">
-                        <div class="faq-q">Q: Isosceles Right Triangle的"斜边为底"是什么意思？</div>
+                        <div class="faq-q">Q: Isosceles Right Triangle "hypotenuse as base"what does it mean？</div>
                         <div class="faq-a">A: The triangle is upside down, hypotenuse facing down as base, right angle vertex pointing up. Area = hypotenuse²/4.</div>
                     </div>
                 </div>
@@ -560,11 +560,11 @@
     </div>
 
     <script>
-        // 椭圆参数
-        const a = 5;  // x方向半轴
-        const b = 2;  // y方向半轴
+        // Ellipse parameters
+        const a = 5;  // x semi-axis
+        const b = 2;  // y semi-axis
 
-        // 获取元素
+        // Get elements
         const sectionType = document.getElementById('sectionType');
         const slicePos = document.getElementById('slicePos');
         const posValue = document.getElementById('posValue');
@@ -577,12 +577,12 @@
         const sectionCtx = sectionCanvas.getContext('2d');
         const ctx3d = canvas3d.getContext('2d');
 
-        // 更新显示
+        // Update display
         function update() {
             const type = sectionType.value;
-            const pos = slicePos.value / 10;  // 转换为实际坐标
+            const pos = slicePos.value / 10;  // Convert to actualcoordinate
 
-            // 根据类型调整滑块范围和显示
+            // Adjust slider range based on type
             if (type === 'equilateral' || type === 'semicircle') {
                 slicePos.min = -50;
                 slicePos.max = 50;
@@ -599,7 +599,7 @@
             updateCalcInfo(type, pos);
         }
 
-        // 绘制俯视图
+        // Draw top view
         function drawTopView(type, pos) {
             const ctx = topCtx;
             const w = topCanvas.width;
@@ -610,7 +610,7 @@
 
             ctx.clearRect(0, 0, w, h);
 
-            // 绘制坐标轴
+            // Draw coordinate axes
             ctx.strokeStyle = '#ccc';
             ctx.lineWidth = 1;
             ctx.beginPath();
@@ -620,7 +620,7 @@
             ctx.lineTo(cx, h);
             ctx.stroke();
 
-            // 绘制刻度
+            // Draw scale marks
             ctx.fillStyle = '#999';
             ctx.font = '12px Arial';
             ctx.textAlign = 'center';
@@ -638,21 +638,21 @@
             ctx.fillText('x', w - 10, cy - 5);
             ctx.fillText('y', cx + 15, 15);
 
-            // 绘制椭圆
+            // Drawellipse
             ctx.strokeStyle = '#667eea';
             ctx.lineWidth = 3;
             ctx.beginPath();
             ctx.ellipse(cx, cy, a * scale, b * scale, 0, 0, 2 * Math.PI);
             ctx.stroke();
 
-            // 绘制切片线
+            // Drawsliceline
             ctx.strokeStyle = '#e74c3c';
             ctx.lineWidth = 2;
             ctx.setLineDash([5, 5]);
             ctx.beginPath();
 
             if (type === 'equilateral' || type === 'semicircle') {
-                // 垂直于x轴的切片
+                // Slice perpendicular to x-axis
                 const x = cx + pos * scale;
                 if (Math.abs(pos) <= a) {
                     const yVal = b * Math.sqrt(1 - (pos * pos) / (a * a));
@@ -660,7 +660,7 @@
                     ctx.lineTo(x, cy + yVal * scale);
                 }
             } else {
-                // 垂直于y轴的切片
+                // Slice perpendicular to y-axis
                 const y = cy - pos * scale;
                 if (Math.abs(pos) <= b) {
                     const xVal = a * Math.sqrt(1 - (pos * pos) / (b * b));
@@ -671,7 +671,7 @@
             ctx.stroke();
             ctx.setLineDash([]);
 
-            // 标注弦长
+            // Label chord length
             ctx.fillStyle = '#e74c3c';
             ctx.font = 'bold 14px Arial';
             if (type === 'equilateral' || type === 'semicircle') {
@@ -687,7 +687,7 @@
             }
         }
 
-        // 绘制Cross-Section
+        // DrawCross-Section
         function drawSectionView(type, pos) {
             const ctx = sectionCtx;
             const w = sectionCanvas.width;
@@ -713,7 +713,7 @@
                 ctx.fillStyle = '#999';
                 ctx.font = '16px Arial';
                 ctx.textAlign = 'center';
-                ctx.fillText('Slice Position超出椭圆范围', cx, h / 2);
+                ctx.fillText('Slice Positionoutsideellipserange', cx, h / 2);
                 return;
             }
 
@@ -741,7 +741,7 @@
                     break;
 
                 case 'isosceles':
-                    // Isosceles Right Triangle（斜边为底）
+                    // Isosceles Right Triangle（hypotenuse as base）
                     const legLength = chord / Math.sqrt(2) * scale / 2;
                     ctx.moveTo(cx - halfChord, cy);
                     ctx.lineTo(cx + halfChord, cy);
@@ -757,13 +757,13 @@
             ctx.fill();
             ctx.stroke();
 
-            // 标注尺寸
+            // Label dimensions
             ctx.fillStyle = '#333';
             ctx.font = '14px Arial';
             ctx.textAlign = 'center';
-            ctx.fillText(`底边/side = ${chord.toFixed(2)}`, cx, cy + 30);
+            ctx.fillText(`baseside/side = ${chord.toFixed(2)}`, cx, cy + 30);
 
-            // 计算面积
+            // Calculate area
             let area = 0;
             let areaFormula = '';
             switch (type) {
@@ -789,21 +789,21 @@
             ctx.fillText(areaFormula, cx, 30);
         }
 
-        // 3D投影函数 - 等轴测投影
-        // 坐标系：x-y平面是椭圆底面，z是高度方向（向上）
+        // 3DProjection function - Isometric projection
+        // coordinatesystem：x-yplane is ellipse base，zis height direction（upward）
         function project3D(x, y, z, cx, cy, scale) {
-            // 等轴测投影：x向右前，y向右后，z向上
-            const angleX = Math.PI / 6;  // x轴角度 30度
-            const angleY = Math.PI / 6;  // y轴角度 30度
+            // Isometric projection：xforward right，ybackward right，zupward
+            const angleX = Math.PI / 6;  // xaxis angle 30degrees
+            const angleY = Math.PI / 6;  // yaxis angle 30degrees
 
-            // 屏幕坐标计算
+            // Screen coordinate calculation
             const screenX = cx + (x * Math.cos(angleX) + y * Math.cos(Math.PI - angleY)) * scale;
             const screenY = cy - z * scale + (x * Math.sin(angleX) + y * Math.sin(Math.PI - angleY)) * scale * 0.5;
 
             return { x: screenX, y: screenY };
         }
 
-        // 绘制3D视图
+        // Draw 3D view
         function draw3DView(type) {
             const ctx = ctx3d;
             const w = canvas3d.width;
@@ -811,7 +811,7 @@
 
             ctx.clearRect(0, 0, w, h);
 
-            // 绘制渐变背景
+            // Draw gradient background
             const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
             bgGrad.addColorStop(0, '#f8f9fa');
             bgGrad.addColorStop(1, '#e9ecef');
@@ -822,19 +822,19 @@
             const cy = h / 2 + 80;
             const scale = 28;
 
-            // 标题
+            // Title
             ctx.fillStyle = '#333';
             ctx.font = 'bold 18px Arial';
             ctx.textAlign = 'center';
             const titles = {
-                'equilateral': 'Equilateral TriangleCross-Section立体 (垂直于x轴)',
-                'semicircle': 'SemicircleCross-Section立体 (垂直于x轴)',
+                'equilateral': 'Equilateral TriangleCross-Sectionsolid (perpendicular toxaxis)',
+                'semicircle': 'SemicircleCross-Sectionsolid (perpendicular toxaxis)',
                 'isosceles': 'Isosceles Right Triangle Cross-Section Solid (perp. to y-axis)',
                 'square': 'Square Cross-Section Solid (perp. to y-axis)'
             };
             ctx.fillText(titles[type], cx, 25);
 
-            // 绘制3D网格底面 (x-y平面)
+            // Draw 3D grid base (x-yplane)
             ctx.strokeStyle = 'rgba(150, 150, 150, 0.2)';
             ctx.lineWidth = 0.5;
             for (let i = -6; i <= 6; i++) {
@@ -854,10 +854,10 @@
                 ctx.stroke();
             }
 
-            // 绘制坐标轴
+            // Draw coordinate axes
             ctx.lineWidth = 2.5;
 
-            // X轴 (红色) - 椭圆长轴方向
+            // Xaxis (red) - Ellipse major axis direction
             let p1 = project3D(0, 0, 0, cx, cy, scale);
             let p2 = project3D(6, 0, 0, cx, cy, scale);
             ctx.strokeStyle = '#e74c3c';
@@ -869,7 +869,7 @@
             ctx.font = 'bold 14px Arial';
             ctx.fillText('x', p2.x + 8, p2.y + 12);
 
-            // Y轴 (蓝色) - 椭圆短轴方向
+            // Yaxis (blue) - Ellipse minor axis direction
             p2 = project3D(0, 3, 0, cx, cy, scale);
             ctx.strokeStyle = '#3498db';
             ctx.beginPath();
@@ -879,7 +879,7 @@
             ctx.fillStyle = '#2980b9';
             ctx.fillText('y', p2.x - 15, p2.y + 5);
 
-            // Z轴 (绿色) - 高度方向
+            // Zaxis (green) - Height direction
             p2 = project3D(0, 0, 6, cx, cy, scale);
             ctx.strokeStyle = '#27ae60';
             ctx.beginPath();
@@ -887,13 +887,13 @@
             ctx.lineTo(p2.x, p2.y);
             ctx.stroke();
             ctx.fillStyle = '#1e8449';
-            ctx.fillText('z(高度)', p2.x + 5, p2.y - 5);
+            ctx.fillText('z(height)', p2.x + 5, p2.y - 5);
 
-            // 绘制椭圆底面 (x-y平面, z=0)
+            // Draw ellipse base (x-yplane, z=0)
             ctx.beginPath();
             for (let t = 0; t <= 2 * Math.PI; t += 0.02) {
-                const ex = a * Math.cos(t);  // x方向: -5 to 5
-                const ey = b * Math.sin(t);  // y方向: -2 to 2
+                const ex = a * Math.cos(t);  // xdirection: -5 to 5
+                const ey = b * Math.sin(t);  // ydirection: -2 to 2
                 const p = project3D(ex, ey, 0, cx, cy, scale);
                 if (t === 0) {
                     ctx.moveTo(p.x, p.y);
@@ -903,7 +903,7 @@
             }
             ctx.closePath();
 
-            // 椭圆底面渐变
+            // Ellipse base gradient
             const ellipseGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 200);
             ellipseGrad.addColorStop(0, 'rgba(102, 126, 234, 0.25)');
             ellipseGrad.addColorStop(1, 'rgba(102, 126, 234, 0.05)');
@@ -913,40 +913,40 @@
             ctx.lineWidth = 2.5;
             ctx.stroke();
 
-            // 根据类型绘制实心立体
+            // Draw solid based on type
             if (type === 'equilateral' || type === 'semicircle') {
-                // 垂直于x轴：沿x方向切片，Cross-Section在y-z平面
+                // Perpendicular to x-axis: slice along x，Cross-Sectionaty-zplane
                 drawSolid3D_perpX(ctx, type, cx, cy, scale);
             } else {
-                // 垂直于y轴：沿y方向切片，Cross-Section在x-z平面
+                // Perpendicular to y-axis: slice along y，Cross-Sectionatx-zplane
                 drawSolid3D_perpY(ctx, type, cx, cy, scale);
             }
         }
 
-        // 绘制垂直于X轴的立体（Equilateral Triangle/Semicircle）
-        // Cross-Section在 y-z 平面，沿 x 方向堆叠
+        // Draw solid perpendicular to X-axis（Equilateral Triangle/Semicircle）
+        // Cross-Sectionat y-z plane，along x direction stack
         function drawSolid3D_perpX(ctx, type, cx, cy, scale) {
             const steps = 60;
 
-            // 在每个x位置，y的范围是 ±(2/5)√(25-x²)
-            // Cross-Section的底边（弦长）= (4/5)√(25-x²)
+            // At each x position，yrange is ±(2/5)√(25-x²)
+            // Cross-Section baseside（chord length）= (4/5)√(25-x²)
 
-            // 收集轮廓点
-            const topPoints = [];      // Cross-Section顶点轨迹
-            const frontPoints = [];    // y > 0 侧的底边
-            const backPoints = [];     // y < 0 侧的底边
+            // Collect contour points
+            const topPoints = [];      // Cross-SectionVertex path
+            const frontPoints = [];    // y > 0 side base edge
+            const backPoints = [];     // y < 0 side base edge
 
             for (let i = 0; i <= steps; i++) {
                 const t = i / steps;
                 const x = -a + t * 2 * a;
                 const yMax = (2/5) * Math.sqrt(Math.max(0, 25 - x * x));
-                const chord = 2 * yMax;  // 弦长
+                const chord = 2 * yMax;  // chord length
 
                 let topZ = 0;
                 if (type === 'equilateral') {
-                    topZ = chord * Math.sqrt(3) / 2;  // Equilateral Triangle高度
+                    topZ = chord * Math.sqrt(3) / 2;  // Equilateral Triangleheight
                 } else {
-                    topZ = chord / 2;  // Semicircle半径
+                    topZ = chord / 2;  // Semicircleradius
                 }
 
                 topPoints.push(project3D(x, 0, topZ, cx, cy, scale));
@@ -954,7 +954,7 @@
                 backPoints.push(project3D(x, -yMax, 0, cx, cy, scale));
             }
 
-            // 绘制背面（y < 0 侧to顶部）
+            // Draw back face（y < 0 sidetotop）
             ctx.beginPath();
             for (let i = 0; i <= steps; i++) {
                 const p = backPoints[i];
@@ -976,7 +976,7 @@
             ctx.lineWidth = 1;
             ctx.stroke();
 
-            // 绘制前面（y > 0 侧to顶部）
+            // Draw front face（y > 0 sidetotop）
             ctx.beginPath();
             for (let i = 0; i <= steps; i++) {
                 const p = frontPoints[i];
@@ -998,7 +998,7 @@
             ctx.lineWidth = 1.5;
             ctx.stroke();
 
-            // 顶部轮廓线（脊线）
+            // Top contour line（ridge）
             ctx.beginPath();
             for (let i = 0; i <= steps; i++) {
                 const p = topPoints[i];
@@ -1009,7 +1009,7 @@
             ctx.lineWidth = 3;
             ctx.stroke();
 
-            // 绘制几个代表性的Cross-Section
+            // Draw representativeCross-Section
             const slicePositions = [-3.5, 0, 3.5];
             for (const x of slicePositions) {
                 if (Math.abs(x) > a) continue;
@@ -1049,7 +1049,7 @@
                 ctx.setLineDash([]);
             }
 
-            // 添加高光
+            // Add highlights
             ctx.beginPath();
             for (let i = 5; i <= steps * 0.6; i++) {
                 const t = i / steps;
@@ -1068,37 +1068,37 @@
             ctx.lineCap = 'butt';
         }
 
-        // 绘制垂直于Y轴的立体（Isosceles Right Triangle/Square）
-        // Cross-Section在 x-z 平面，沿 y 方向堆叠
+        // Draw solid perpendicular to Y-axis（Isosceles Right Triangle/Square）
+        // Cross-Sectionat x-z plane，along y direction stack
         function drawSolid3D_perpY(ctx, type, cx, cy, scale) {
             const steps = 60;
 
-            // 在每个y位置，x的范围是 ±(5/2)√(4-y²)
-            // Cross-Section的底边（弦长）= 5√(4-y²)
+            // At each y position，xrange is ±(5/2)√(4-y²)
+            // Cross-Section baseside（chord length）= 5√(4-y²)
 
-            // 收集轮廓点
-            const topPoints = [];      // Cross-Section顶点轨迹
-            const leftPoints = [];     // x < 0 侧的底边
-            const rightPoints = [];    // x > 0 侧的底边
+            // Collect contour points
+            const topPoints = [];      // Cross-SectionVertex path
+            const leftPoints = [];     // x < 0 side base edge
+            const rightPoints = [];    // x > 0 side base edge
 
             for (let i = 0; i <= steps; i++) {
                 const t = i / steps;
-                const y = -b + t * 2 * b;  // y从-2to2
+                const y = -b + t * 2 * b;  // yfrom-2to2
                 const xMax = (5/2) * Math.sqrt(Math.max(0, 4 - y * y));
                 const chord = 2 * xMax;  // Chord = 5√(4-y²)
 
                 let topZ = 0;
                 if (type === 'isosceles') {
-                    topZ = chord / 2;  // Isosceles Right Triangle（斜边为底）高度 = 斜边/2
+                    topZ = chord / 2;  // Isosceles Right Triangle（hypotenuse as base）height = diagonalside/2
                 } else {
-                    topZ = chord;  // Square高度 = side
+                    topZ = chord;  // Squareheight = side
                 }
 
                 if (type === 'isosceles') {
-                    // Isosceles Right Triangle顶点在x=0处
+                    // Isosceles Right Trianglevertexatx=0at
                     topPoints.push(project3D(0, y, topZ, cx, cy, scale));
                 } else {
-                    // Square顶面左右两边
+                    // SquareTop surface left rightside
                     topPoints.push({
                         left: project3D(-xMax, y, topZ, cx, cy, scale),
                         right: project3D(xMax, y, topZ, cx, cy, scale)
@@ -1110,9 +1110,9 @@
             }
 
             if (type === 'isosceles') {
-                // Isosceles Right Triangle立体
+                // Isosceles Right Trianglesolid
 
-                // 绘制左斜面（x < 0 to顶点）
+                // Draw left slope（x < 0 tovertex）
                 ctx.beginPath();
                 for (let i = 0; i <= steps; i++) {
                     const p = leftPoints[i];
@@ -1134,7 +1134,7 @@
                 ctx.lineWidth = 1;
                 ctx.stroke();
 
-                // 绘制右斜面（x > 0 to顶点）
+                // Draw right slope（x > 0 tovertex）
                 ctx.beginPath();
                 for (let i = 0; i <= steps; i++) {
                     const p = rightPoints[i];
@@ -1156,7 +1156,7 @@
                 ctx.lineWidth = 1.5;
                 ctx.stroke();
 
-                // 顶部脊线
+                // Top ridge line
                 ctx.beginPath();
                 for (let i = 0; i <= steps; i++) {
                     const p = topPoints[i];
@@ -1167,7 +1167,7 @@
                 ctx.lineWidth = 3;
                 ctx.stroke();
 
-                // 绘制前端面 (y接近2处)
+                // Draw front end face (yclose to2at)
                 const frontY = b * 0.9;
                 const xMaxFront = (5/2) * Math.sqrt(Math.max(0, 4 - frontY * frontY));
                 const chordFront = 2 * xMaxFront;
@@ -1188,10 +1188,10 @@
                 }
 
             } else {
-                // Square立体
+                // Squaresolid
                 // SquareCross-Section
 
-                // 绘制顶面
+                // Draw top face
                 ctx.beginPath();
                 for (let i = 0; i <= steps; i++) {
                     const p = topPoints[i].left;
@@ -1213,7 +1213,7 @@
                 ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // 绘制右侧面
+                // Draw right side
                 ctx.beginPath();
                 for (let i = 0; i <= steps; i++) {
                     const p = rightPoints[i];
@@ -1235,7 +1235,7 @@
                 ctx.lineWidth = 1.5;
                 ctx.stroke();
 
-                // 绘制左侧面（部分可见）
+                // Draw left side（partially visible）
                 ctx.beginPath();
                 for (let i = 0; i <= steps; i++) {
                     const p = leftPoints[i];
@@ -1258,7 +1258,7 @@
                 ctx.stroke();
             }
 
-            // 绘制几个代表性的Cross-Section切片（沿y方向）
+            // Draw representativeCross-Sectionslice（alongydirection）
             const slicePositions = [-1.2, 0, 1.2];
             for (const yPos of slicePositions) {
                 if (Math.abs(yPos) > b) continue;
@@ -1296,7 +1296,7 @@
                 ctx.setLineDash([]);
             }
 
-            // 添加高光效果
+            // Add highlightseffect
             ctx.beginPath();
             const highlightSteps = steps * 0.5;
             for (let i = 5; i <= highlightSteps; i++) {
@@ -1317,29 +1317,29 @@
             ctx.lineCap = 'butt';
         }
 
-        // 更新计算信息
+        // Update calculation info
         function updateCalcInfo(type, pos) {
             const info = {
                 'equilateral': {
-                    name: 'Equilateral TriangleCross-Section (垂直于x轴)',
+                    name: 'Equilateral TriangleCross-Section (perpendicular toxaxis)',
                     chord: `2y = (4/5)√(25-x²)`,
                     area: `A(x) = (√3/4) × [(4/5)√(25-x²)]² = (4√3/25)(25-x²)`,
                     integral: `V = ∫₋₅⁵ (4√3/25)(25-x²) dx`
                 },
                 'semicircle': {
-                    name: 'SemicircleCross-Section (垂直于x轴)',
+                    name: 'SemicircleCross-Section (perpendicular toxaxis)',
                     chord: `diameter = 2y = (4/5)√(25-x²),radius r = (2/5)√(25-x²)`,
                     area: `A(x) = (π/2)r² = (π/2) × [(2/5)√(25-x²)]² = (2π/25)(25-x²)`,
                     integral: `V = ∫₋₅⁵ (2π/25)(25-x²) dx`
                 },
                 'isosceles': {
-                    name: 'Isosceles Right TriangleCross-Section (垂直于y轴，斜边为底)',
+                    name: 'Isosceles Right TriangleCross-Section (perpendicular toyaxis，hypotenuse as base)',
                     chord: `hypotenuse = 2x = 5√(4-y²)`,
-                    area: `A(y) = (斜边²)/4 = [5√(4-y²)]²/4 = (25/4)(4-y²)`,
+                    area: `A(y) = (diagonalside²)/4 = [5√(4-y²)]²/4 = (25/4)(4-y²)`,
                     integral: `V = ∫₋₂² (25/4)(4-y²) dy`
                 },
                 'square': {
-                    name: 'SquareCross-Section (垂直于y轴)',
+                    name: 'SquareCross-Section (perpendicular toyaxis)',
                     chord: `side = 2x = 5√(4-y²)`,
                     area: `A(y) = side² = [5√(4-y²)]² = 25(4-y²)`,
                     integral: `V = ∫₋₂² 25(4-y²) dy`
@@ -1349,23 +1349,23 @@
             const data = info[type];
             calcInfo.innerHTML = `
                 <h3 style="color: #667eea; margin-bottom: 16px;">${data.name}</h3>
-                <p><strong>第一步：求弦长（Cross-Section的边）</strong></p>
+                <p><strong>Step 1：findchord length（Cross-Section side）</strong></p>
                 <div class="formula">${data.chord}</div>
-                <p><strong>第二步：求Cross-Section面积 A</strong></p>
+                <p><strong>Step 2：findCross-Sectionarea A</strong></p>
                 <div class="formula">${data.area}</div>
                 <p><strong>Step 3: Set up integral</strong></p>
                 <div class="formula" style="font-size: 22px; color: #e74c3c;">${data.integral}</div>
             `;
         }
 
-        // 事件监听
+        // Event listeners
         sectionType.addEventListener('change', () => {
             slicePos.value = 0;
             update();
         });
         slicePos.addEventListener('input', update);
 
-        // 初始化
+        // Initialize
         update();
     </script>
 </body>
