@@ -12,17 +12,17 @@ export async function getStaticPaths({ paginate }) {
 const { page } = Astro.props;
 ---
 
-<BaseLayout title="学习笔记" sideBarActiveItemID="notes">
+<BaseLayout title="Study Notes" sideBarActiveItemID="notes">
   <div class="mb-5">
-    <div class="text-3xl w-full font-bold">学习笔记</div>
-    <div class="text-base text-gray-500 mt-2">数学、物理等学习资料与解题方法</div>
+    <div class="text-3xl w-full font-bold" data-i18n="notes-title">Study Notes</div>
+    <div class="text-base text-gray-500 mt-2" data-i18n="notes-desc">Mathematics, Physics, and other study materials with problem-solving methods</div>
   </div>
 
   {
     page.data.length === 0 ? (
       <div class="bg-base-200 border-l-4 border-secondary w-full p-4 min-w-full">
-        <p class="font-bold">暂无内容</p>
-        <p>目前还没有学习笔记，稍后再来看看吧！</p>
+        <p class="font-bold" data-i18n="notes-no-content">No Content</p>
+        <p data-i18n="notes-no-content-desc">There are no study notes yet. Please check back later!</p>
       </div>
     ) : (
       <ul>
@@ -58,7 +58,7 @@ const { page } = Astro.props;
           >
             <path d="M15.41,16.58L10.83,12L15.41,7.41L14,6L8,12L14,18L15.41,16.58Z" />
           </svg>{" "}
-          较新笔记
+          <span data-i18n="notes-newer">Newer Notes</span>
         </a>
       ) : (
         <div />
@@ -67,7 +67,7 @@ const { page } = Astro.props;
     {
       page.url.next ? (
         <a href={page.url.next} class="btn btn-ghost my-10 mx-5">
-          更早笔记{" "}
+          <span data-i18n="notes-older">Older Notes</span>{" "}
           <svg
             class="h-6 w-6 fill-current md:h-8 md:w-8"
             xmlns="http://www.w3.org/2000/svg"
