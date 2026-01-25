@@ -18,6 +18,15 @@ const translations = {
       book: 'My Book',
       contact: 'Contact',
     },
+    header: {
+      name: 'Linkaili',
+      sidebarCaption: 'Me and My Little Brother',
+    },
+    breadcrumb: {
+      home: 'Home',
+      blog: 'Essays',
+      notes: 'Notes',
+    },
     home: {
       biographyLabel: 'Biography',
       name: 'Linkaili',
@@ -51,6 +60,15 @@ const translations = {
       notes: '学习笔记',
       book: '我的书籍',
       contact: '联系方式',
+    },
+    header: {
+      name: 'Linkaili',
+      sidebarCaption: '我和我的弟弟',
+    },
+    breadcrumb: {
+      home: '首页',
+      blog: '文章',
+      notes: '笔记',
     },
     home: {
       biographyLabel: '个人简介',
@@ -105,7 +123,31 @@ function updateLanguage(lang) {
   if (menuItems.blog && translations[lang]) menuItems.blog.textContent = translations[lang].menu.blog;
   if (menuItems.notes && translations[lang]) menuItems.notes.textContent = translations[lang].menu.notes;
   if (menuItems.book && translations[lang]) menuItems.book.textContent = translations[lang].menu.book;
-  
+
+  // Update contact menu item
+  const contactMenu = document.querySelector('[data-i18n="menu-contact"]');
+  if (contactMenu && translations[lang]) contactMenu.textContent = translations[lang].menu.contact;
+
+  // Update header and sidebar
+  const headerName = document.querySelector('[data-i18n="header-name"]');
+  const sidebarCaption = document.querySelector('[data-i18n="sidebar-caption"]');
+  if (headerName && translations[lang] && translations[lang].header) {
+    headerName.textContent = translations[lang].header.name;
+  }
+  if (sidebarCaption && translations[lang] && translations[lang].header) {
+    sidebarCaption.textContent = translations[lang].header.sidebarCaption;
+  }
+
+  // Update breadcrumb navigation
+  const breadcrumbHome = document.querySelector('[data-i18n="breadcrumb-home"]');
+  const breadcrumbBlog = document.querySelector('[data-i18n="breadcrumb-blog"]');
+  const breadcrumbNotes = document.querySelector('[data-i18n="breadcrumb-notes"]');
+  if (translations[lang] && translations[lang].breadcrumb) {
+    if (breadcrumbHome) breadcrumbHome.textContent = translations[lang].breadcrumb.home;
+    if (breadcrumbBlog) breadcrumbBlog.textContent = translations[lang].breadcrumb.blog;
+    if (breadcrumbNotes) breadcrumbNotes.textContent = translations[lang].breadcrumb.notes;
+  }
+
   // Update notes page content if on notes page
   const notesTitle = document.querySelector('[data-i18n="notes-title"]');
   const notesDesc = document.querySelector('[data-i18n="notes-desc"]');

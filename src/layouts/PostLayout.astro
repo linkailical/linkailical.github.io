@@ -4,17 +4,32 @@ import BaseLayout from "./BaseLayout.astro";
 import dayjs from "dayjs";
 import localizedFormat from "dayjs/plugin/localizedFormat";
 
-export interface Props extends BlogSchema {}
+export interface Props extends BlogSchema {
+  contentType?: 'blog' | 'notes';
+}
 
-const { title, description, pubDate, updatedDate, heroImage, badge, tags = [] } = Astro.props;
+const { title, description, pubDate, updatedDate, heroImage, badge, tags = [], contentType = 'blog' } = Astro.props;
 dayjs.extend(localizedFormat);
 const displayDate = dayjs(pubDate).format("ll")
 import { Image } from "astro:assets";
+
+const breadcrumbConfig = {
+  blog: { href: '/blog/', labelKey: 'breadcrumb-blog', defaultLabel: 'Essays' },
+  notes: { href: '/notes/', labelKey: 'breadcrumb-notes', defaultLabel: 'Notes' }
+};
+const crumb = breadcrumbConfig[contentType];
 ---
 
 <BaseLayout title={title} description={description} image={heroImage}, ogType="article">
   <main class="md:flex md:justify-center">
     <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+      <!-- Breadcrumb Navigation -->
+      <nav class="text-sm breadcrumbs mb-4 not-prose">
+        <ul>
+          <li><a href="/" class="link link-hover" data-i18n="breadcrumb-home">Home</a></li>
+          <li><a href={crumb.href} class="link link-hover" data-i18n={crumb.labelKey}>{crumb.defaultLabel}</a></li>
+        </ul>
+      </nav>
       {heroImage && <Image width={750} height={422} format="webp" src={heroImage} alt={title} class="w-full mb-6" />}
       <h1 class="title my-2 text-4xl font-bold">{title}</h1>
       {pubDate && <time>{displayDate}</time>}
