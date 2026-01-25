@@ -10,53 +10,67 @@ const last_posts = posts.slice(0, 3);
 
 <BaseLayout sideBarActiveItemID="home">
   <div class="pb-12 mt-5">
-    <div class="text-xl py-1 font-serif italic text-gray-500">Biography</div>
-    <div class="text-5xl font-bold font-serif mb-4">Linkaili</div>
-    <div class="text-2xl py-2 font-light text-base-content/80">
+    <div class="text-xl py-1 font-serif italic text-gray-500" data-i18n="home-biography-label">Biography</div>
+    <div class="text-5xl font-bold font-serif mb-4" data-i18n="home-name">Linkaili</div>
+    <div class="text-2xl py-2 font-light text-base-content/80" data-i18n="home-subtitle">
       Student-Athlete (Golf) & Academic Scholar | Class of 2027
     </div>
-    
+
     <div class="py-6 text-lg leading-relaxed text-justify">
-      <p class="mb-4">
+      <p class="mb-4" data-i18n="home-bio1">
         Linkaili is a dedicated high school student based in the United States, currently pursuing a rigorous academic curriculum alongside competitive varsity athletics. With a graduation target of 2027, she embodies the <strong>scholar-athlete</strong> ideal—demonstrating discipline on the golf course and intellectual curiosity in the classroom.
       </p>
-      <p>
+      <p data-i18n="home-bio2">
         Her academic interests lie at the intersection of <strong>Science and Social Impact</strong>, exploring how analytical thinking can solve community challenges. As a Varsity Golf team captain, she applies strategic planning and resilience learned from sport to her leadership roles.
       </p>
     </div>
 
     <div class="mt-4 flex gap-4">
-      <a class="btn btn-primary" href="/cv">View Academic Profile</a>
-      <a class="btn btn-outline" href="mailto:linkaili.2008@gmail.com">Contact for Admissions</a>
+      <a class="btn btn-primary" href="/cv" data-i18n="home-view-profile">View Academic Profile</a>
+      <a class="btn btn-outline" href="mailto:linkaili.2008@gmail.com" data-i18n="home-contact-admissions">Contact for Admissions</a>
     </div>
   </div>
 
   <div class="divider my-10"></div>
 
   <div>
-    <div class="text-3xl w-full font-bold mb-5 font-serif">Research & Leadership Highlights</div>
+    <div class="text-3xl w-full font-bold mb-5 font-serif" data-i18n="home-research-title">Research & Leadership Highlights</div>
   </div>
 
-  <HorizontalCard
-    title="Varsity Golf Leadership"
-    img="/golf_match.jpg"
-    desc="Serving as Team Captain to foster a culture of excellence and sportsmanship. Analyzing performance metrics to improve team strategy."
-    url="/cv"
-    badge="Athletics"
-  />
+  <div class="rounded-lg bg-base-100 hover:shadow-xl transition ease-in-out hover:scale-[102%]">
+    <a href="/cv" target="_blank">
+      <div class="hero-content flex-col md:flex-row">
+        <img src="/golf_match.jpg" alt="Varsity Golf Leadership" class="max-w-full md:max-w-[13rem] rounded-lg" />
+        <div class="grow w-full">
+          <h1 class="text-xl font-bold">
+            <span data-i18n="home-golf-title">Varsity Golf Leadership</span>
+            <div class="badge badge-secondary mx-2">Athletics</div>
+          </h1>
+          <p class="py-1 text-1xl" data-i18n="home-golf-desc">Serving as Team Captain to foster a culture of excellence and sportsmanship. Analyzing performance metrics to improve team strategy.</p>
+        </div>
+      </div>
+    </a>
+  </div>
   <div class="divider my-0"></div>
-  <HorizontalCard
-    title="Environmental Impact Study"
-    img="/study.jpg"
-    desc="Independent research investigating sustainable water management practices in local golf courses, bridging athletic interest with environmental science."
-    url="/projects"
-    badge="Research"
-  />
+  <div class="rounded-lg bg-base-100 hover:shadow-xl transition ease-in-out hover:scale-[102%]">
+    <a href="/projects" target="_blank">
+      <div class="hero-content flex-col md:flex-row">
+        <img src="/study.jpg" alt="Environmental Impact Study" class="max-w-full md:max-w-[13rem] rounded-lg" />
+        <div class="grow w-full">
+          <h1 class="text-xl font-bold">
+            <span data-i18n="home-env-title">Environmental Impact Study</span>
+            <div class="badge badge-secondary mx-2">Research</div>
+          </h1>
+          <p class="py-1 text-1xl" data-i18n="home-env-desc">Independent research investigating sustainable water management practices in local golf courses, bridging athletic interest with environmental science.</p>
+        </div>
+      </div>
+    </a>
+  </div>
 
   <div class="divider my-10"></div>
 
   <div>
-    <div class="text-3xl w-full font-bold mb-5 font-serif">Selected Essays</div>
+    <div class="text-3xl w-full font-bold mb-5 font-serif" data-i18n="home-essays-title">Selected Essays</div>
   </div>
 
   {
