@@ -268,3 +268,6 @@ if (document.readyState === 'loading') {
   // DOMContentLoaded has already fired
   initLanguage();
 }
+
+// Re-initialize after Astro ViewTransitions page navigation
+document.addEventListener('astro:page-load', initLanguage);
