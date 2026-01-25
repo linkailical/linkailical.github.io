@@ -88,10 +88,14 @@ function updateLanguage(lang) {
   if (notesNewer && translations[lang]) notesNewer.textContent = translations[lang].notes.newerNotes;
   if (notesOlder && translations[lang]) notesOlder.textContent = translations[lang].notes.olderNotes;
   
-  // Update language toggle button
+  // Update language toggle buttons
   const langDisplay = document.getElementById('lang-display');
+  const langDisplayMobile = document.getElementById('lang-display-mobile');
   if (langDisplay) {
     langDisplay.textContent = lang === 'en' ? '中文' : 'EN';
+  }
+  if (langDisplayMobile) {
+    langDisplayMobile.textContent = lang === 'en' ? '中文' : 'EN';
   }
 }
 
@@ -100,19 +104,26 @@ function initLanguage() {
   const currentLang = getLanguage();
   updateLanguage(currentLang);
   
-  // Set up language toggle
+  // Set up language toggle buttons
   const langToggle = document.getElementById('lang-toggle');
-  if (langToggle) {
-    // Remove existing listeners by cloning and replacing
-    const newToggle = langToggle.cloneNode(true);
-    langToggle.parentNode?.replaceChild(newToggle, langToggle);
-    
-    newToggle.addEventListener('click', () => {
-      const currentLang = getLanguage();
-      const newLang = currentLang === 'en' ? 'zh' : 'en';
-      updateLanguage(newLang);
-    });
+  const langToggleMobile = document.getElementById('lang-toggle-mobile');
+  
+  function setupToggle(button) {
+    if (button) {
+      // Remove existing listeners by cloning and replacing
+      const newToggle = button.cloneNode(true);
+      button.parentNode?.replaceChild(newToggle, button);
+      
+      newToggle.addEventListener('click', () => {
+        const currentLang = getLanguage();
+        const newLang = currentLang === 'en' ? 'zh' : 'en';
+        updateLanguage(newLang);
+      });
+    }
   }
+  
+  setupToggle(langToggle);
+  setupToggle(langToggleMobile);
 }
 
 // Initialize on page load
