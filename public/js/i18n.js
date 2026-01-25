@@ -43,7 +43,10 @@ const translations = {
 function getLanguage() {
   if (typeof window === 'undefined') return 'en';
   const stored = localStorage.getItem('language');
-  return stored && (stored === 'en' || stored === 'zh') ? stored : 'en';
+  // Default to English if no preference is set
+  // Only use stored language if it was explicitly set by user
+  if (!stored) return 'en';
+  return (stored === 'en' || stored === 'zh') ? stored : 'en';
 }
 
 function setLanguage(lang) {
@@ -101,8 +104,28 @@ function updateLanguage(lang) {
 
 // Initialize language function
 function initLanguage() {
-  const currentLang = getLanguage();
-  updateLanguage(currentLang);
+  // Check if this is the first time or if we should reset to English
+  // For now, default to English - only apply Chinese if user explicitly chooses it
+  const stored = localStorage.getItem('language');
+  const currentLang = stored === 'zh' ? 'zh' : 'en';
+  
+  // Only apply language change if user has explicitly chosen Chinese
+  // Otherwise, keep the default English from HTML
+  if (currentLang === 'zh') {
+    updateLanguage('zh');
+  } else {
+    // Ensure English is set and update button display
+    localStorage.setItem('language', 'en');
+    const langDisplay = document.getElementById('lang-display');
+    const langDisplayMobile = document.getElementById('lang-display-mobile');
+    if (langDisplay) {
+      langDisplay.textContent = '中文';
+    }
+    if (langDisplayMobile) {
+      langDisplayMobile.textContent = '中文';
+    }
+    document.documentElement.lang = 'en';
+  }
   
   // Set up language toggle buttons
   const langToggle = document.getElementById('lang-toggle');
@@ -117,6 +140,8 @@ function initLanguage() {
       newToggle.addEventListener('click', () => {
         const currentLang = getLanguage();
         const newLang = currentLang === 'en' ? 'zh' : 'en';
+        // Save user's explicit choice
+        localStorage.setItem('language', newLang);
         updateLanguage(newLang);
       });
     }
