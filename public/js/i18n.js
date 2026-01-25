@@ -104,27 +104,30 @@ function updateLanguage(lang) {
 
 // Initialize language function
 function initLanguage() {
-  // Check if this is the first time or if we should reset to English
-  // For now, default to English - only apply Chinese if user explicitly chooses it
+  // Default to English - always start with English
+  // Only apply Chinese if user explicitly toggles in this session
   const stored = localStorage.getItem('language');
-  const currentLang = stored === 'zh' ? 'zh' : 'en';
   
-  // Only apply language change if user has explicitly chosen Chinese
-  // Otherwise, keep the default English from HTML
-  if (currentLang === 'zh') {
-    updateLanguage('zh');
-  } else {
-    // Ensure English is set and update button display
-    localStorage.setItem('language', 'en');
-    const langDisplay = document.getElementById('lang-display');
-    const langDisplayMobile = document.getElementById('lang-display-mobile');
-    if (langDisplay) {
-      langDisplay.textContent = '中文';
-    }
-    if (langDisplayMobile) {
-      langDisplayMobile.textContent = '中文';
-    }
-    document.documentElement.lang = 'en';
+  // Always default to English on page load
+  // Keep the default English text from HTML, don't modify it
+  const langDisplay = document.getElementById('lang-display');
+  const langDisplayMobile = document.getElementById('lang-display-mobile');
+  if (langDisplay) {
+    langDisplay.textContent = '中文';
+  }
+  if (langDisplayMobile) {
+    langDisplayMobile.textContent = '中文';
+  }
+  document.documentElement.lang = 'en';
+  
+  // Only apply stored language if it was explicitly set to Chinese
+  // and user wants to keep it (we'll respect their choice after they toggle)
+  // For now, always start with English
+  if (stored === 'zh') {
+    // User previously chose Chinese, but we'll start with English
+    // They can toggle to Chinese if they want
+    // Uncomment the line below if you want to respect previous choice:
+    // updateLanguage('zh');
   }
   
   // Set up language toggle buttons
