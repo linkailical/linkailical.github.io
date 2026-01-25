@@ -1,7 +1,7 @@
 ---
 title: "截面法求体积详解"
 description: "通过切面包的例子理解截面法，详解椭圆区域四种截面类型的体积积分"
-pubDate: "Jan 14 2024"
+pubDate: "Jan 14 2026"
 badge: "微积分"
 tags: ["积分", "体积", "截面法"]
 lang: "zh"

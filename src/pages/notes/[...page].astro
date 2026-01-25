@@ -23,6 +23,20 @@ const { page } = Astro.props;
     <p data-i18n="notes-no-content-desc">There are no study notes yet. Please check back later!</p>
   </div>
 
+  <style is:inline>
+    /* Default: show English notes, hide Chinese notes */
+    .note-item[data-lang="zh"] { display: none; }
+  </style>
+  <script is:inline>
+    // Immediately apply stored language preference before page renders
+    (function() {
+      const lang = localStorage.getItem('language');
+      if (lang === 'zh') {
+        document.write('<style>.note-item[data-lang="en"]{display:none}.note-item[data-lang="zh"]{display:block}</style>');
+      }
+    })();
+  </script>
+
   <ul id="notes-list">
     {page.data.map((note) => (
       <div class="note-item" data-lang={note.data.lang || 'en'}>

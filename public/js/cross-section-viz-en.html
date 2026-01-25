@@ -1,0 +1,1372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cross-Section Method for Volume - Interactive Visualization</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .card h2 {
+            color: #333;
+            margin-bottom: 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        .control-group {
+            flex: 1;
+            min-width: 200px;
+        }
+        .control-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        select, input[type="range"] {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .canvas-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .canvas-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        .canvas-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .canvas-box h3 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        canvas {
+            display: block;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .info-box {
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .formula {
+            background: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Times New Roman', serif;
+            font-size: 18px;
+            text-align: center;
+            margin: 12px 0;
+            border-left: 4px solid #667eea;
+        }
+        .slider-value {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 12px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+
+        /* 知识点样式 */
+        .knowledge-section {
+            margin-bottom: 24px;
+        }
+        .knowledge-section h3 {
+            color: #667eea;
+            font-size: 18px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px dashed #e0e0e0;
+        }
+        .knowledge-box {
+            background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+            border-radius: 12px;
+            padding: 16px 20px;
+            border-left: 4px solid #667eea;
+        }
+        .knowledge-box p {
+            margin: 8px 0;
+            line-height: 1.6;
+        }
+        .knowledge-box .formula {
+            background: white;
+            margin: 12px 0;
+        }
+        .knowledge-box .formula.small {
+            font-size: 16px;
+            padding: 10px;
+        }
+        .formula-explain {
+            font-size: 14px;
+            color: #666;
+            margin-top: 8px !important;
+        }
+        .formula-explain .highlight {
+            background: #fff3cd;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+            color: #856404;
+        }
+        .knowledge-box.two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 600px) {
+            .knowledge-box.two-column {
+                grid-template-columns: 1fr;
+            }
+        }
+        .knowledge-box .column {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+        }
+        .knowledge-box .note {
+            font-size: 13px;
+            color: #888;
+            margin-top: 8px;
+        }
+
+        /* 公式卡片 */
+        .formula-cards {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+        }
+        @media (max-width: 768px) {
+            .formula-cards {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        .formula-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        .formula-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(102,126,234,0.35);
+            border-color: #667eea;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f4ff 100%);
+        }
+        .formula-card:hover .shape-icon {
+            transform: scale(1.2);
+            color: #764ba2;
+        }
+        .formula-card:hover .shape-formula {
+            transform: scale(1.05);
+        }
+        .shape-icon {
+            font-size: 32px;
+            color: #667eea;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+        .shape-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .shape-formula {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 8px;
+            border-radius: 6px;
+            font-family: 'Times New Roman', serif;
+            font-size: 16px;
+            margin-bottom: 6px;
+            transition: all 0.3s ease;
+        }
+        .shape-note {
+            font-size: 12px;
+            color: #888;
+        }
+
+        /* 步骤框 */
+        .steps-box {
+            display: flex;
+            gap: 16px;
+        }
+        @media (max-width: 768px) {
+            .steps-box {
+                flex-direction: column;
+            }
+        }
+        .step {
+            flex: 1;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            background: white;
+            padding: 16px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(102,126,234,0.25);
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+        }
+        .step:hover .step-num {
+            transform: scale(1.15) rotate(10deg);
+            box-shadow: 0 4px 15px rgba(102,126,234,0.4);
+        }
+        .step-num {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            flex-shrink: 0;
+            transition: all 0.3s ease;
+        }
+        .step-content {
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        /* FAQ */
+        .faq-box {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 16px;
+        }
+        .faq-item {
+            margin-bottom: 16px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid #e9ecef;
+            padding: 12px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover {
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transform: translateX(5px);
+        }
+        .faq-item:last-child {
+            margin-bottom: 0;
+            border-bottom: none;
+        }
+        .faq-q {
+            font-weight: 600;
+            color: #e74c3c;
+            margin-bottom: 6px;
+            transition: color 0.3s ease;
+        }
+        .faq-item:hover .faq-q {
+            color: #c0392b;
+        }
+        .faq-a {
+            color: #555;
+            padding-left: 20px;
+            border-left: 3px solid #27ae60;
+            transition: all 0.3s ease;
+        }
+        .faq-item:hover .faq-a {
+            border-left-width: 5px;
+            padding-left: 22px;
+        }
+
+        /* 知识框动画 */
+        .knowledge-box {
+            transition: all 0.3s ease;
+        }
+        .knowledge-box:hover {
+            transform: translateX(5px);
+            box-shadow: 0 4px 20px rgba(102,126,234,0.15);
+        }
+        .knowledge-section h3 {
+            transition: all 0.3s ease;
+        }
+        .knowledge-section:hover h3 {
+            color: #764ba2;
+            padding-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Cross-Section Method for Volume - Interactive Visualization</h1>
+
+        <div class="card">
+            <h2>Control Panel</h2>
+            <div class="controls">
+                <div class="control-group">
+                    <label>Select Cross-Section Type:</label>
+                    <select id="sectionType">
+                        <option value="equilateral">a) Equilateral Triangle (perpendicular to x-axis)</option>
+                        <option value="semicircle">b) Semicircle (perpendicular to x-axis)</option>
+                        <option value="isosceles">c) Isosceles Right Triangle (perpendicular to y-axis)</option>
+                        <option value="square">d) Square (perpendicular to y-axis)</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Slice Position:<span class="slider-value" id="posValue">0</span></label>
+                    <input type="range" id="slicePos" min="-50" max="50" value="0">
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Visualization</h2>
+            <div class="canvas-container">
+                <div class="canvas-box">
+                    <h3>Top View (Ellipse Base)</h3>
+                    <canvas id="topView" width="400" height="300"></canvas>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #667eea;"></div>
+                            <span>Ellipse Boundary</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #e74c3c;"></div>
+                            <span>Slice Position</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="canvas-box">
+                    <h3>Cross-Section Shape</h3>
+                    <canvas id="sectionView" width="400" height="300"></canvas>
+                    <div class="legend">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #2ecc71;"></div>
+                            <span>Cross-Section</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>3D Solid Preview</h2>
+            <div style="text-align: center;">
+                <canvas id="view3d" width="600" height="450"></canvas>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>Calculation Process</h2>
+            <div class="info-box" id="calcInfo">
+                <!-- 动态填充 -->
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📚 Knowledge Points</h2>
+
+            <div class="knowledge-section">
+                <h3>一、什么是Cross-Section法？</h3>
+                <div class="knowledge-box">
+                    <p><strong>Core Idea:</strong>Slice the solid into infinitely thin pieces, know the area of each piece, add them all up to get the volume.</p>
+                    <div class="formula">V = ∫<sub>a</sub><sup>b</sup> A(x) dx</div>
+                    <p class="formula-explain">
+                        <span class="highlight">A(x)</span> = 在位置 x 处的Cross-Section面积<br>
+                        <span class="highlight">dx</span> = Thickness of each slice (infinitely thin)<br>
+                        <span class="highlight">∫</span> = 把所有薄片"加起来"
+                    </p>
+                </div>
+            </div>
+
+            <div class="knowledge-section">
+                <h3>II. The Ellipse Base</h3>
+                <div class="knowledge-box">
+                    <p><strong>Original Equation:</strong>4x² + 25y² = 100</p>
+                    <p><strong>Standard Form:</strong></p>
+                    <div class="formula">x²/25 + y²/4 = 1 → x²/5² + y²/2² = 1</div>
+                    <p class="formula-explain">
+                        • x direction: from <span class="highlight">-5</span> to <span class="highlight">+5</span>(major axis)<br>
+                        • y direction: from <span class="highlight">-2</span> to <span class="highlight">+2</span>(minor axis)
+                    </p>
+                </div>
+            </div>
+
+            <div class="knowledge-section">
+                <h3>III. Chord Length Formula (Most Important!)</h3>
+                <div class="knowledge-box two-column">
+                    <div class="column">
+                        <p><strong>Perpendicular to x-axis:</strong></p>
+                        <div class="formula small">Chord = (4/5)√(25-x²)</div>
+                        <p class="note">Integration range:x ∈ [-5, 5]</p>
+                    </div>
+                    <div class="column">
+                        <p><strong>Perpendicular to y-axis:</strong></p>
+                        <div class="formula small">Chord = 5√(4-y²)</div>
+                        <p class="note">Integration range:y ∈ [-2, 2]</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="knowledge-section">
+                <h3>IV. Essential Area Formulas</h3>
+                <div class="formula-cards">
+                    <div class="formula-card">
+                        <div class="shape-icon">△</div>
+                        <div class="shape-name">Equilateral Triangle</div>
+                        <div class="shape-formula">A = (√3/4)s²</div>
+                        <div class="shape-note">s = side</div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="shape-icon">◗</div>
+                        <div class="shape-name">Semicircle</div>
+                        <div class="shape-formula">A = (π/2)r²</div>
+                        <div class="shape-note">r = radius = diameter/2</div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="shape-icon">◺</div>
+                        <div class="shape-name">Isosceles Right Triangle</div>
+                        <div class="shape-formula">A = h²/4</div>
+                        <div class="shape-note">h = hypotenuse (base)</div>
+                    </div>
+                    <div class="formula-card">
+                        <div class="shape-icon">□</div>
+                        <div class="shape-name">Square</div>
+                        <div class="shape-formula">A = s²</div>
+                        <div class="shape-note">s = side</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="knowledge-section">
+                <h3>V. Three-Step Problem Solving</h3>
+                <div class="steps-box">
+                    <div class="step">
+                        <div class="step-num">1</div>
+                        <div class="step-content">
+                            <strong>找Cross-Section的"边"</strong><br>
+                            side = chord length of ellipse at that position
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">2</div>
+                        <div class="step-content">
+                            <strong>Substitute into area formula</strong><br>
+                            Calculate A(x) or A(y) using chord expression
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-num">3</div>
+                        <div class="step-content">
+                            <strong>Write the integral</strong><br>
+                            Determine integration variable and limits
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="knowledge-section">
+                <h3>VI. Common Questions</h3>
+                <div class="faq-box">
+                    <div class="faq-item">
+                        <div class="faq-q">Q: How to determine whether to integrate with x or y?</div>
+                        <div class="faq-a">A: 看题目说"垂直于哪个轴"。垂直于 x 轴 → 对 x 积分；垂直于 y 轴 → 对 y 积分。</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q">Q: How to determine integration limits?</div>
+                        <div class="faq-a">A: Check the range of the ellipse in that direction. x direction is [-5, 5], y direction is [-2, 2].</div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-q">Q: Isosceles Right Triangle的"斜边为底"是什么意思？</div>
+                        <div class="faq-a">A: The triangle is upside down, hypotenuse facing down as base, right angle vertex pointing up. Area = hypotenuse²/4.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 椭圆参数
+        const a = 5;  // x方向半轴
+        const b = 2;  // y方向半轴
+
+        // 获取元素
+        const sectionType = document.getElementById('sectionType');
+        const slicePos = document.getElementById('slicePos');
+        const posValue = document.getElementById('posValue');
+        const topCanvas = document.getElementById('topView');
+        const sectionCanvas = document.getElementById('sectionView');
+        const canvas3d = document.getElementById('view3d');
+        const calcInfo = document.getElementById('calcInfo');
+
+        const topCtx = topCanvas.getContext('2d');
+        const sectionCtx = sectionCanvas.getContext('2d');
+        const ctx3d = canvas3d.getContext('2d');
+
+        // 更新显示
+        function update() {
+            const type = sectionType.value;
+            const pos = slicePos.value / 10;  // 转换为实际坐标
+
+            // 根据类型调整滑块范围和显示
+            if (type === 'equilateral' || type === 'semicircle') {
+                slicePos.min = -50;
+                slicePos.max = 50;
+                posValue.textContent = `x = ${pos.toFixed(1)}`;
+            } else {
+                slicePos.min = -20;
+                slicePos.max = 20;
+                posValue.textContent = `y = ${pos.toFixed(1)}`;
+            }
+
+            drawTopView(type, pos);
+            drawSectionView(type, pos);
+            draw3DView(type);
+            updateCalcInfo(type, pos);
+        }
+
+        // 绘制俯视图
+        function drawTopView(type, pos) {
+            const ctx = topCtx;
+            const w = topCanvas.width;
+            const h = topCanvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+            const scale = 35;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // 绘制坐标轴
+            ctx.strokeStyle = '#ccc';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, cy);
+            ctx.lineTo(w, cy);
+            ctx.moveTo(cx, 0);
+            ctx.lineTo(cx, h);
+            ctx.stroke();
+
+            // 绘制刻度
+            ctx.fillStyle = '#999';
+            ctx.font = '12px Arial';
+            ctx.textAlign = 'center';
+            for (let i = -5; i <= 5; i++) {
+                if (i !== 0) {
+                    ctx.fillText(i, cx + i * scale, cy + 15);
+                }
+            }
+            ctx.textAlign = 'right';
+            for (let i = -2; i <= 2; i++) {
+                if (i !== 0) {
+                    ctx.fillText(i, cx - 5, cy - i * scale + 4);
+                }
+            }
+            ctx.fillText('x', w - 10, cy - 5);
+            ctx.fillText('y', cx + 15, 15);
+
+            // 绘制椭圆
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.ellipse(cx, cy, a * scale, b * scale, 0, 0, 2 * Math.PI);
+            ctx.stroke();
+
+            // 绘制切片线
+            ctx.strokeStyle = '#e74c3c';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+
+            if (type === 'equilateral' || type === 'semicircle') {
+                // 垂直于x轴的切片
+                const x = cx + pos * scale;
+                if (Math.abs(pos) <= a) {
+                    const yVal = b * Math.sqrt(1 - (pos * pos) / (a * a));
+                    ctx.moveTo(x, cy - yVal * scale);
+                    ctx.lineTo(x, cy + yVal * scale);
+                }
+            } else {
+                // 垂直于y轴的切片
+                const y = cy - pos * scale;
+                if (Math.abs(pos) <= b) {
+                    const xVal = a * Math.sqrt(1 - (pos * pos) / (b * b));
+                    ctx.moveTo(cx - xVal * scale, y);
+                    ctx.lineTo(cx + xVal * scale, y);
+                }
+            }
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // 标注弦长
+            ctx.fillStyle = '#e74c3c';
+            ctx.font = 'bold 14px Arial';
+            if (type === 'equilateral' || type === 'semicircle') {
+                if (Math.abs(pos) <= a) {
+                    const chord = 2 * b * Math.sqrt(1 - (pos * pos) / (a * a));
+                    ctx.fillText(`Chord = ${chord.toFixed(2)}`, cx + pos * scale + 10, cy - 50);
+                }
+            } else {
+                if (Math.abs(pos) <= b) {
+                    const chord = 2 * a * Math.sqrt(1 - (pos * pos) / (b * b));
+                    ctx.fillText(`Chord = ${chord.toFixed(2)}`, cx + 50, cy - pos * scale - 10);
+                }
+            }
+        }
+
+        // 绘制Cross-Section
+        function drawSectionView(type, pos) {
+            const ctx = sectionCtx;
+            const w = sectionCanvas.width;
+            const h = sectionCanvas.height;
+            const cx = w / 2;
+            const cy = h - 50;
+            const scale = 50;
+
+            ctx.clearRect(0, 0, w, h);
+
+            let chord = 0;
+            if (type === 'equilateral' || type === 'semicircle') {
+                if (Math.abs(pos) <= a) {
+                    chord = 2 * b * Math.sqrt(1 - (pos * pos) / (a * a));
+                }
+            } else {
+                if (Math.abs(pos) <= b) {
+                    chord = 2 * a * Math.sqrt(1 - (pos * pos) / (b * b));
+                }
+            }
+
+            if (chord <= 0) {
+                ctx.fillStyle = '#999';
+                ctx.font = '16px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('Slice Position超出椭圆范围', cx, h / 2);
+                return;
+            }
+
+            ctx.fillStyle = 'rgba(46, 204, 113, 0.3)';
+            ctx.strokeStyle = '#2ecc71';
+            ctx.lineWidth = 3;
+
+            const halfChord = chord * scale / 2;
+
+            ctx.beginPath();
+            switch (type) {
+                case 'equilateral':
+                    // Equilateral Triangle
+                    const triHeight = halfChord * Math.sqrt(3);
+                    ctx.moveTo(cx - halfChord, cy);
+                    ctx.lineTo(cx + halfChord, cy);
+                    ctx.lineTo(cx, cy - triHeight);
+                    ctx.closePath();
+                    break;
+
+                case 'semicircle':
+                    // Semicircle
+                    ctx.arc(cx, cy, halfChord, Math.PI, 0);
+                    ctx.closePath();
+                    break;
+
+                case 'isosceles':
+                    // Isosceles Right Triangle（斜边为底）
+                    const legLength = chord / Math.sqrt(2) * scale / 2;
+                    ctx.moveTo(cx - halfChord, cy);
+                    ctx.lineTo(cx + halfChord, cy);
+                    ctx.lineTo(cx + halfChord, cy - legLength * 2);
+                    ctx.closePath();
+                    break;
+
+                case 'square':
+                    // Square
+                    ctx.rect(cx - halfChord, cy - chord * scale, chord * scale, chord * scale);
+                    break;
+            }
+            ctx.fill();
+            ctx.stroke();
+
+            // 标注尺寸
+            ctx.fillStyle = '#333';
+            ctx.font = '14px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText(`底边/side = ${chord.toFixed(2)}`, cx, cy + 30);
+
+            // 计算面积
+            let area = 0;
+            let areaFormula = '';
+            switch (type) {
+                case 'equilateral':
+                    area = Math.sqrt(3) / 4 * chord * chord;
+                    areaFormula = `A = (√3/4)×${chord.toFixed(2)}² = ${area.toFixed(2)}`;
+                    break;
+                case 'semicircle':
+                    area = Math.PI / 2 * (chord / 2) * (chord / 2);
+                    areaFormula = `A = (π/2)×(${(chord/2).toFixed(2)})² = ${area.toFixed(2)}`;
+                    break;
+                case 'isosceles':
+                    area = chord * chord / 4;
+                    areaFormula = `A = ${chord.toFixed(2)}²/4 = ${area.toFixed(2)}`;
+                    break;
+                case 'square':
+                    area = chord * chord;
+                    areaFormula = `A = ${chord.toFixed(2)}² = ${area.toFixed(2)}`;
+                    break;
+            }
+            ctx.fillStyle = '#667eea';
+            ctx.font = 'bold 16px Arial';
+            ctx.fillText(areaFormula, cx, 30);
+        }
+
+        // 3D投影函数 - 等轴测投影
+        // 坐标系：x-y平面是椭圆底面，z是高度方向（向上）
+        function project3D(x, y, z, cx, cy, scale) {
+            // 等轴测投影：x向右前，y向右后，z向上
+            const angleX = Math.PI / 6;  // x轴角度 30度
+            const angleY = Math.PI / 6;  // y轴角度 30度
+
+            // 屏幕坐标计算
+            const screenX = cx + (x * Math.cos(angleX) + y * Math.cos(Math.PI - angleY)) * scale;
+            const screenY = cy - z * scale + (x * Math.sin(angleX) + y * Math.sin(Math.PI - angleY)) * scale * 0.5;
+
+            return { x: screenX, y: screenY };
+        }
+
+        // 绘制3D视图
+        function draw3DView(type) {
+            const ctx = ctx3d;
+            const w = canvas3d.width;
+            const h = canvas3d.height;
+
+            ctx.clearRect(0, 0, w, h);
+
+            // 绘制渐变背景
+            const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+            bgGrad.addColorStop(0, '#f8f9fa');
+            bgGrad.addColorStop(1, '#e9ecef');
+            ctx.fillStyle = bgGrad;
+            ctx.fillRect(0, 0, w, h);
+
+            const cx = w / 2;
+            const cy = h / 2 + 80;
+            const scale = 28;
+
+            // 标题
+            ctx.fillStyle = '#333';
+            ctx.font = 'bold 18px Arial';
+            ctx.textAlign = 'center';
+            const titles = {
+                'equilateral': 'Equilateral TriangleCross-Section立体 (垂直于x轴)',
+                'semicircle': 'SemicircleCross-Section立体 (垂直于x轴)',
+                'isosceles': 'Isosceles Right Triangle Cross-Section Solid (perp. to y-axis)',
+                'square': 'Square Cross-Section Solid (perp. to y-axis)'
+            };
+            ctx.fillText(titles[type], cx, 25);
+
+            // 绘制3D网格底面 (x-y平面)
+            ctx.strokeStyle = 'rgba(150, 150, 150, 0.2)';
+            ctx.lineWidth = 0.5;
+            for (let i = -6; i <= 6; i++) {
+                let p1 = project3D(i, -3, 0, cx, cy, scale);
+                let p2 = project3D(i, 3, 0, cx, cy, scale);
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            }
+            for (let j = -3; j <= 3; j++) {
+                let p1 = project3D(-6, j, 0, cx, cy, scale);
+                let p2 = project3D(6, j, 0, cx, cy, scale);
+                ctx.beginPath();
+                ctx.moveTo(p1.x, p1.y);
+                ctx.lineTo(p2.x, p2.y);
+                ctx.stroke();
+            }
+
+            // 绘制坐标轴
+            ctx.lineWidth = 2.5;
+
+            // X轴 (红色) - 椭圆长轴方向
+            let p1 = project3D(0, 0, 0, cx, cy, scale);
+            let p2 = project3D(6, 0, 0, cx, cy, scale);
+            ctx.strokeStyle = '#e74c3c';
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+            ctx.fillStyle = '#c0392b';
+            ctx.font = 'bold 14px Arial';
+            ctx.fillText('x', p2.x + 8, p2.y + 12);
+
+            // Y轴 (蓝色) - 椭圆短轴方向
+            p2 = project3D(0, 3, 0, cx, cy, scale);
+            ctx.strokeStyle = '#3498db';
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+            ctx.fillStyle = '#2980b9';
+            ctx.fillText('y', p2.x - 15, p2.y + 5);
+
+            // Z轴 (绿色) - 高度方向
+            p2 = project3D(0, 0, 6, cx, cy, scale);
+            ctx.strokeStyle = '#27ae60';
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.stroke();
+            ctx.fillStyle = '#1e8449';
+            ctx.fillText('z(高度)', p2.x + 5, p2.y - 5);
+
+            // 绘制椭圆底面 (x-y平面, z=0)
+            ctx.beginPath();
+            for (let t = 0; t <= 2 * Math.PI; t += 0.02) {
+                const ex = a * Math.cos(t);  // x方向: -5 to 5
+                const ey = b * Math.sin(t);  // y方向: -2 to 2
+                const p = project3D(ex, ey, 0, cx, cy, scale);
+                if (t === 0) {
+                    ctx.moveTo(p.x, p.y);
+                } else {
+                    ctx.lineTo(p.x, p.y);
+                }
+            }
+            ctx.closePath();
+
+            // 椭圆底面渐变
+            const ellipseGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 200);
+            ellipseGrad.addColorStop(0, 'rgba(102, 126, 234, 0.25)');
+            ellipseGrad.addColorStop(1, 'rgba(102, 126, 234, 0.05)');
+            ctx.fillStyle = ellipseGrad;
+            ctx.fill();
+            ctx.strokeStyle = '#667eea';
+            ctx.lineWidth = 2.5;
+            ctx.stroke();
+
+            // 根据类型绘制实心立体
+            if (type === 'equilateral' || type === 'semicircle') {
+                // 垂直于x轴：沿x方向切片，Cross-Section在y-z平面
+                drawSolid3D_perpX(ctx, type, cx, cy, scale);
+            } else {
+                // 垂直于y轴：沿y方向切片，Cross-Section在x-z平面
+                drawSolid3D_perpY(ctx, type, cx, cy, scale);
+            }
+        }
+
+        // 绘制垂直于X轴的立体（Equilateral Triangle/Semicircle）
+        // Cross-Section在 y-z 平面，沿 x 方向堆叠
+        function drawSolid3D_perpX(ctx, type, cx, cy, scale) {
+            const steps = 60;
+
+            // 在每个x位置，y的范围是 ±(2/5)√(25-x²)
+            // Cross-Section的底边（弦长）= (4/5)√(25-x²)
+
+            // 收集轮廓点
+            const topPoints = [];      // Cross-Section顶点轨迹
+            const frontPoints = [];    // y > 0 侧的底边
+            const backPoints = [];     // y < 0 侧的底边
+
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                const x = -a + t * 2 * a;
+                const yMax = (2/5) * Math.sqrt(Math.max(0, 25 - x * x));
+                const chord = 2 * yMax;  // 弦长
+
+                let topZ = 0;
+                if (type === 'equilateral') {
+                    topZ = chord * Math.sqrt(3) / 2;  // Equilateral Triangle高度
+                } else {
+                    topZ = chord / 2;  // Semicircle半径
+                }
+
+                topPoints.push(project3D(x, 0, topZ, cx, cy, scale));
+                frontPoints.push(project3D(x, yMax, 0, cx, cy, scale));
+                backPoints.push(project3D(x, -yMax, 0, cx, cy, scale));
+            }
+
+            // 绘制背面（y < 0 侧to顶部）
+            ctx.beginPath();
+            for (let i = 0; i <= steps; i++) {
+                const p = backPoints[i];
+                if (i === 0) ctx.moveTo(p.x, p.y);
+                else ctx.lineTo(p.x, p.y);
+            }
+            for (let i = steps; i >= 0; i--) {
+                const p = topPoints[i];
+                ctx.lineTo(p.x, p.y);
+            }
+            ctx.closePath();
+
+            const backGrad = ctx.createLinearGradient(cx - 100, cy, cx + 100, cy - 150);
+            backGrad.addColorStop(0, 'rgba(46, 204, 113, 0.35)');
+            backGrad.addColorStop(1, 'rgba(39, 174, 96, 0.55)');
+            ctx.fillStyle = backGrad;
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(39, 174, 96, 0.5)';
+            ctx.lineWidth = 1;
+            ctx.stroke();
+
+            // 绘制前面（y > 0 侧to顶部）
+            ctx.beginPath();
+            for (let i = 0; i <= steps; i++) {
+                const p = frontPoints[i];
+                if (i === 0) ctx.moveTo(p.x, p.y);
+                else ctx.lineTo(p.x, p.y);
+            }
+            for (let i = steps; i >= 0; i--) {
+                const p = topPoints[i];
+                ctx.lineTo(p.x, p.y);
+            }
+            ctx.closePath();
+
+            const frontGrad = ctx.createLinearGradient(cx - 100, cy + 50, cx + 100, cy - 150);
+            frontGrad.addColorStop(0, 'rgba(46, 204, 113, 0.5)');
+            frontGrad.addColorStop(1, 'rgba(88, 214, 141, 0.75)');
+            ctx.fillStyle = frontGrad;
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(39, 174, 96, 0.7)';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+
+            // 顶部轮廓线（脊线）
+            ctx.beginPath();
+            for (let i = 0; i <= steps; i++) {
+                const p = topPoints[i];
+                if (i === 0) ctx.moveTo(p.x, p.y);
+                else ctx.lineTo(p.x, p.y);
+            }
+            ctx.strokeStyle = '#27ae60';
+            ctx.lineWidth = 3;
+            ctx.stroke();
+
+            // 绘制几个代表性的Cross-Section
+            const slicePositions = [-3.5, 0, 3.5];
+            for (const x of slicePositions) {
+                if (Math.abs(x) > a) continue;
+                const yMax = (2/5) * Math.sqrt(Math.max(0, 25 - x * x));
+                const chord = 2 * yMax;
+                if (chord <= 0.1) continue;
+
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+
+                ctx.beginPath();
+                if (type === 'equilateral') {
+                    const triH = chord * Math.sqrt(3) / 2;
+                    const p1 = project3D(x, -yMax, 0, cx, cy, scale);
+                    const p2 = project3D(x, yMax, 0, cx, cy, scale);
+                    const p3 = project3D(x, 0, triH, cx, cy, scale);
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.lineTo(p3.x, p3.y);
+                    ctx.closePath();
+                } else {
+                    // Semicircle
+                    const r = chord / 2;
+                    const segments = 24;
+                    for (let i = 0; i <= segments; i++) {
+                        const angle = Math.PI * i / segments;
+                        const py = -r * Math.cos(angle);
+                        const pz = r * Math.sin(angle);
+                        const p = project3D(x, py, pz, cx, cy, scale);
+                        if (i === 0) ctx.moveTo(p.x, p.y);
+                        else ctx.lineTo(p.x, p.y);
+                    }
+                    ctx.closePath();
+                }
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // 添加高光
+            ctx.beginPath();
+            for (let i = 5; i <= steps * 0.6; i++) {
+                const t = i / steps;
+                const x = -a + t * 2 * a;
+                const yMax = (2/5) * Math.sqrt(Math.max(0, 25 - x * x));
+                const chord = 2 * yMax;
+                let topZ = type === 'equilateral' ? chord * Math.sqrt(3) / 2 * 0.7 : chord / 2 * 0.7;
+                const p = project3D(x, yMax * 0.3, topZ, cx, cy, scale);
+                if (i === 5) ctx.moveTo(p.x, p.y);
+                else ctx.lineTo(p.x, p.y);
+            }
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.45)';
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+            ctx.lineCap = 'butt';
+        }
+
+        // 绘制垂直于Y轴的立体（Isosceles Right Triangle/Square）
+        // Cross-Section在 x-z 平面，沿 y 方向堆叠
+        function drawSolid3D_perpY(ctx, type, cx, cy, scale) {
+            const steps = 60;
+
+            // 在每个y位置，x的范围是 ±(5/2)√(4-y²)
+            // Cross-Section的底边（弦长）= 5√(4-y²)
+
+            // 收集轮廓点
+            const topPoints = [];      // Cross-Section顶点轨迹
+            const leftPoints = [];     // x < 0 侧的底边
+            const rightPoints = [];    // x > 0 侧的底边
+
+            for (let i = 0; i <= steps; i++) {
+                const t = i / steps;
+                const y = -b + t * 2 * b;  // y从-2to2
+                const xMax = (5/2) * Math.sqrt(Math.max(0, 4 - y * y));
+                const chord = 2 * xMax;  // Chord = 5√(4-y²)
+
+                let topZ = 0;
+                if (type === 'isosceles') {
+                    topZ = chord / 2;  // Isosceles Right Triangle（斜边为底）高度 = 斜边/2
+                } else {
+                    topZ = chord;  // Square高度 = side
+                }
+
+                if (type === 'isosceles') {
+                    // Isosceles Right Triangle顶点在x=0处
+                    topPoints.push(project3D(0, y, topZ, cx, cy, scale));
+                } else {
+                    // Square顶面左右两边
+                    topPoints.push({
+                        left: project3D(-xMax, y, topZ, cx, cy, scale),
+                        right: project3D(xMax, y, topZ, cx, cy, scale)
+                    });
+                }
+
+                leftPoints.push(project3D(-xMax, y, 0, cx, cy, scale));
+                rightPoints.push(project3D(xMax, y, 0, cx, cy, scale));
+            }
+
+            if (type === 'isosceles') {
+                // Isosceles Right Triangle立体
+
+                // 绘制左斜面（x < 0 to顶点）
+                ctx.beginPath();
+                for (let i = 0; i <= steps; i++) {
+                    const p = leftPoints[i];
+                    if (i === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                }
+                for (let i = steps; i >= 0; i--) {
+                    const p = topPoints[i];
+                    ctx.lineTo(p.x, p.y);
+                }
+                ctx.closePath();
+
+                const leftGrad = ctx.createLinearGradient(cx - 150, cy + 50, cx, cy - 150);
+                leftGrad.addColorStop(0, 'rgba(52, 152, 219, 0.35)');
+                leftGrad.addColorStop(1, 'rgba(41, 128, 185, 0.6)');
+                ctx.fillStyle = leftGrad;
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(41, 128, 185, 0.5)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // 绘制右斜面（x > 0 to顶点）
+                ctx.beginPath();
+                for (let i = 0; i <= steps; i++) {
+                    const p = rightPoints[i];
+                    if (i === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                }
+                for (let i = steps; i >= 0; i--) {
+                    const p = topPoints[i];
+                    ctx.lineTo(p.x, p.y);
+                }
+                ctx.closePath();
+
+                const rightGrad = ctx.createLinearGradient(cx, cy + 50, cx + 150, cy - 150);
+                rightGrad.addColorStop(0, 'rgba(52, 152, 219, 0.5)');
+                rightGrad.addColorStop(1, 'rgba(93, 173, 226, 0.75)');
+                ctx.fillStyle = rightGrad;
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(41, 128, 185, 0.7)';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // 顶部脊线
+                ctx.beginPath();
+                for (let i = 0; i <= steps; i++) {
+                    const p = topPoints[i];
+                    if (i === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                }
+                ctx.strokeStyle = '#2980b9';
+                ctx.lineWidth = 3;
+                ctx.stroke();
+
+                // 绘制前端面 (y接近2处)
+                const frontY = b * 0.9;
+                const xMaxFront = (5/2) * Math.sqrt(Math.max(0, 4 - frontY * frontY));
+                const chordFront = 2 * xMaxFront;
+                if (chordFront > 0.5) {
+                    ctx.beginPath();
+                    const fp1 = project3D(-xMaxFront, frontY, 0, cx, cy, scale);
+                    const fp2 = project3D(xMaxFront, frontY, 0, cx, cy, scale);
+                    const fp3 = project3D(0, frontY, chordFront/2, cx, cy, scale);
+                    ctx.moveTo(fp1.x, fp1.y);
+                    ctx.lineTo(fp2.x, fp2.y);
+                    ctx.lineTo(fp3.x, fp3.y);
+                    ctx.closePath();
+                    ctx.fillStyle = 'rgba(93, 173, 226, 0.6)';
+                    ctx.fill();
+                    ctx.strokeStyle = '#2980b9';
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+
+            } else {
+                // Square立体
+                // SquareCross-Section
+
+                // 绘制顶面
+                ctx.beginPath();
+                for (let i = 0; i <= steps; i++) {
+                    const p = topPoints[i].left;
+                    if (i === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                }
+                for (let i = steps; i >= 0; i--) {
+                    const p = topPoints[i].right;
+                    ctx.lineTo(p.x, p.y);
+                }
+                ctx.closePath();
+
+                const topGrad = ctx.createLinearGradient(cx - 50, cy - 150, cx + 50, cy - 50);
+                topGrad.addColorStop(0, 'rgba(93, 173, 226, 0.9)');
+                topGrad.addColorStop(1, 'rgba(52, 152, 219, 0.7)');
+                ctx.fillStyle = topGrad;
+                ctx.fill();
+                ctx.strokeStyle = '#2980b9';
+                ctx.lineWidth = 2;
+                ctx.stroke();
+
+                // 绘制右侧面
+                ctx.beginPath();
+                for (let i = 0; i <= steps; i++) {
+                    const p = rightPoints[i];
+                    if (i === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                }
+                for (let i = steps; i >= 0; i--) {
+                    const p = topPoints[i].right;
+                    ctx.lineTo(p.x, p.y);
+                }
+                ctx.closePath();
+
+                const sideGrad = ctx.createLinearGradient(cx + 50, cy + 50, cx + 100, cy - 100);
+                sideGrad.addColorStop(0, 'rgba(52, 152, 219, 0.5)');
+                sideGrad.addColorStop(1, 'rgba(41, 128, 185, 0.7)');
+                ctx.fillStyle = sideGrad;
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(41, 128, 185, 0.8)';
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+
+                // 绘制左侧面（部分可见）
+                ctx.beginPath();
+                for (let i = 0; i <= steps; i++) {
+                    const p = leftPoints[i];
+                    if (i === 0) ctx.moveTo(p.x, p.y);
+                    else ctx.lineTo(p.x, p.y);
+                }
+                for (let i = steps; i >= 0; i--) {
+                    const p = topPoints[i].left;
+                    ctx.lineTo(p.x, p.y);
+                }
+                ctx.closePath();
+
+                const leftSideGrad = ctx.createLinearGradient(cx - 100, cy + 50, cx - 50, cy - 100);
+                leftSideGrad.addColorStop(0, 'rgba(41, 128, 185, 0.4)');
+                leftSideGrad.addColorStop(1, 'rgba(52, 152, 219, 0.5)');
+                ctx.fillStyle = leftSideGrad;
+                ctx.fill();
+                ctx.strokeStyle = 'rgba(41, 128, 185, 0.5)';
+                ctx.lineWidth = 1;
+                ctx.stroke();
+            }
+
+            // 绘制几个代表性的Cross-Section切片（沿y方向）
+            const slicePositions = [-1.2, 0, 1.2];
+            for (const yPos of slicePositions) {
+                if (Math.abs(yPos) > b) continue;
+                const xMax = (5/2) * Math.sqrt(Math.max(0, 4 - yPos * yPos));
+                const chord = 2 * xMax;
+                if (chord <= 0.1) continue;
+
+                ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([5, 5]);
+
+                ctx.beginPath();
+                if (type === 'isosceles') {
+                    const topZ = chord / 2;
+                    const p1 = project3D(-xMax, yPos, 0, cx, cy, scale);
+                    const p2 = project3D(xMax, yPos, 0, cx, cy, scale);
+                    const p3 = project3D(0, yPos, topZ, cx, cy, scale);
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.lineTo(p3.x, p3.y);
+                    ctx.closePath();
+                } else {
+                    const topZ = chord;
+                    const p1 = project3D(-xMax, yPos, 0, cx, cy, scale);
+                    const p2 = project3D(xMax, yPos, 0, cx, cy, scale);
+                    const p3 = project3D(xMax, yPos, topZ, cx, cy, scale);
+                    const p4 = project3D(-xMax, yPos, topZ, cx, cy, scale);
+                    ctx.moveTo(p1.x, p1.y);
+                    ctx.lineTo(p2.x, p2.y);
+                    ctx.lineTo(p3.x, p3.y);
+                    ctx.lineTo(p4.x, p4.y);
+                    ctx.closePath();
+                }
+                ctx.stroke();
+                ctx.setLineDash([]);
+            }
+
+            // 添加高光效果
+            ctx.beginPath();
+            const highlightSteps = steps * 0.5;
+            for (let i = 5; i <= highlightSteps; i++) {
+                const t = 0.2 + i / steps * 0.6;
+                const yPos = -b + t * 2 * b;
+                const xMax = (5/2) * Math.sqrt(Math.max(0, 4 - yPos * yPos));
+                const chord = 2 * xMax;
+                let topZ = type === 'isosceles' ? chord / 2 * 0.7 : chord * 0.8;
+                const xOffset = type === 'isosceles' ? xMax * 0.2 : xMax * 0.5;
+                const p = project3D(xOffset, yPos, topZ, cx, cy, scale);
+                if (i === 5) ctx.moveTo(p.x, p.y);
+                else ctx.lineTo(p.x, p.y);
+            }
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.4)';
+            ctx.lineWidth = 4;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+            ctx.lineCap = 'butt';
+        }
+
+        // 更新计算信息
+        function updateCalcInfo(type, pos) {
+            const info = {
+                'equilateral': {
+                    name: 'Equilateral TriangleCross-Section (垂直于x轴)',
+                    chord: `2y = (4/5)√(25-x²)`,
+                    area: `A(x) = (√3/4) × [(4/5)√(25-x²)]² = (4√3/25)(25-x²)`,
+                    integral: `V = ∫₋₅⁵ (4√3/25)(25-x²) dx`
+                },
+                'semicircle': {
+                    name: 'SemicircleCross-Section (垂直于x轴)',
+                    chord: `diameter = 2y = (4/5)√(25-x²),radius r = (2/5)√(25-x²)`,
+                    area: `A(x) = (π/2)r² = (π/2) × [(2/5)√(25-x²)]² = (2π/25)(25-x²)`,
+                    integral: `V = ∫₋₅⁵ (2π/25)(25-x²) dx`
+                },
+                'isosceles': {
+                    name: 'Isosceles Right TriangleCross-Section (垂直于y轴，斜边为底)',
+                    chord: `hypotenuse = 2x = 5√(4-y²)`,
+                    area: `A(y) = (斜边²)/4 = [5√(4-y²)]²/4 = (25/4)(4-y²)`,
+                    integral: `V = ∫₋₂² (25/4)(4-y²) dy`
+                },
+                'square': {
+                    name: 'SquareCross-Section (垂直于y轴)',
+                    chord: `side = 2x = 5√(4-y²)`,
+                    area: `A(y) = side² = [5√(4-y²)]² = 25(4-y²)`,
+                    integral: `V = ∫₋₂² 25(4-y²) dy`
+                }
+            };
+
+            const data = info[type];
+            calcInfo.innerHTML = `
+                <h3 style="color: #667eea; margin-bottom: 16px;">${data.name}</h3>
+                <p><strong>第一步：求弦长（Cross-Section的边）</strong></p>
+                <div class="formula">${data.chord}</div>
+                <p><strong>第二步：求Cross-Section面积 A</strong></p>
+                <div class="formula">${data.area}</div>
+                <p><strong>Step 3: Set up integral</strong></p>
+                <div class="formula" style="font-size: 22px; color: #e74c3c;">${data.integral}</div>
+            `;
+        }
+
+        // 事件监听
+        sectionType.addEventListener('change', () => {
+            slicePos.value = 0;
+            update();
+        });
+        slicePos.addEventListener('input', update);
+
+        // 初始化
+        update();
+    </script>
+</body>
+</html>

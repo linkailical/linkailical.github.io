@@ -1,7 +1,7 @@
 ---
 title: "垫圈法求旋转体体积详解"
 description: "通过甜甜圈的例子理解垫圈法，详解内外半径确定方法和积分计算步骤"
-pubDate: "Jan 15 2024"
+pubDate: "Jan 15 2026"
 badge: "微积分"
 tags: ["积分", "体积", "垫圈法", "旋转体"]
 lang: "zh"

@@ -1,7 +1,7 @@
 ---
 title: "Washer Method for Volume of Revolution"
 description: "Understanding the washer method through a donut analogy, with detailed explanations on determining inner and outer radii and integration steps"
-pubDate: "Jan 15 2024"
+pubDate: "Jan 15 2026"
 badge: "Calculus"
 tags: ["Integration", "Volume", "Washer Method", "Solid of Revolution"]
 lang: "en"
@@ -21,7 +21,7 @@ lang: "en"
 - View the washer cross-section shape
 - 3D preview of the solid of revolution
 
-<a href="/js/washer-method-viz.html" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px 0;">Open Interactive Visualization Tool</a>
+<a href="/js/washer-method-viz-en.html" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px 0;">Open Interactive Visualization Tool</a>
 
 ---
 

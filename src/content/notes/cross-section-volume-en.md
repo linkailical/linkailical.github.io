@@ -1,7 +1,7 @@
 ---
 title: "Cross-Section Method for Volume"
 description: "Understanding the cross-section method through a bread-slicing analogy, with detailed volume integrals for four types of cross-sections on an elliptical region"
-pubDate: "Jan 14 2024"
+pubDate: "Jan 14 2026"
 badge: "Calculus"
 tags: ["Integration", "Volume", "Cross-Section Method"]
 lang: "en"
@@ -21,7 +21,7 @@ lang: "en"
 - See the ellipse, cross-section shape, and 3D solid in real-time
 - Automatically display calculation formulas
 
-<a href="/js/cross-section-viz.html" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px 0;">Open Interactive Visualization Tool</a>
+<a href="/js/cross-section-viz-en.html" target="_blank" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; margin: 10px 0;">Open Interactive Visualization Tool</a>
 
 ---
 
