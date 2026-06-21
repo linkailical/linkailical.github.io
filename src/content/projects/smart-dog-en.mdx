@@ -1,6 +1,6 @@
 ---
 title: "Robotics 01: Voice Dog"
-description: "An iterative robotics implementation using Petoi Bittle X V2 for voice control, expressive actions, and build documentation."
+description: "A robotics design and code project using Petoi Bittle X V2 to explore voice control, expressive actions, and reproducible build documentation."
 pubDate: "Jun 22 2026"
 heroImage: "/itemPreview.webp"
 badge: "Robotics / Voice Interaction"
@@ -9,10 +9,10 @@ role: "Project Design, Research, and Build Planning"
 timeline: "2026 – Present"
 tags: ["Robotics", "Voice Control", "Embedded Systems", "Engineering Design"]
 links:
-  - label: "Robotics Collection"
-    url: "/robotics/"
-  - label: "Voice Dog Build Guide"
-    url: "/robotics/voice-dog/"
+  - label: "robot4Doctor Repository"
+    url: "https://github.com/linkailical/robot4Doctor"
+  - label: "Voice Dog Design Docs"
+    url: "https://github.com/linkailical/robot4Doctor/tree/main/docs/voice-dog"
   - label: "OpenCatESP32"
     url: "https://github.com/PetoiCamp/OpenCatEsp32-Quadruped-Robot"
 order: 3
@@ -21,11 +21,11 @@ lang: "en"
 
 ## Overview
 
-This is the first implementation in a broader robotics project family. The robotics collection will keep evolving with new builds and design records. Version one is **Voice Dog**: a robot dog that responds to spoken commands and communicates state through posture, head motion, audio feedback, and short movement sequences.
+This is the first implementation in a broader robotics project family. Robotics code, hardware notes, and design documents live in the GitHub repository **robot4Doctor**. The personal website stays focused on bilingual introduction and project storytelling. Version one is **Voice Dog**: a robot dog that responds to spoken commands and communicates state through posture, head motion, audio feedback, and short movement sequences.
 
 The first version does not redesign the control board. It uses Petoi Bittle X V2 and BiBoard V1 so the engineering focus stays on a reliable, reproducible interaction demo: voice input, action execution, expressive action design, troubleshooting, and documentation.
 
-This is not meant to live only as a standalone web tool. On the main portfolio site, the project page explains the design reasoning and engineering value, while `/robotics/voice-dog/` stores the executable build checklist, reference index, and iteration plan.
+This page explains the motivation, design reasoning, and engineering value. Build plans, firmware notes, hardware references, and future code belong in `linkailical/robot4Doctor`.
 
 ## Core Question
 
@@ -39,11 +39,11 @@ Version one focuses on three tests:
 
 ## What I Built
 
-1. Created a robotics collection page under `/robotics/`.
-2. Created the first implementation under `/robotics/voice-dog/`.
+1. Separated robotics code and design from the personal website into `robot4Doctor`.
+2. Created `docs/voice-dog/` for the Voice Dog design brief, build plan, and references.
 3. Organized the bill of materials, assembly workflow, firmware upload, joint calibration, voice command testing, and custom actions.
 4. Designed first-version expression behaviors: happy, listening, confused, excited, and sleepy.
-5. Kept the older `/smartdog/` path as a redirect while moving active maintenance into the robotics collection.
+5. Kept the personal website focused on bilingual project presentation with links to the robotics repository.
 
 ## Expression and Action Design
 
@@ -65,17 +65,16 @@ This lets the project validate the interaction chain first: voice -> robot state
 - **Firmware:** OpenCatESP32.
 - **Interaction:** Petoi Voice Command Module.
 - **Action design:** Built-in skills plus Skill Composer custom sequences.
-- **Documentation:** Static build guide, progress checklist, reference index, and acceptance criteria.
+- **Repository:** `linkailical/robot4Doctor` stores build plans, firmware notes, hardware references, and future code.
 
-## Site Integration
+## Site and Repository Split
 
-To make this a portfolio project rather than only a standalone system, the content is organized into three layers:
+This project is maintained in two places:
 
-1. **Homepage highlight:** The project appears as part of the site's Research & Leadership Highlights.
-2. **Portfolio project page:** This page explains the motivation, design choices, and engineering skills.
-3. **Build guide:** `/robotics/voice-dog/` keeps the practical checklist, risk notes, and official references.
+1. **Personal website:** bilingual introduction, motivation, design highlights, and portfolio narrative.
+2. **robot4Doctor repository:** robotics code, build plans, hardware notes, firmware notes, and design iterations.
 
-This structure supports future iteration. If the project later adds vision-based obstacle avoidance, OLED expressions, or Raspberry Pi control, those versions can be added under the robotics collection without rewriting the whole site.
+This keeps the website clean while allowing the robotics repository to evolve as the implementation grows.
 
 ## Version-One Acceptance Criteria
 
