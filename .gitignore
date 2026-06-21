@@ -20,3 +20,25 @@ pnpm-debug.log*
 
 # Astro
 .astro/
+
+# PDFs (do not commit)
+*.pdf
+
+# Book source — do not commit
+bhsc-book/
+
+# LaTeX source & build artifacts (do not commit)
+*.tex
+*.cls
+*.sty
+*.bib
+*.bbl
+*.blg
+*.aux
+*.toc
+*.out
+*.lof
+*.lot
+*.fls
+*.fdb_latexmk
+*.synctex.gz

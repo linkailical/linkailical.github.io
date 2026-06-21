@@ -1,0 +1,442 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AI Doctor — Symptom Checker</title>
+  <meta name="description" content="A bilingual (EN/中文), offline symptom-checker demo. Not a substitute for professional medical advice." />
+  <style>
+    :root {
+      --bg: #0f172a; --panel: #1e293b; --panel2: #273449;
+      --text: #e2e8f0; --muted: #94a3b8; --line: #334155;
+      --teal: #14b8a6; --teal-d: #0d9488;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: linear-gradient(160deg, #0b1220, #0f172a 40%); color: var(--text);
+      min-height: 100vh; line-height: 1.55;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 24px 18px 64px; }
+    header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+    .logo {
+      width: 44px; height: 44px; border-radius: 12px; flex: none;
+      background: linear-gradient(135deg, var(--teal), #2563eb);
+      display: grid; place-items: center; font-size: 24px;
+    }
+    h1 { font-size: 1.5rem; margin: 0; }
+    .tag { color: var(--muted); font-size: .9rem; }
+    .langbtn { margin-left: auto; }
+    .disclaimer {
+      background: rgba(239,68,68,.12); border: 1px solid rgba(239,68,68,.4);
+      color: #fecaca; border-radius: 10px; padding: 10px 14px; font-size: .85rem; margin: 16px 0 24px;
+    }
+    .card {
+      background: var(--panel); border: 1px solid var(--line);
+      border-radius: 16px; padding: 22px; margin-bottom: 18px;
+    }
+    .step-label { color: var(--teal); font-size: .8rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+    h2 { font-size: 1.15rem; margin: 6px 0 16px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .chip {
+      background: var(--panel2); border: 1px solid var(--line); color: var(--text);
+      border-radius: 12px; padding: 14px 12px; cursor: pointer; text-align: left;
+      font-size: .95rem; transition: .15s; display: flex; align-items: center; gap: 8px;
+    }
+    .chip:hover { border-color: var(--teal); transform: translateY(-1px); }
+    .chip .ico { font-size: 1.3rem; }
+    .q { margin-bottom: 18px; }
+    .q p { font-weight: 600; margin: 0 0 8px; }
+    .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+    .opt {
+      background: var(--panel2); border: 1px solid var(--line); color: var(--text);
+      border-radius: 999px; padding: 8px 14px; cursor: pointer; font-size: .9rem; transition: .15s;
+    }
+    .opt:hover { border-color: var(--teal); }
+    .opt.sel { background: var(--teal-d); border-color: var(--teal); color: #fff; }
+    .btn {
+      background: var(--teal); color: #04201c; border: none; border-radius: 10px;
+      padding: 11px 20px; font-weight: 700; font-size: .95rem; cursor: pointer; transition: .15s;
+    }
+    .btn:hover { background: var(--teal-d); color: #fff; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn.ghost { background: transparent; border: 1px solid var(--line); color: var(--muted); }
+    .btn.ghost:hover { border-color: var(--teal); color: var(--text); }
+    .btn.sm { padding: 7px 12px; font-size: .85rem; }
+    .row { display: flex; gap: 10px; align-items: center; margin-top: 8px; }
+    .triage { border-radius: 14px; padding: 18px 20px; margin-bottom: 18px; border: 1px solid; }
+    .triage h3 { margin: 0 0 4px; font-size: 1.25rem; }
+    .triage.green  { background: rgba(34,197,94,.12);  border-color: rgba(34,197,94,.5);  color: #bbf7d0; }
+    .triage.yellow { background: rgba(234,179,8,.12);   border-color: rgba(234,179,8,.5);  color: #fef08a; }
+    .triage.orange { background: rgba(249,115,22,.12);  border-color: rgba(249,115,22,.5); color: #fed7aa; }
+    .triage.red    { background: rgba(239,68,68,.14);   border-color: rgba(239,68,68,.6);  color: #fecaca; }
+    .section h4 { margin: 18px 0 6px; font-size: .8rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); }
+    .section ul { margin: 0; padding-left: 18px; }
+    .section li { margin: 3px 0; }
+    .gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+    .gallery figure { margin: 0; background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; }
+    .gallery img { width: 100%; height: 120px; object-fit: cover; display: block; }
+    .gallery figcaption { font-size: .78rem; padding: 6px 8px; color: var(--muted); }
+    .credit { font-size: .72rem; color: var(--muted); margin-top: 6px; }
+    footer { color: var(--muted); font-size: .8rem; text-align: center; margin-top: 28px; }
+    a { color: var(--teal); }
+    .hidden { display: none; }
+    kbd { background:#0b1220; border:1px solid var(--line); border-radius:4px; padding:0 5px; font-size:.8em; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">🩺</div>
+      <div>
+        <h1>AI Doctor</h1>
+        <div class="tag" id="subtitle"></div>
+      </div>
+      <div class="langbtn" style="display:flex; gap:8px;">
+        <button class="btn ghost sm" id="nav-checker"></button>
+        <button class="btn ghost sm" id="nav-dataset"></button>
+        <button class="btn ghost sm" id="lang-toggle">中文</button>
+      </div>
+    </header>
+
+    <div class="disclaimer" id="disclaimer-top"></div>
+
+    <!-- Dataset view -->
+    <div class="card hidden" id="dataset-view">
+      <div class="step-label">Dataset</div>
+      <h2 id="dataset-title"></h2>
+      <p class="tag" id="dataset-desc"></p>
+      <div id="dataset-body"></div>
+      <div class="section"><h4 id="dataset-related-h"></h4><ul id="dataset-related"></ul></div>
+      <div class="credit" id="dataset-extend"></div>
+    </div>
+
+    <div class="card" id="step1">
+      <div class="step-label">Step 1</div>
+      <h2 id="step1-title"></h2>
+      <div class="grid" id="symptom-grid"></div>
+    </div>
+
+    <div class="card hidden" id="step2">
+      <div class="step-label">Step 2</div>
+      <h2 id="step2-title"></h2>
+      <div id="questions"></div>
+      <div class="row">
+        <button class="btn" id="assess-btn" disabled></button>
+        <button class="btn ghost" id="back-btn"></button>
+      </div>
+    </div>
+
+    <div class="card hidden" id="step3">
+      <div class="step-label" id="assessment-label">Assessment</div>
+      <div id="result"></div>
+      <div class="row">
+        <button class="btn" id="restart-btn"></button>
+      </div>
+    </div>
+
+    <footer id="footer"></footer>
+  </div>
+
+  <script src="data/dataset.js"></script>
+  <script>
+    // ===== i18n strings =================================================
+    const UI = {
+      subtitle: { en: "Educational symptom checker · runs fully offline in your browser", zh: "教育用症状自查 · 完全在浏览器本地离线运行" },
+      disclaimer: { en: "⚠️ <b>Not medical advice.</b> This is a student-built educational demo using simple rules, not a real diagnosis. In an emergency, call your local emergency number immediately.",
+                    zh: "⚠️ <b>非医疗建议。</b>这是学生制作的教育演示，使用简单规则，并非真实诊断。如遇紧急情况，请立即拨打当地急救电话。" },
+      step1Title: { en: "What is your main symptom?", zh: "你的主要症状是什么？" },
+      step2About: { en: "About your", zh: "关于你的" },
+      qSeverity: { en: "How severe is it?", zh: "严重程度如何？" },
+      qDuration: { en: "How long have you had it?", zh: "已经持续多久了？" },
+      qFlags: { en: "Do you have any of these warning signs? (select all that apply)", zh: "是否有以下任一警示症状？（可多选）" },
+      none: { en: "None of these", zh: "以上都没有" },
+      assess: { en: "See assessment →", zh: "查看评估 →" },
+      back: { en: "Back", zh: "返回" },
+      restart: { en: "Start over", zh: "重新开始" },
+      assessment: { en: "Assessment", zh: "评估结果" },
+      lblSymptom: { en: "Symptom", zh: "症状" },
+      lblSeverity: { en: "Severity", zh: "严重程度" },
+      lblDuration: { en: "Duration", zh: "持续时间" },
+      secFlags: { en: "Warning signs you reported", zh: "你报告的警示症状" },
+      secCommon: { en: "What it could be (general, not a diagnosis)", zh: "可能原因（一般科普，非诊断）" },
+      secCare: { en: "General self-care", zh: "一般自我护理" },
+      secWhen: { en: "When to get help", zh: "何时就医" },
+      whenList: { en: ["Symptoms get worse or new warning signs appear",
+                       "You are worried, very young, elderly, pregnant, or have a chronic illness",
+                       "Any of the red-flag warning signs above develop"],
+                  zh: ["症状加重或出现新的警示表现", "你感到担忧，或为婴幼儿、老人、孕妇或有慢性病", "出现上述任何红旗警示症状"] },
+      resultDisc: { en: "This automated result is educational only and may be wrong. Always rely on a qualified healthcare professional for real medical decisions.",
+                    zh: "此自动结果仅供教育参考，可能有误。真正的医疗决定请始终依靠合格的医疗专业人员。" },
+      gallery: { en: "Reference photos (educational)", zh: "参考照片（科普）" },
+      navChecker: { en: "Checker", zh: "自查" },
+      navDataset: { en: "Dataset", zh: "数据集" },
+      datasetRelated: { en: "Related public datasets (import & annotate)", zh: "相关公开数据集（可导入并标注）" },
+      datasetExtend: { en: "Extensible: add an image to /assets and one entry in data/dataset.js — the gallery updates automatically.", zh: "可扩展：把图片放进 /assets，并在 data/dataset.js 加一条记录，画廊会自动更新。" },
+      footer: { en: "AI Doctor · offline rule-based demo · for learning & portfolio purposes only.", zh: "AI Doctor · 离线规则化演示 · 仅供学习与作品集用途。" },
+      sevOpts: [ { key: "mild", en: "Mild", zh: "轻" }, { key: "moderate", en: "Moderate", zh: "中" }, { key: "severe", en: "Severe", zh: "重" } ],
+      durOpts: [ { key: "short", en: "Less than 3 days", zh: "少于 3 天" }, { key: "med", en: "3–7 days", zh: "3–7 天" }, { key: "long", en: "More than 7 days", zh: "超过 7 天" } ],
+      triage: {
+        red:    { title: { en: "Seek emergency care now", zh: "立即就医（急诊）" },
+                  advice: { en: "Your answers include a warning sign that can be serious. Call your local emergency number or go to the nearest emergency department now.", zh: "你的回答包含可能严重的警示症状。请立即拨打当地急救电话或前往最近的急诊科。" } },
+        orange: { title: { en: "See a doctor urgently (within hours)", zh: "尽快就医（数小时内）" },
+                  advice: { en: "Your symptoms suggest you should be evaluated soon. Contact an urgent care clinic or your doctor today.", zh: "你的症状提示应尽快就诊。请于今日联系急诊/门诊或你的医生。" } },
+        yellow: { title: { en: "Book a routine doctor visit", zh: "预约常规就诊" },
+                  advice: { en: "This does not look like an emergency, but a clinician should review it in the next few days if it does not improve.", zh: "看起来并非急症，但若未好转，建议数日内由医生评估。" } },
+        green:  { title: { en: "Self-care at home", zh: "居家自我护理" },
+                  advice: { en: "This looks mild. Self-care is usually reasonable — but seek help if things get worse.", zh: "看起来较轻。通常可居家护理——若加重请及时就医。" } },
+      },
+    };
+
+    // ===== Knowledge base (bilingual) ===================================
+    // flag: { en, zh, emergency? }
+    const F = (en, zh, emergency) => ({ en, zh, emergency: !!emergency });
+    const L = (en, zh) => ({ en, zh });
+
+    const SYMPTOMS = {
+      fever: { icon: "🌡️", label: L("Fever", "发热"),
+        redFlags: [ F("Stiff neck", "颈项强直", true), F("Confusion or fainting", "意识模糊或晕厥", true), F("Difficulty breathing", "呼吸困难", true), F("Rash that does not fade when pressed", "按压不褪色的皮疹", true) ],
+        common: [ L("Viral infection (cold, flu)", "病毒感染（感冒、流感）"), L("Bacterial infection", "细菌感染"), L("Other inflammatory causes", "其他炎症性原因") ],
+        selfCare: [ L("Rest and drink plenty of fluids", "休息并多喝水"), L("Paracetamol/ibuprofen as directed on the label", "按说明使用对乙酰氨基酚/布洛芬"), L("Recheck your temperature regularly", "定时复测体温") ] },
+      cough: { icon: "😷", label: L("Cough", "咳嗽"),
+        redFlags: [ F("Difficulty breathing", "呼吸困难", true), F("Coughing up blood", "咳血", true), F("Chest tightness or pressure", "胸闷或压迫感", true) ],
+        common: [ L("Common cold / viral infection", "普通感冒/病毒感染"), L("Bronchitis", "支气管炎"), L("Allergies or asthma", "过敏或哮喘") ],
+        selfCare: [ L("Warm fluids and honey (if over 1 year old)", "温热饮品和蜂蜜（1 岁以上）"), L("Avoid smoke and irritants", "避免烟雾和刺激物"), L("Rest your voice and stay hydrated", "少说话、多补水") ] },
+      headache: { icon: "🤕", label: L("Headache", "头痛"),
+        redFlags: [ F("Worst-ever / sudden severe headache", "有生以来最剧烈/突发的剧烈头痛", true), F("Confusion or fainting", "意识模糊或晕厥", true), F("Weakness on one side / slurred speech", "单侧无力/言语不清", true), F("Stiff neck", "颈项强直", true) ],
+        common: [ L("Tension headache", "紧张性头痛"), L("Migraine", "偏头痛"), L("Dehydration or eye strain", "脱水或用眼疲劳") ],
+        selfCare: [ L("Rest in a quiet, dark room", "在安静、昏暗的房间休息"), L("Hydrate and eat something", "补水并适当进食"), L("Simple pain relief as directed", "按说明服用简单止痛药") ] },
+      "chest-pain": { icon: "❤️", label: L("Chest pain", "胸痛"),
+        redFlags: [ F("Chest tightness or pressure", "胸闷或压迫感", true), F("Difficulty breathing", "呼吸困难", true), F("Pain spreading to arm/jaw", "疼痛放射至手臂/下颌", true), F("Confusion or fainting", "意识模糊或晕厥", true) ],
+        common: [ L("Muscle strain", "肌肉拉伤"), L("Acid reflux / heartburn", "胃酸反流/烧心"), L("Anxiety", "焦虑") ],
+        selfCare: [ L("If clearly muscular and mild, rest and avoid strain", "若明确为轻度肌肉痛，休息并避免用力"), L("Do NOT ignore pressure-like pain — get checked", "切勿忽视压迫样疼痛——请就医检查") ] },
+      "abdominal-pain": { icon: "🤢", label: L("Abdominal pain", "腹痛"),
+        redFlags: [ F("Severe, worst-ever pain", "剧烈、前所未有的疼痛", true), F("Blood in vomit or stool", "呕血或便血", true), F("Rigid, very tender belly", "腹部僵硬、压痛明显", true), F("Confusion or fainting", "意识模糊或晕厥", true) ],
+        common: [ L("Indigestion / gas", "消化不良/胀气"), L("Gastroenteritis (stomach bug)", "肠胃炎"), L("Constipation", "便秘") ],
+        selfCare: [ L("Small sips of water, bland food", "小口喝水，清淡饮食"), L("Avoid heavy/greasy meals", "避免油腻大餐"), L("Monitor for worsening pain", "留意疼痛是否加重") ] },
+      "sore-throat": { icon: "🗣️", label: L("Sore throat", "咽喉痛"),
+        redFlags: [ F("Difficulty breathing", "呼吸困难", true), F("Difficulty swallowing saliva / drooling", "无法吞咽唾液/流口水", true), F("Muffled voice with high fever", "声音含糊伴高热", true) ],
+        common: [ L("Viral pharyngitis", "病毒性咽炎"), L("Strep throat (bacterial)", "链球菌性咽炎（细菌）"), L("Irritation / dryness", "刺激/干燥") ],
+        selfCare: [ L("Warm salt-water gargle", "温盐水漱口"), L("Warm fluids, throat lozenges", "温热饮品、含片"), L("Rest and hydrate", "休息并补水") ] },
+      breathing: { icon: "💨", label: L("Shortness of breath", "呼吸急促"),
+        redFlags: [ F("Difficulty breathing", "呼吸困难", true), F("Chest tightness or pressure", "胸闷或压迫感", true), F("Blue lips or face", "口唇或面色发绀", true), F("Confusion or fainting", "意识模糊或晕厥", true) ],
+        common: [ L("Asthma flare", "哮喘发作"), L("Respiratory infection", "呼吸道感染"), L("Anxiety / exertion", "焦虑/劳累") ],
+        selfCare: [ L("Sit upright and try to stay calm", "坐直并尽量保持冷静"), L("Use a prescribed inhaler if you have one", "如有处方吸入剂请使用"), L("Seek care quickly if it persists", "若持续请尽快就医") ] },
+      rash: { icon: "🌸", label: L("Skin rash", "皮疹"),
+        redFlags: [ F("Rash that does not fade when pressed", "按压不褪色的皮疹", true), F("Difficulty breathing", "呼吸困难", true), F("Swelling of face/lips/tongue", "面部/嘴唇/舌头肿胀", true) ],
+        common: [ L("Allergic reaction", "过敏反应"), L("Eczema / contact dermatitis", "湿疹/接触性皮炎"), L("Viral rash", "病毒疹") ],
+        selfCare: [ L("Avoid known triggers and scratching", "避免已知诱因和抓挠"), L("Cool compress, gentle moisturizer", "冷敷、温和保湿"), L("Antihistamine for mild itching if appropriate", "轻度瘙痒可适当用抗组胺药") ] },
+      dental: { icon: "🦷", label: L("Oral / teeth", "口腔/牙齿"),
+        redFlags: [ F("Facial swelling with fever", "面部肿胀伴发热", true), F("Difficulty breathing or swallowing", "呼吸或吞咽困难", true), F("Knocked-out adult tooth (just now)", "恒牙刚被磕掉", true), F("Uncontrolled bleeding", "出血不止", true) ],
+        common: [ L("Dental caries (cavities)", "龋齿（蛀牙）"), L("Gingivitis / gum inflammation", "牙龈炎"), L("Tooth sensitivity or a cracked tooth", "牙齿敏感或牙裂") ],
+        selfCare: [ L("Brush gently twice daily and floss", "每日轻刷牙两次并使用牙线"), L("Warm salt-water rinse for sore gums", "牙龈酸痛可温盐水漱口"), L("Avoid very hot/cold/sweet foods; see a dentist for ongoing pain", "避免过冷过热过甜；持续疼痛请看牙医") ],
+        images: [
+          { src: "assets/healthy-teeth.jpg", cap: L("Healthy teeth", "健康牙齿") },
+          { src: "assets/dental-caries.jpg", cap: L("Dental caries (cavities)", "龋齿（蛀牙）") },
+          { src: "assets/gingivitis.jpg", cap: L("Gingivitis (gum inflammation)", "牙龈炎（牙龈发炎）") },
+        ],
+        credit: 'Photos: "Full set upper teeth" by Roquex (CC0); "Dental Caries" by Ickyvickywiki (CC BY-SA 4.0); "Gingivită" by Geaninamiu (CC BY-SA 4.0) — via Wikimedia Commons.' },
+    };
+
+    // ===== State =========================================================
+    let lang = "en";
+    const state = { symptom: null, severity: null, duration: null, flagIdx: new Set(), hasResult: false };
+    const $ = (id) => document.getElementById(id);
+    const t = (o) => (o ? o[lang] : "");
+
+    // ===== Static UI text ===============================================
+    function paintStatic() {
+      $("subtitle").textContent = t(UI.subtitle);
+      $("disclaimer-top").innerHTML = t(UI.disclaimer);
+      $("step1-title").textContent = t(UI.step1Title);
+      $("assess-btn").textContent = t(UI.assess);
+      $("back-btn").textContent = t(UI.back);
+      $("restart-btn").textContent = t(UI.restart);
+      $("assessment-label").textContent = t(UI.assessment);
+      $("footer").textContent = t(UI.footer);
+      $("lang-toggle").textContent = lang === "en" ? "中文" : "EN";
+      $("nav-checker").textContent = t(UI.navChecker);
+      $("nav-dataset").textContent = t(UI.navDataset);
+      document.documentElement.lang = lang === "en" ? "en" : "zh";
+    }
+
+    // ===== Dataset view ==================================================
+    function renderDataset() {
+      const ds = window.DENTAL_DATASET;
+      if (!ds) return;
+      $("dataset-title").textContent = t(ds.name);
+      $("dataset-desc").textContent = t(ds.description);
+      $("dataset-related-h").textContent = t(UI.datasetRelated);
+      $("dataset-extend").textContent = t(UI.datasetExtend);
+
+      const body = $("dataset-body"); body.innerHTML = "";
+      ds.classes.forEach((cls) => {
+        const items = ds.items.filter((i) => i.classKey === cls.key);
+        if (!items.length) return;
+        const sec = document.createElement("div"); sec.className = "section";
+        const h = document.createElement("h4");
+        h.textContent = `${t(cls.label)} (${items.length})`;
+        sec.appendChild(h);
+        const g = document.createElement("div"); g.className = "gallery";
+        items.forEach((im) => {
+          const fig = document.createElement("figure");
+          fig.innerHTML =
+            `<img src="${im.file}" alt="${im.title}" loading="lazy">` +
+            `<figcaption><b>${im.title}</b><br>` +
+            `<a href="${im.url}" target="_blank" rel="noopener">${im.author} · ${im.license}</a></figcaption>`;
+          g.appendChild(fig);
+        });
+        sec.appendChild(g); body.appendChild(sec);
+      });
+
+      const rel = $("dataset-related"); rel.innerHTML = "";
+      (ds.related || []).forEach((r) => {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="${r.url}" target="_blank" rel="noopener">${r.name}</a> — ${t(r.note)}`;
+        rel.appendChild(li);
+      });
+    }
+
+    function showView(which) {
+      const dataset = which === "dataset";
+      $("dataset-view").classList.toggle("hidden", !dataset);
+      ["step1", "step2", "step3"].forEach((id) => $(id).classList.toggle("hidden", dataset));
+      if (dataset) { renderDataset(); }
+      else { // back to checker — show step1 fresh
+        $("step1").classList.remove("hidden");
+        $("step2").classList.add("hidden"); $("step3").classList.add("hidden");
+      }
+      $("nav-checker").classList.toggle("btn", !dataset);
+      $("nav-dataset").classList.toggle("btn", dataset);
+    }
+
+    // ===== Step 1 ========================================================
+    function renderSymptoms() {
+      const grid = $("symptom-grid");
+      grid.innerHTML = "";
+      Object.entries(SYMPTOMS).forEach(([key, s]) => {
+        const b = document.createElement("button");
+        b.className = "chip";
+        b.innerHTML = `<span class="ico">${s.icon}</span><span>${t(s.label)}</span>`;
+        b.onclick = () => selectSymptom(key);
+        grid.appendChild(b);
+      });
+    }
+    function selectSymptom(key) {
+      state.symptom = key; state.severity = null; state.duration = null;
+      state.flagIdx = new Set(); state.hasResult = false;
+      $("step1").classList.add("hidden");
+      $("step3").classList.add("hidden");
+      $("step2").classList.remove("hidden");
+      renderQuestions();
+      $("step2").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // ===== Step 2 ========================================================
+    function singleChoice(label, options, selectedKey, onPick) {
+      const wrap = document.createElement("div");
+      wrap.className = "q";
+      const p = document.createElement("p"); p.textContent = label; wrap.appendChild(p);
+      const opts = document.createElement("div"); opts.className = "opts";
+      options.forEach((o) => {
+        const el = document.createElement("button");
+        el.className = "opt" + (o.key === selectedKey ? " sel" : ""); el.textContent = o[lang];
+        el.onclick = () => { opts.querySelectorAll(".opt").forEach((x) => x.classList.remove("sel")); el.classList.add("sel"); onPick(o.key); checkReady(); };
+        opts.appendChild(el);
+      });
+      wrap.appendChild(opts); return wrap;
+    }
+    function flagsChoice(label, flags) {
+      const wrap = document.createElement("div"); wrap.className = "q";
+      const p = document.createElement("p"); p.textContent = label; wrap.appendChild(p);
+      const opts = document.createElement("div"); opts.className = "opts";
+      flags.forEach((f, i) => {
+        const el = document.createElement("button");
+        el.className = "opt" + (state.flagIdx.has(i) ? " sel" : ""); el.textContent = f[lang];
+        el.onclick = () => {
+          if (state.flagIdx.has(i)) state.flagIdx.delete(i); else state.flagIdx.add(i);
+          el.classList.toggle("sel"); none.classList.remove("sel"); checkReady();
+        };
+        opts.appendChild(el);
+      });
+      const none = document.createElement("button");
+      none.className = "opt" + (state.flagIdx.size === 0 ? " sel" : ""); none.textContent = t(UI.none);
+      none.onclick = () => { state.flagIdx = new Set(); opts.querySelectorAll(".opt").forEach((x) => x.classList.remove("sel")); none.classList.add("sel"); checkReady(); };
+      opts.appendChild(none); wrap.appendChild(opts); return wrap;
+    }
+    function renderQuestions() {
+      const s = SYMPTOMS[state.symptom];
+      $("step2-title").textContent = `${t(UI.step2About)} ${t(s.label)}`;
+      const c = $("questions"); c.innerHTML = "";
+      c.appendChild(singleChoice(t(UI.qSeverity), UI.sevOpts, state.severity, (k) => (state.severity = k)));
+      c.appendChild(singleChoice(t(UI.qDuration), UI.durOpts, state.duration, (k) => (state.duration = k)));
+      c.appendChild(flagsChoice(t(UI.qFlags), s.redFlags));
+      checkReady();
+    }
+    function checkReady() { $("assess-btn").disabled = !(state.severity && state.duration); }
+
+    // ===== Step 3: triage ===============================================
+    function triage() {
+      const s = SYMPTOMS[state.symptom];
+      const selFlags = [...state.flagIdx].map((i) => s.redFlags[i]);
+      const hasEmergency = selFlags.some((f) => f.emergency);
+      const hasAnyFlag = selFlags.length > 0;
+
+      let level;
+      if (hasEmergency) level = "red";
+      else if (hasAnyFlag || state.severity === "severe") level = "orange";
+      else if (state.duration === "long" || state.severity === "moderate") level = "yellow";
+      else level = "green";
+
+      const tr = UI.triage[level];
+      const sevLabel = UI.sevOpts.find((o) => o.key === state.severity)[lang];
+      const durLabel = UI.durOpts.find((o) => o.key === state.duration)[lang];
+
+      const flagsHtml = hasAnyFlag
+        ? `<div class="section"><h4>${t(UI.secFlags)}</h4><ul>${selFlags.map((f) => `<li>${f[lang]}</li>`).join("")}</ul></div>` : "";
+      const galleryHtml = s.images
+        ? `<div class="section"><h4>${t(UI.gallery)}</h4><div class="gallery">${
+            s.images.map((im) => `<figure><img src="${im.src}" alt="${t(im.cap)}" loading="lazy"><figcaption>${t(im.cap)}</figcaption></figure>`).join("")
+          }</div><div class="credit">${s.credit}</div></div>` : "";
+
+      $("result").innerHTML = `
+        <div class="triage ${level}"><h3>${t(tr.title)}</h3><div>${t(tr.advice)}</div></div>
+        <div style="color:var(--muted);font-size:.9rem;">
+          ${t(UI.lblSymptom)}: <b>${t(s.label)}</b> · ${t(UI.lblSeverity)}: <b>${sevLabel}</b> · ${t(UI.lblDuration)}: <b>${durLabel}</b>
+        </div>
+        ${flagsHtml}
+        <div class="section"><h4>${t(UI.secCommon)}</h4><ul>${s.common.map((x) => `<li>${t(x)}</li>`).join("")}</ul></div>
+        <div class="section"><h4>${t(UI.secCare)}</h4><ul>${s.selfCare.map((x) => `<li>${t(x)}</li>`).join("")}</ul></div>
+        ${galleryHtml}
+        <div class="section"><h4>${t(UI.secWhen)}</h4><ul>${UI.whenList[lang].map((x) => `<li>${x}</li>`).join("")}</ul></div>
+        <div class="disclaimer" style="margin-top:18px;">${t(UI.resultDisc)}</div>`;
+
+      state.hasResult = true;
+      $("step2").classList.add("hidden");
+      $("step3").classList.remove("hidden");
+      $("step3").scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    // ===== Wire up =======================================================
+    $("assess-btn").onclick = triage;
+    $("back-btn").onclick = () => { $("step2").classList.add("hidden"); $("step1").classList.remove("hidden"); $("step1").scrollIntoView({ behavior: "smooth", block: "start" }); };
+    $("restart-btn").onclick = () => {
+      state.symptom = null; state.severity = null; state.duration = null; state.flagIdx = new Set(); state.hasResult = false;
+      $("step3").classList.add("hidden"); $("step1").classList.remove("hidden"); $("step1").scrollIntoView({ behavior: "smooth", block: "start" });
+    };
+    $("nav-checker").onclick = () => showView("checker");
+    $("nav-dataset").onclick = () => showView("dataset");
+    $("lang-toggle").onclick = () => {
+      lang = lang === "en" ? "zh" : "en";
+      paintStatic(); renderSymptoms();
+      if (!$("step2").classList.contains("hidden")) renderQuestions();
+      if (state.hasResult && !$("step3").classList.contains("hidden")) triage();
+      if (!$("dataset-view").classList.contains("hidden")) renderDataset();
+    };
+
+    // ===== Init ==========================================================
+    paintStatic();
+    renderSymptoms();
+  </script>
+</body>
+</html>

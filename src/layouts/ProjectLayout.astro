@@ -1,0 +1,63 @@
+---
+import { type ProjectsSchema } from "../content/config";
+import BaseLayout from "./BaseLayout.astro";
+import { Image } from "astro:assets";
+
+const { title, description, heroImage, badge, status, role, timeline, tags = [], links = [] } = Astro.props as ProjectsSchema;
+---
+
+<BaseLayout title={title} description={description} image={heroImage} ogType="article">
+  <main class="md:flex md:justify-center">
+    <article class="prose prose-lg max-w-[750px] prose-img:mx-auto">
+      <!-- Breadcrumb Navigation -->
+      <nav class="text-sm breadcrumbs mb-4 not-prose">
+        <ul>
+          <li><a href="/" class="link link-hover" data-i18n="breadcrumb-home">Home</a></li>
+          <li><a href="/projects" class="link link-hover" data-i18n="menu-projects">Projects</a></li>
+        </ul>
+      </nav>
+
+      {heroImage && <Image width={750} height={422} format="webp" src={heroImage} alt={title} class="w-full mb-6 rounded-lg" />}
+
+      <h1 class="title my-2 text-4xl font-bold">{title}</h1>
+
+      <div class="not-prose flex flex-wrap items-center gap-2 my-3">
+        {badge && <div class="badge badge-secondary">{badge}</div>}
+        {status && <div class="badge badge-accent badge-outline">{status}</div>}
+        {tags && tags.map((tag) => <span class="badge badge-outline">{tag}</span>)}
+      </div>
+
+      {(role || timeline) && (
+        <div class="not-prose grid grid-cols-1 sm:grid-cols-2 gap-2 bg-base-200 rounded-lg p-4 my-4 text-sm">
+          {role && (
+            <div>
+              <span class="font-bold opacity-70">Role / 角色:</span> {role}
+            </div>
+          )}
+          {timeline && (
+            <div>
+              <span class="font-bold opacity-70">Timeline / 时间:</span> {timeline}
+            </div>
+          )}
+        </div>
+      )}
+
+      <div class="divider my-2"></div>
+
+      <slot />
+
+      {links && links.length > 0 && (
+        <div class="not-prose mt-8">
+          <div class="divider text-lg font-bold">Links</div>
+          <div class="flex flex-wrap gap-3">
+            {links.map((link) => (
+              <a href={link.url} target="_blank" rel="noopener" class="btn btn-sm btn-outline">
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
+    </article>
+  </main>
+</BaseLayout>

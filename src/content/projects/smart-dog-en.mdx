@@ -1,0 +1,95 @@
+---
+title: "Robotics 01: Voice Dog"
+description: "An iterative robotics implementation using Petoi Bittle X V2 for voice control, expressive actions, and build documentation."
+pubDate: "Jun 22 2026"
+heroImage: "/itemPreview.webp"
+badge: "Robotics / Voice Interaction"
+status: "Design and Build"
+role: "Project Design, Research, and Build Planning"
+timeline: "2026 – Present"
+tags: ["Robotics", "Voice Control", "Embedded Systems", "Engineering Design"]
+links:
+  - label: "Robotics Collection"
+    url: "/robotics/"
+  - label: "Voice Dog Build Guide"
+    url: "/robotics/voice-dog/"
+  - label: "OpenCatESP32"
+    url: "https://github.com/PetoiCamp/OpenCatEsp32-Quadruped-Robot"
+order: 3
+lang: "en"
+---
+
+## Overview
+
+This is the first implementation in a broader robotics project family. The robotics collection will keep evolving with new builds and design records. Version one is **Voice Dog**: a robot dog that responds to spoken commands and communicates state through posture, head motion, audio feedback, and short movement sequences.
+
+The first version does not redesign the control board. It uses Petoi Bittle X V2 and BiBoard V1 so the engineering focus stays on a reliable, reproducible interaction demo: voice input, action execution, expressive action design, troubleshooting, and documentation.
+
+This is not meant to live only as a standalone web tool. On the main portfolio site, the project page explains the design reasoning and engineering value, while `/robotics/voice-dog/` stores the executable build checklist, reference index, and iteration plan.
+
+## Core Question
+
+The question behind this project is: how can an entry-level quadruped robot move from "it can walk" to "it can interact"? A robot dog that only walks is mostly a mechanical exercise. A robot dog that hears a command and responds with understandable body language becomes an interactive robotics prototype.
+
+Version one focuses on three tests:
+
+1. **Voice reliability:** Can the robot recognize common commands in a normal indoor environment?
+2. **Repeatable motion:** Can it sit, stand, walk, greet, and run a short show sequence reliably?
+3. **Readable expression:** Can it express happy, listening, confused, excited, and sleepy without relying on a display?
+
+## What I Built
+
+1. Created a robotics collection page under `/robotics/`.
+2. Created the first implementation under `/robotics/voice-dog/`.
+3. Organized the bill of materials, assembly workflow, firmware upload, joint calibration, voice command testing, and custom actions.
+4. Designed first-version expression behaviors: happy, listening, confused, excited, and sleepy.
+5. Kept the older `/smartdog/` path as a redirect while moving active maintenance into the robotics collection.
+
+## Expression and Action Design
+
+Version one uses body language instead of screen-based facial expressions:
+
+| State | Voice Trigger | Behavior Design |
+| --- | --- | --- |
+| Happy | Happy | Quick head nod, small forward step, short audio response, then stable stand |
+| Listening | Listen | Head tilt left and right, then hold still as if waiting for the next command |
+| Confused | Confused | Small backward step, head shake, then sit |
+| Excited | Dance | Moonwalk or a short Skill Composer motion sequence |
+| Sleepy | Sleep | Sit or rest pose, then enter quiet mode |
+
+This lets the project validate the interaction chain first: voice -> robot state -> visible feedback. Later OLED/LED facial expressions or vision modules can build on the same command and action system.
+
+## Technical Direction
+
+- **Hardware:** Petoi Bittle X V2, BiBoard V1, P1S servos, battery, optional vision or ultrasonic modules.
+- **Firmware:** OpenCatESP32.
+- **Interaction:** Petoi Voice Command Module.
+- **Action design:** Built-in skills plus Skill Composer custom sequences.
+- **Documentation:** Static build guide, progress checklist, reference index, and acceptance criteria.
+
+## Site Integration
+
+To make this a portfolio project rather than only a standalone system, the content is organized into three layers:
+
+1. **Homepage highlight:** The project appears as part of the site's Research & Leadership Highlights.
+2. **Portfolio project page:** This page explains the motivation, design choices, and engineering skills.
+3. **Build guide:** `/robotics/voice-dog/` keeps the practical checklist, risk notes, and official references.
+
+This structure supports future iteration. If the project later adds vision-based obstacle avoidance, OLED expressions, or Raspberry Pi control, those versions can be added under the robotics collection without rewriting the whole site.
+
+## Version-One Acceptance Criteria
+
+- The robot boots reliably.
+- Joint calibration allows stable stand, sit, and walking actions.
+- At least five built-in voice commands work.
+- At least three custom voice commands work.
+- At least three expression behaviors can be demonstrated reliably.
+- The full demo sequence can run twice without manual reset.
+
+## Next Step
+
+Future iterations can add LED/OLED facial expressions, vision recognition, obstacle avoidance, or Raspberry Pi high-level control. This version focuses first on stable voice triggering and expressive movement before moving into more complex perception and autonomy.
+
+## Project Significance
+
+The value of the project is the full engineering process: research, platform selection, constraint analysis, hardware setup, firmware configuration, interaction design, testing, acceptance criteria, and public documentation. It is not just buying a robot kit; it turns existing hardware into an explainable, reproducible, and extensible robotics interaction project.

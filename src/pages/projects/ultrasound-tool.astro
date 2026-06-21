@@ -1,0 +1,723 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+---
+
+<BaseLayout
+  title="Ultrasound Annotation Tool | Linkaili"
+  description="A browser-based tool for annotating B-mode ultrasound images with bounding boxes and polygons, with zoom/pan and COCO export — built for learning and science outreach."
+  sideBarActiveItemID="projects"
+>
+  <nav class="text-sm breadcrumbs mb-4">
+    <ul>
+      <li><a href="/" class="link link-hover">Home</a></li>
+      <li><a href="/projects" class="link link-hover">Projects</a></li>
+      <li><a href="/projects/ultrasound-en" class="link link-hover">Ultrasound</a></li>
+    </ul>
+  </nav>
+
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold font-serif mb-2">B-Ultrasound Annotation Tool</h1>
+    <p class="opacity-80">
+      Load a B-mode ultrasound image, draw bounding boxes or organ-boundary polygons,
+      zoom &amp; pan to work precisely, and export labels as plain JSON or
+      <b>COCO</b> format. Everything runs locally in your browser — no image is uploaded.
+      (本地运行，图像不会上传)
+    </p>
+  </div>
+
+  <!-- Toolbar -->
+  <div class="flex flex-wrap items-center gap-2 mb-3 p-3 bg-base-200 rounded-lg" id="ust-toolbar">
+    <button class="btn btn-sm" data-tool="box" id="ust-tool-box">▭ Box</button>
+    <button class="btn btn-sm" data-tool="polygon" id="ust-tool-poly">⬡ Polygon</button>
+    <button class="btn btn-sm" data-tool="pan" id="ust-tool-pan">✋ Pan</button>
+
+    <div class="divider divider-horizontal mx-0"></div>
+
+    <select class="select select-bordered select-sm" id="ust-class"></select>
+
+    <div class="divider divider-horizontal mx-0"></div>
+
+    <button class="btn btn-sm btn-outline" id="ust-zoomout">−</button>
+    <span class="text-sm tabular-nums w-12 text-center" id="ust-zoom">100%</span>
+    <button class="btn btn-sm btn-outline" id="ust-zoomin">+</button>
+    <button class="btn btn-sm btn-outline" id="ust-fit">Fit</button>
+
+    <div class="divider divider-horizontal mx-0"></div>
+
+    <button class="btn btn-sm btn-outline" id="ust-load">Load Image</button>
+    <button class="btn btn-sm btn-outline" id="ust-sample">Sample</button>
+    <button class="btn btn-sm btn-outline" id="ust-undo">Undo</button>
+    <button class="btn btn-sm btn-outline" id="ust-clear">Clear</button>
+
+    <div class="divider divider-horizontal mx-0"></div>
+
+    <button class="btn btn-sm btn-primary" id="ust-export">Export JSON</button>
+    <button class="btn btn-sm btn-secondary" id="ust-coco">Export COCO</button>
+    <button class="btn btn-sm btn-secondary btn-outline" id="ust-yolo">Export YOLO</button>
+    <button class="btn btn-sm btn-outline" id="ust-import">Import JSON</button>
+
+    <input type="file" accept="image/*" id="ust-file" class="hidden" />
+    <input type="file" accept="application/json,.json" id="ust-jsonfile" class="hidden" />
+  </div>
+
+  <p class="text-sm opacity-70 mb-3" id="ust-hint"></p>
+
+  <div class="flex flex-col lg:flex-row gap-4">
+    <!-- Canvas viewport -->
+    <div class="flex-grow bg-base-300 rounded-lg p-2 overflow-hidden">
+      <canvas id="ust-canvas" class="bg-black rounded" style="touch-action:none;"></canvas>
+      <div class="flex flex-wrap gap-3 mt-2 text-xs" id="ust-legend"></div>
+    </div>
+
+    <!-- Annotation list -->
+    <div class="lg:w-72 flex-shrink-0">
+      <div class="text-sm font-bold mb-2">Annotations (<span id="ust-count">0</span>)</div>
+      <ul id="ust-list" class="space-y-1 text-sm"></ul>
+    </div>
+  </div>
+
+  <!-- Educational / science-outreach panel -->
+  <div class="collapse collapse-arrow bg-base-200 mt-6">
+    <input type="checkbox" checked />
+    <div class="collapse-title text-lg font-bold">📖 About this tool — 科普 & 学习</div>
+    <div class="collapse-content prose prose-sm max-w-none">
+      <p>
+        <b>What is a B-ultrasound (B超)?</b> An ultrasound probe sends high-frequency
+        sound waves into the body; tissues reflect those waves as <i>echoes</i>. The machine
+        measures how strong each echo is and how long it takes to return, then paints a
+        grayscale cross-section — bright = strong reflection, dark = fluid or weak reflection.
+        <br />
+        <span class="opacity-70">B超用高频声波探入身体，组织把声波反射成"回声"；机器按回声强弱画成灰度切面——亮=强反射，暗=液体/弱反射。</span>
+      </p>
+      <p>
+        <b>What is annotation, and why do it?</b> Labeling structures (drawing boxes or
+        outlines and naming them) turns a raw image into <i>training data</i> for AI models and
+        into a <i>teaching aid</i> for learning anatomy. Consistent labels are what let a model
+        learn "this shape is a kidney."
+        <br />
+        <span class="opacity-70">标注=框出结构并命名，把原始图像变成 AI 的训练数据，也是学习解剖的教具。</span>
+      </p>
+      <p><b>How to use / 用法：</b></p>
+      <ul>
+        <li><b>Box</b> — click &amp; drag a rectangle. 拖拽画框。</li>
+        <li><b>Polygon</b> — click points around a boundary; click the first point, double-click, or press <kbd>Enter</kbd> to close; <kbd>Esc</kbd> cancels. 连点画轮廓。</li>
+        <li><b>Zoom</b> — mouse wheel, or +/−/Fit buttons. <b>Pan</b> — Pan tool, hold <kbd>Space</kbd>, or right-drag. 滚轮缩放，空格/右键拖拽平移。</li>
+        <li><b>Export COCO / YOLO</b> — produces a standard <code>COCO</code> dataset file (bbox + segmentation) or <code>YOLO</code> label files (<code>image.txt</code> + <code>classes.txt</code>), the formats real ML pipelines use. 导出标准 COCO / YOLO 数据集格式。</li>
+      </ul>
+      <p><b>Keyboard shortcuts / 快捷键：</b></p>
+      <ul>
+        <li><kbd>B</kbd> Box · <kbd>P</kbd> Polygon · <kbd>V</kbd>/<kbd>H</kbd> Pan</li>
+        <li><kbd>1</kbd>–<kbd>6</kbd> pick class · <kbd>F</kbd> fit · <kbd>+</kbd>/<kbd>−</kbd> zoom</li>
+        <li><kbd>Del</kbd> delete selected · <kbd>Ctrl/⌘+Z</kbd> undo · <kbd>Esc</kbd> cancel · <kbd>Enter</kbd> close polygon</li>
+      </ul>
+      <p class="text-xs opacity-60">
+        Sample image: <i>Ultrasonography of a normal liver</i> by Mikael Häggström,
+        released under <b>CC0 1.0 (public domain)</b> via
+        <a href="https://commons.wikimedia.org/wiki/File:Ultrasonography_of_a_normal_liver.jpg" target="_blank" rel="noopener">Wikimedia Commons</a>.
+        示例图为公有版权（CC0）医学超声图。
+      </p>
+    </div>
+  </div>
+
+  <script is:inline>
+    (function () {
+      function initUltrasoundTool() {
+        const canvas = document.getElementById("ust-canvas");
+        if (!canvas || canvas.dataset.init === "1") return;
+        canvas.dataset.init = "1";
+
+        const ctx = canvas.getContext("2d");
+        const dpr = window.devicePixelRatio || 1;
+
+        const CLASSES = [
+          { name: "Liver / 肝", color: "#ef4444" },
+          { name: "Kidney / 肾", color: "#3b82f6" },
+          { name: "Cyst / 囊肿", color: "#22c55e" },
+          { name: "Nodule / 结节", color: "#f59e0b" },
+          { name: "Vessel / 血管", color: "#a855f7" },
+          { name: "Other / 其他", color: "#14b8a6" },
+        ];
+
+        const VP_H = 520; // viewport height in CSS px
+
+        const state = {
+          img: null,
+          imgW: 0,
+          imgH: 0,
+          baseScale: 1,
+          tool: "box",
+          classIndex: 0,
+          annotations: [],
+          nextId: 1,
+          selectedId: null,
+          // view transform: screen = image * view.scale + offset
+          view: { scale: 1, offsetX: 0, offsetY: 0 },
+          // interaction
+          dragging: false,
+          start: null,
+          temp: null,
+          polyPoints: [],
+          panning: false,
+          panLast: null,
+          spaceDown: false,
+          movedWhilePanning: false,
+        };
+
+        // --- UI refs ---
+        const classSel = document.getElementById("ust-class");
+        const listEl = document.getElementById("ust-list");
+        const legendEl = document.getElementById("ust-legend");
+        const countEl = document.getElementById("ust-count");
+        const hintEl = document.getElementById("ust-hint");
+        const zoomEl = document.getElementById("ust-zoom");
+        const fileInput = document.getElementById("ust-file");
+        const jsonInput = document.getElementById("ust-jsonfile");
+
+        CLASSES.forEach((c, i) => {
+          const opt = document.createElement("option");
+          opt.value = String(i);
+          opt.textContent = c.name;
+          classSel.appendChild(opt);
+          const chip = document.createElement("span");
+          chip.className = "inline-flex items-center gap-1";
+          chip.innerHTML =
+            '<span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:' +
+            c.color + '"></span>' + c.name;
+          legendEl.appendChild(chip);
+        });
+        classSel.addEventListener("change", () => {
+          state.classIndex = parseInt(classSel.value, 10);
+        });
+
+        // --- tools ---
+        function setTool(t) {
+          state.tool = t;
+          state.polyPoints = [];
+          state.dragging = false;
+          state.temp = null;
+          ["box", "poly", "pan"].forEach((k) => {
+            const id = k === "poly" ? "ust-tool-poly" : "ust-tool-" + k;
+            const active = (k === "poly" ? "polygon" : k) === t;
+            document.getElementById(id).classList.toggle("btn-primary", active);
+          });
+          updateCursor();
+          updateHint();
+          redraw();
+        }
+        document.getElementById("ust-tool-box").addEventListener("click", () => setTool("box"));
+        document.getElementById("ust-tool-poly").addEventListener("click", () => setTool("polygon"));
+        document.getElementById("ust-tool-pan").addEventListener("click", () => setTool("pan"));
+
+        function panActive() {
+          return state.tool === "pan" || state.spaceDown;
+        }
+        function updateCursor() {
+          canvas.style.cursor = panActive()
+            ? state.panning ? "grabbing" : "grab"
+            : "crosshair";
+        }
+        function updateHint() {
+          if (!state.img) {
+            hintEl.textContent = "Load an image (or click Sample) to begin. 载入图像后开始。";
+          } else if (panActive()) {
+            hintEl.textContent = "Pan mode: drag to move. Wheel to zoom. 拖拽平移，滚轮缩放。";
+          } else if (state.tool === "box") {
+            hintEl.textContent = "Box: click & drag. Wheel = zoom, Space/right-drag = pan.";
+          } else {
+            hintEl.textContent =
+              "Polygon: click to add points; first point / double-click / Enter to close; Esc cancels.";
+          }
+        }
+
+        // --- image loading & view ---
+        function vpWidth() {
+          return Math.max(280, Math.min(820, canvas.parentElement.clientWidth - 16));
+        }
+        function sizeCanvas() {
+          const w = vpWidth();
+          canvas.style.width = w + "px";
+          canvas.style.height = VP_H + "px";
+          canvas.width = Math.round(w * dpr);
+          canvas.height = Math.round(VP_H * dpr);
+        }
+        function fitView() {
+          if (!state.img) return;
+          const w = vpWidth();
+          state.baseScale = Math.min(w / state.imgW, VP_H / state.imgH);
+          state.view.scale = state.baseScale;
+          state.view.offsetX = (w - state.imgW * state.view.scale) / 2;
+          state.view.offsetY = (VP_H - state.imgH * state.view.scale) / 2;
+          updateZoomLabel();
+          redraw();
+        }
+        function loadImage(src) {
+          const im = new Image();
+          im.onload = () => {
+            state.img = im;
+            state.imgW = im.naturalWidth;
+            state.imgH = im.naturalHeight;
+            sizeCanvas();
+            fitView();
+            updateHint();
+          };
+          im.src = src;
+        }
+        function updateZoomLabel() {
+          const pct = state.baseScale ? Math.round((state.view.scale / state.baseScale) * 100) : 100;
+          zoomEl.textContent = pct + "%";
+        }
+
+        // --- coordinate helpers ---
+        function toImg(e) {
+          const r = canvas.getBoundingClientRect();
+          const x = (e.clientX - r.left - state.view.offsetX) / state.view.scale;
+          const y = (e.clientY - r.top - state.view.offsetY) / state.view.scale;
+          return {
+            x: Math.round(Math.max(0, Math.min(state.imgW, x))),
+            y: Math.round(Math.max(0, Math.min(state.imgH, y))),
+          };
+        }
+        const sx = (x) => x * state.view.scale + state.view.offsetX;
+        const sy = (y) => y * state.view.scale + state.view.offsetY;
+
+        // --- drawing ---
+        function redraw() {
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          const w = vpWidth();
+          ctx.clearRect(0, 0, w, VP_H);
+          if (state.img) {
+            ctx.drawImage(
+              state.img,
+              state.view.offsetX, state.view.offsetY,
+              state.imgW * state.view.scale, state.imgH * state.view.scale
+            );
+          }
+          state.annotations.forEach((a) => drawAnn(a, a.id === state.selectedId));
+
+          if (state.temp) {
+            const c = CLASSES[state.classIndex].color;
+            ctx.strokeStyle = c; ctx.lineWidth = 2; ctx.setLineDash([5, 4]);
+            const x = sx(Math.min(state.temp.x1, state.temp.x2));
+            const y = sy(Math.min(state.temp.y1, state.temp.y2));
+            ctx.strokeRect(x, y,
+              Math.abs((state.temp.x2 - state.temp.x1) * state.view.scale),
+              Math.abs((state.temp.y2 - state.temp.y1) * state.view.scale));
+            ctx.setLineDash([]);
+          }
+          if (state.polyPoints.length) {
+            const c = CLASSES[state.classIndex].color;
+            ctx.strokeStyle = c; ctx.fillStyle = c; ctx.lineWidth = 2;
+            ctx.beginPath();
+            state.polyPoints.forEach((p, i) => {
+              i === 0 ? ctx.moveTo(sx(p.x), sy(p.y)) : ctx.lineTo(sx(p.x), sy(p.y));
+            });
+            ctx.stroke();
+            state.polyPoints.forEach((p) => {
+              ctx.beginPath(); ctx.arc(sx(p.x), sy(p.y), 4, 0, Math.PI * 2); ctx.fill();
+            });
+          }
+        }
+        function drawAnn(a, selected) {
+          ctx.strokeStyle = a.color;
+          ctx.lineWidth = selected ? 3 : 2;
+          ctx.fillStyle = a.color + "22";
+          if (a.type === "box") {
+            const x = sx(a.points[0].x), y = sy(a.points[0].y);
+            const w = (a.points[1].x - a.points[0].x) * state.view.scale;
+            const h = (a.points[1].y - a.points[0].y) * state.view.scale;
+            ctx.fillRect(x, y, w, h);
+            ctx.strokeRect(x, y, w, h);
+            drawLabel(a.label, x, y);
+          } else {
+            ctx.beginPath();
+            a.points.forEach((p, i) => {
+              i === 0 ? ctx.moveTo(sx(p.x), sy(p.y)) : ctx.lineTo(sx(p.x), sy(p.y));
+            });
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+            drawLabel(a.label, sx(a.points[0].x), sy(a.points[0].y));
+          }
+        }
+        function drawLabel(text, x, y) {
+          ctx.font = "12px sans-serif";
+          const w = ctx.measureText(text).width + 8;
+          ctx.fillStyle = "rgba(0,0,0,0.7)";
+          ctx.fillRect(x, Math.max(0, y - 16), w, 16);
+          ctx.fillStyle = "#fff";
+          ctx.fillText(text, x + 4, Math.max(11, y - 4));
+        }
+
+        // --- zoom (wheel, around cursor) ---
+        function zoomAt(cssX, cssY, factor) {
+          if (!state.img) return;
+          const imgX = (cssX - state.view.offsetX) / state.view.scale;
+          const imgY = (cssY - state.view.offsetY) / state.view.scale;
+          const min = state.baseScale * 0.2, max = state.baseScale * 20;
+          let ns = Math.max(min, Math.min(max, state.view.scale * factor));
+          state.view.scale = ns;
+          state.view.offsetX = cssX - imgX * ns;
+          state.view.offsetY = cssY - imgY * ns;
+          updateZoomLabel();
+          redraw();
+        }
+        canvas.addEventListener("wheel", (e) => {
+          if (!state.img) return;
+          e.preventDefault();
+          const r = canvas.getBoundingClientRect();
+          zoomAt(e.clientX - r.left, e.clientY - r.top, e.deltaY < 0 ? 1.1 : 1 / 1.1);
+        }, { passive: false });
+        document.getElementById("ust-zoomin").addEventListener("click", () => zoomAt(vpWidth() / 2, VP_H / 2, 1.2));
+        document.getElementById("ust-zoomout").addEventListener("click", () => zoomAt(vpWidth() / 2, VP_H / 2, 1 / 1.2));
+        document.getElementById("ust-fit").addEventListener("click", fitView);
+
+        // --- mouse: pan + draw ---
+        canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+        canvas.addEventListener("mousedown", (e) => {
+          if (!state.img) return;
+          const usePan = panActive() || e.button === 2 || e.button === 1;
+          if (usePan) {
+            state.panning = true;
+            state.movedWhilePanning = false;
+            state.panLast = { x: e.clientX, y: e.clientY };
+            updateCursor();
+            return;
+          }
+          if (e.button !== 0) return;
+          if (state.tool === "box") {
+            state.dragging = true;
+            const p = toImg(e);
+            state.start = p;
+            state.temp = { x1: p.x, y1: p.y, x2: p.x, y2: p.y };
+          }
+        });
+        canvas.addEventListener("mousemove", (e) => {
+          if (state.panning) {
+            state.movedWhilePanning = true;
+            state.view.offsetX += e.clientX - state.panLast.x;
+            state.view.offsetY += e.clientY - state.panLast.y;
+            state.panLast = { x: e.clientX, y: e.clientY };
+            redraw();
+            return;
+          }
+          if (state.tool === "box" && state.dragging && state.temp) {
+            const p = toImg(e);
+            state.temp.x2 = p.x; state.temp.y2 = p.y;
+            redraw();
+          }
+        });
+        window.addEventListener("mouseup", (e) => {
+          if (state.panning) {
+            state.panning = false;
+            updateCursor();
+            return;
+          }
+          if (state.tool !== "box" || !state.dragging) return;
+          state.dragging = false;
+          const p = toImg(e);
+          const x1 = Math.min(state.start.x, p.x), y1 = Math.min(state.start.y, p.y);
+          const x2 = Math.max(state.start.x, p.x), y2 = Math.max(state.start.y, p.y);
+          state.temp = null;
+          if (x2 - x1 > 3 && y2 - y1 > 3) addAnnotation("box", [{ x: x1, y: y1 }, { x: x2, y: y2 }]);
+          redraw();
+        });
+
+        canvas.addEventListener("click", (e) => {
+          if (!state.img || state.tool !== "polygon" || panActive()) return;
+          if (state.movedWhilePanning) { state.movedWhilePanning = false; return; }
+          const p = toImg(e);
+          if (state.polyPoints.length >= 3) {
+            const f = state.polyPoints[0];
+            if (Math.abs(sx(f.x) - sx(p.x)) < 8 && Math.abs(sy(f.y) - sy(p.y)) < 8) {
+              finishPolygon();
+              return;
+            }
+          }
+          state.polyPoints.push(p);
+          redraw();
+        });
+        canvas.addEventListener("dblclick", () => {
+          if (state.tool === "polygon") finishPolygon();
+        });
+        function finishPolygon() {
+          if (state.polyPoints.length >= 3) addAnnotation("polygon", state.polyPoints.slice());
+          state.polyPoints = [];
+          redraw();
+        }
+
+        window.addEventListener("keydown", (e) => {
+          const t = e.target;
+          const typing = t && (t.tagName === "INPUT" || t.tagName === "SELECT" || t.tagName === "TEXTAREA");
+
+          if (e.code === "Space" && !state.spaceDown) {
+            state.spaceDown = true;
+            updateCursor(); updateHint();
+            if (!typing) e.preventDefault();
+          }
+          if (e.key === "Enter" && state.tool === "polygon") finishPolygon();
+          if (e.key === "Escape") {
+            state.polyPoints = []; state.temp = null; state.dragging = false;
+            redraw();
+          }
+
+          if (typing) return;
+
+          // Ctrl/Cmd+Z → undo
+          if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "z") {
+            e.preventDefault();
+            if (state.polyPoints.length) state.polyPoints.pop();
+            else { state.annotations.pop(); renderList(); }
+            redraw();
+            return;
+          }
+          if (e.ctrlKey || e.metaKey || e.altKey) return;
+
+          const k = e.key.toLowerCase();
+          if (k === "b") setTool("box");
+          else if (k === "p") setTool("polygon");
+          else if (k === "v" || k === "h") setTool("pan");
+          else if (k === "f") fitView();
+          else if (k === "+" || k === "=") zoomAt(vpWidth() / 2, VP_H / 2, 1.2);
+          else if (k === "-" || k === "_") zoomAt(vpWidth() / 2, VP_H / 2, 1 / 1.2);
+          else if (k === "delete" || k === "backspace") {
+            if (state.selectedId != null) { e.preventDefault(); removeAnnotation(state.selectedId); }
+          } else if (k >= "1" && k <= String(CLASSES.length)) {
+            state.classIndex = parseInt(k, 10) - 1;
+            classSel.value = String(state.classIndex);
+          }
+        });
+        window.addEventListener("keyup", (e) => {
+          if (e.code === "Space") { state.spaceDown = false; updateCursor(); updateHint(); }
+        });
+
+        // --- annotation CRUD ---
+        function addAnnotation(type, points) {
+          const c = CLASSES[state.classIndex];
+          state.annotations.push({
+            id: state.nextId++,
+            type, points,
+            label: c.name,
+            color: c.color,
+            classIndex: state.classIndex,
+          });
+          renderList();
+        }
+        function removeAnnotation(id) {
+          state.annotations = state.annotations.filter((a) => a.id !== id);
+          if (state.selectedId === id) state.selectedId = null;
+          renderList(); redraw();
+        }
+        function renderList() {
+          countEl.textContent = String(state.annotations.length);
+          listEl.innerHTML = "";
+          state.annotations.forEach((a) => {
+            const li = document.createElement("li");
+            li.className =
+              "flex items-center justify-between gap-2 p-2 rounded bg-base-200 hover:bg-base-300 cursor-pointer" +
+              (a.id === state.selectedId ? " ring-2 ring-primary" : "");
+            const left = document.createElement("span");
+            left.className = "flex items-center gap-2 truncate";
+            left.innerHTML =
+              '<span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:' +
+              a.color + '"></span><span class="truncate">#' + a.id + " " + a.type + " · " + a.label + "</span>";
+            const del = document.createElement("button");
+            del.className = "btn btn-xs btn-ghost text-error";
+            del.textContent = "✕";
+            del.addEventListener("click", (ev) => { ev.stopPropagation(); removeAnnotation(a.id); });
+            li.appendChild(left); li.appendChild(del);
+            li.addEventListener("click", () => {
+              state.selectedId = state.selectedId === a.id ? null : a.id;
+              renderList(); redraw();
+            });
+            listEl.appendChild(li);
+          });
+        }
+
+        // --- toolbar actions ---
+        document.getElementById("ust-load").addEventListener("click", () => fileInput.click());
+        fileInput.addEventListener("change", (e) => {
+          const f = e.target.files[0];
+          if (!f) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            state.annotations = []; state.selectedId = null; state.nextId = 1;
+            renderList(); loadImage(reader.result);
+          };
+          reader.readAsDataURL(f);
+          fileInput.value = "";
+        });
+        document.getElementById("ust-sample").addEventListener("click", () => {
+          state.annotations = []; state.selectedId = null; state.nextId = 1;
+          renderList();
+          loadImage("/images/projects/sample-ultrasound.jpg");
+        });
+        document.getElementById("ust-undo").addEventListener("click", () => {
+          if (state.polyPoints.length) state.polyPoints.pop();
+          else { state.annotations.pop(); renderList(); }
+          redraw();
+        });
+        document.getElementById("ust-clear").addEventListener("click", () => {
+          state.annotations = []; state.polyPoints = []; state.selectedId = null;
+          renderList(); redraw();
+        });
+
+        function download(filename, text) {
+          const blob = new Blob([text], { type: "application/json" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url; link.download = filename; link.click();
+          URL.revokeObjectURL(url);
+        }
+
+        // simple JSON export
+        document.getElementById("ust-export").addEventListener("click", () => {
+          if (!state.img) return alert("Load an image first.");
+          download("ultrasound-annotations.json", JSON.stringify({
+            image: { width: state.imgW, height: state.imgH },
+            classes: CLASSES.map((c) => c.name),
+            annotations: state.annotations.map((a) => ({
+              id: a.id, label: a.label, type: a.type, points: a.points,
+            })),
+          }, null, 2));
+        });
+
+        // COCO export
+        function polyArea(pts) {
+          let s = 0;
+          for (let i = 0; i < pts.length; i++) {
+            const j = (i + 1) % pts.length;
+            s += pts[i].x * pts[j].y - pts[j].x * pts[i].y;
+          }
+          return Math.abs(s) / 2;
+        }
+        document.getElementById("ust-coco").addEventListener("click", () => {
+          if (!state.img) return alert("Load an image first.");
+          const coco = {
+            info: { description: "B-ultrasound annotations", tool: "linkailical.github.io ultrasound-tool" },
+            images: [{ id: 1, file_name: "image.png", width: state.imgW, height: state.imgH }],
+            categories: CLASSES.map((c, i) => ({ id: i + 1, name: c.name, supercategory: "ultrasound" })),
+            annotations: state.annotations.map((a) => {
+              let bbox, area, seg;
+              if (a.type === "box") {
+                const x = a.points[0].x, y = a.points[0].y;
+                const w = a.points[1].x - x, h = a.points[1].y - y;
+                bbox = [x, y, w, h]; area = w * h;
+                seg = [[x, y, x + w, y, x + w, y + h, x, y + h]];
+              } else {
+                const xs = a.points.map((p) => p.x), ys = a.points.map((p) => p.y);
+                const minX = Math.min(...xs), minY = Math.min(...ys);
+                bbox = [minX, minY, Math.max(...xs) - minX, Math.max(...ys) - minY];
+                area = Math.round(polyArea(a.points));
+                seg = [a.points.flatMap((p) => [p.x, p.y])];
+              }
+              return {
+                id: a.id, image_id: 1,
+                category_id: (a.classIndex ?? 5) + 1,
+                bbox: bbox.map((n) => Math.round(n)),
+                area: Math.round(area),
+                segmentation: seg,
+                iscrowd: 0,
+              };
+            }),
+          };
+          download("ultrasound-coco.json", JSON.stringify(coco, null, 2));
+        });
+
+        // YOLO export (detection .txt with normalized cx cy w h, + classes.txt)
+        function downloadText(filename, text, mime) {
+          const blob = new Blob([text], { type: mime || "text/plain" });
+          const url = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = url; link.download = filename; link.click();
+          URL.revokeObjectURL(url);
+        }
+        document.getElementById("ust-yolo").addEventListener("click", () => {
+          if (!state.img) return alert("Load an image first.");
+          if (!state.annotations.length) return alert("No annotations to export.");
+          const W = state.imgW, H = state.imgH;
+          const lines = state.annotations.map((a) => {
+            let x, y, w, h;
+            if (a.type === "box") {
+              x = a.points[0].x; y = a.points[0].y;
+              w = a.points[1].x - x; h = a.points[1].y - y;
+            } else {
+              const xs = a.points.map((p) => p.x), ys = a.points.map((p) => p.y);
+              x = Math.min(...xs); y = Math.min(...ys);
+              w = Math.max(...xs) - x; h = Math.max(...ys) - y;
+            }
+            const cx = (x + w / 2) / W, cy = (y + h / 2) / H;
+            const f = (n) => n.toFixed(6);
+            return `${a.classIndex ?? 5} ${f(cx)} ${f(cy)} ${f(w / W)} ${f(h / H)}`;
+          });
+          downloadText("image.txt", lines.join("\n") + "\n");
+          // classes.txt maps class index -> name (YOLO convention)
+          downloadText("classes.txt", CLASSES.map((c) => c.name).join("\n") + "\n");
+        });
+
+        // import (both simple-JSON and COCO)
+        document.getElementById("ust-import").addEventListener("click", () => jsonInput.click());
+        jsonInput.addEventListener("change", (e) => {
+          const f = e.target.files[0];
+          if (!f) return;
+          const reader = new FileReader();
+          reader.onload = () => {
+            try {
+              const data = JSON.parse(reader.result);
+              let anns = [];
+              if (Array.isArray(data.annotations) && data.categories) {
+                // COCO
+                const catById = {};
+                data.categories.forEach((c) => { catById[c.id] = c.name; });
+                anns = data.annotations.map((a, i) => {
+                  const label = catById[a.category_id] || "Other / 其他";
+                  const ci = CLASSES.findIndex((c) => c.name === label);
+                  let type, points;
+                  if (a.segmentation && a.segmentation[0] && a.segmentation[0].length > 8) {
+                    type = "polygon";
+                    const flat = a.segmentation[0];
+                    points = [];
+                    for (let k = 0; k < flat.length; k += 2) points.push({ x: flat[k], y: flat[k + 1] });
+                  } else {
+                    type = "box";
+                    const [x, y, w, h] = a.bbox;
+                    points = [{ x, y }, { x: x + w, y: y + h }];
+                  }
+                  return { id: i + 1, type, points, label,
+                    color: (CLASSES[ci] || CLASSES[5]).color, classIndex: ci < 0 ? 5 : ci };
+                });
+              } else {
+                // simple JSON
+                anns = (data.annotations || []).map((a, i) => {
+                  const ci = CLASSES.findIndex((c) => c.name === a.label);
+                  return { id: i + 1, type: a.type, points: a.points, label: a.label || "Imported",
+                    color: (CLASSES[ci] || CLASSES[5]).color, classIndex: ci < 0 ? 5 : ci };
+                });
+              }
+              state.annotations = anns;
+              state.nextId = anns.length + 1;
+              state.selectedId = null;
+              renderList(); redraw();
+            } catch (err) { alert("Invalid JSON file."); }
+          };
+          reader.readAsText(f);
+          jsonInput.value = "";
+        });
+
+        window.addEventListener("resize", () => {
+          if (!state.img) { sizeCanvas(); return; }
+          sizeCanvas(); fitView();
+        });
+
+        // init
+        sizeCanvas();
+        setTool("box");
+        renderList();
+        updateHint();
+      }
+
+      document.addEventListener("DOMContentLoaded", initUltrasoundTool);
+      document.addEventListener("astro:page-load", initUltrasoundTool);
+      initUltrasoundTool();
+    })();
+  </script>
+</BaseLayout>

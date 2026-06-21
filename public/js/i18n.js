@@ -30,16 +30,18 @@ const translations = {
     home: {
       biographyLabel: 'Biography',
       name: 'Linkaili',
-      subtitle: 'Student-Athlete (Golf) & Academic Scholar | Class of 2027',
-      bio1: 'Linkaili is a dedicated high school student based in the United States, currently pursuing a rigorous academic curriculum alongside competitive varsity athletics. With a graduation target of 2027, she embodies the <strong>scholar-athlete</strong> ideal—demonstrating discipline on the golf course and intellectual curiosity in the classroom.',
-      bio2: 'Her academic interests lie at the intersection of <strong>Science and Social Impact</strong>, exploring how analytical thinking can solve community challenges. As a Varsity Golf team captain, she applies strategic planning and resilience learned from sport to her leadership roles.',
+      subtitle: 'Student-Athlete (Golf & Badminton) & Community Leader | Class of 2027',
+      bio1: 'Linkaili is a high school student at <strong>Portola High School</strong> in Irvine, California (Class of 2027). She is a three-year member of the girls golf team—<strong>back-to-back CIF Division II champions</strong> (2024–25 and 2025–26)—and the top girls\' player and treasurer of the badminton club she helped found.',
+      bio2: 'Beyond competition, she leads and serves: a kids\' buddy for children with special needs at Mariners Church, an assistant badminton coach for the Pureking community program, and a dragon dancer at Irvine Chinese School. She founded her school\'s <strong>Dragon &amp; Lion Dance Club</strong> to share Chinese culture—approved to launch next school year.',
       viewProfile: 'View Academic Profile',
       contactAdmissions: 'Contact for Admissions',
       researchTitle: 'Research & Leadership Highlights',
-      golfTitle: 'Varsity Golf Leadership',
-      golfDesc: 'Serving as Team Captain to foster a culture of excellence and sportsmanship. Analyzing performance metrics to improve team strategy.',
-      envTitle: 'Environmental Impact Study',
-      envDesc: 'Independent research investigating sustainable water management practices in local golf courses, bridging athletic interest with environmental science.',
+      golfTitle: 'CIF Division II Champion — Girls Golf',
+      golfDesc: 'Three-year member of Portola High School\'s girls golf team — back-to-back CIF Division II champions (2024–25 and 2025–26).',
+      envTitle: 'Leadership, Culture & Service',
+      envDesc: 'Founder of the school\'s Dragon & Lion Dance Club, badminton club treasurer, and a volunteer at Mariners Church, Pureking, and Irvine Chinese School.',
+      roboticsTitle: 'Robotics Engineering — Voice Dog',
+      roboticsDesc: 'A continuing robotics project family, starting with a Petoi Bittle X V2 voice dog that turns spoken commands into expressive actions.',
       essaysTitle: 'Selected Essays',
     },
   },
@@ -73,16 +75,18 @@ const translations = {
     home: {
       biographyLabel: '个人简介',
       name: 'Linkaili',
-      subtitle: '学生运动员（高尔夫）& 学术学者 | 2027届',
-      bio1: 'Linkaili 是一名在美国就读的高中生，目前在追求严谨学术课程的同时参与校队竞技体育。作为2027届毕业生，她践行着<strong>学者运动员</strong>的理想——在高尔夫球场上展现纪律性，在课堂上保持求知欲。',
-      bio2: '她的学术兴趣在于<strong>科学与社会影响</strong>的交汇点，探索如何用分析思维解决社区问题。作为校高尔夫球队队长，她将从运动中学到的战略规划和韧性应用于领导角色。',
+      subtitle: '学生运动员（高尔夫 & 羽毛球）& 社区领袖 | 2027届',
+      bio1: 'Linkaili 就读于加州尔湾的 <strong>Portola High School</strong>（2027届）。她是女子高尔夫球队的三年队员——球队<strong>连续两年蝉联 CIF 第二组别冠军</strong>（2024–25、2025–26）；她也是校羽毛球俱乐部的财务主管、并参与创建了校羽毛球队，目前是队内女子第一号选手。',
+      bio2: '在竞技之外，她积极服务社区：在 Mariners Church 担任特殊需要儿童的伙伴，在政府项目 Pureking 担任羽毛球助理教练，并在尔湾中文学校参与舞龙。她还发起创建了学校的<strong>舞龙舞狮俱乐部</strong>以传播中华文化，已获批将于下学年启动。',
       viewProfile: '查看学术履历',
       contactAdmissions: '招生咨询联系',
       researchTitle: '研究与领导力亮点',
-      golfTitle: '校队高尔夫领导力',
-      golfDesc: '担任队长，培养卓越与体育精神的文化。分析表现数据以改进团队策略。',
-      envTitle: '环境影响研究',
-      envDesc: '独立研究调查当地高尔夫球场的可持续水资源管理实践，将运动兴趣与环境科学相结合。',
+      golfTitle: 'CIF 第二组别冠军 — 女子高尔夫',
+      golfDesc: 'Portola High School 女子高尔夫球队三年队员——连续两年蝉联 CIF 第二组别冠军（2024–25、2025–26）。',
+      envTitle: '领导力、文化与服务',
+      envDesc: '学校舞龙舞狮俱乐部创始人、羽毛球俱乐部财务主管，并在 Mariners Church、Pureking 与尔湾中文学校参与志愿服务。',
+      roboticsTitle: '机器人工程 — 语音小狗',
+      roboticsDesc: '一个持续迭代的机器人项目分类，第一版用 Petoi Bittle X V2 把语音命令转化为表情化动作。',
       essaysTitle: '精选文章',
     },
   },
@@ -177,6 +181,8 @@ function updateLanguage(lang) {
     golfDesc: document.querySelector('[data-i18n="home-golf-desc"]'),
     envTitle: document.querySelector('[data-i18n="home-env-title"]'),
     envDesc: document.querySelector('[data-i18n="home-env-desc"]'),
+    roboticsTitle: document.querySelector('[data-i18n="home-robotics-title"]'),
+    roboticsDesc: document.querySelector('[data-i18n="home-robotics-desc"]'),
     essaysTitle: document.querySelector('[data-i18n="home-essays-title"]'),
   };
 
@@ -194,6 +200,8 @@ function updateLanguage(lang) {
     if (homeElements.golfDesc) homeElements.golfDesc.textContent = t.golfDesc;
     if (homeElements.envTitle) homeElements.envTitle.textContent = t.envTitle;
     if (homeElements.envDesc) homeElements.envDesc.textContent = t.envDesc;
+    if (homeElements.roboticsTitle) homeElements.roboticsTitle.textContent = t.roboticsTitle;
+    if (homeElements.roboticsDesc) homeElements.roboticsDesc.textContent = t.roboticsDesc;
     if (homeElements.essaysTitle) homeElements.essaysTitle.textContent = t.essaysTitle;
   }
 

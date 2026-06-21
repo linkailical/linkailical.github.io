@@ -1,0 +1,1184 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Robotics 01 — Voice Dog</title>
+  <meta name="description" content="A bilingual offline guide for building a voice-controlled Petoi Bittle X V2 robot dog with expressive actions." />
+  <style>
+    :root {
+      --bg: #f7f8fb;
+      --ink: #1f2937;
+      --muted: #64748b;
+      --panel: #ffffff;
+      --line: #d8dee9;
+      --line-strong: #b8c2d4;
+      --green: #13795b;
+      --cyan: #087ea4;
+      --amber: #b45309;
+      --red: #b42318;
+      --soft-green: #e8f6f0;
+      --soft-cyan: #e6f4f8;
+      --soft-amber: #fff3dc;
+      --soft-red: #fde8e7;
+      --shadow: 0 18px 45px rgba(31, 41, 55, .08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.55;
+    }
+
+    a { color: var(--cyan); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    .shell {
+      width: min(1180px, calc(100vw - 32px));
+      margin: 0 auto;
+      padding: 24px 0 56px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+    }
+
+    .mark {
+      width: 42px;
+      height: 42px;
+      border-radius: 8px;
+      background:
+        linear-gradient(135deg, rgba(8, 126, 164, .95), rgba(19, 121, 91, .95));
+      position: relative;
+      flex: none;
+      box-shadow: 0 10px 24px rgba(8, 126, 164, .22);
+    }
+
+    .mark::before,
+    .mark::after {
+      content: "";
+      position: absolute;
+      background: #fff;
+      border-radius: 2px;
+    }
+
+    .mark::before {
+      width: 23px;
+      height: 12px;
+      left: 9px;
+      top: 11px;
+    }
+
+    .mark::after {
+      width: 26px;
+      height: 4px;
+      left: 8px;
+      top: 27px;
+      box-shadow: 0 7px 0 rgba(255, 255, 255, .75);
+    }
+
+    h1, h2, h3 { line-height: 1.18; margin: 0; }
+    h1 { font-size: clamp(1.35rem, 2.5vw, 2.2rem); letter-spacing: 0; }
+    h2 { font-size: 1.25rem; }
+    h3 { font-size: 1rem; }
+
+    .subtitle {
+      color: var(--muted);
+      font-size: .95rem;
+      margin-top: 2px;
+      overflow-wrap: anywhere;
+    }
+
+    .toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    button,
+    .link-button {
+      border: 1px solid var(--line-strong);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 8px;
+      padding: 9px 12px;
+      font-weight: 700;
+      font-size: .9rem;
+      cursor: pointer;
+      min-height: 38px;
+    }
+
+    button:hover,
+    .link-button:hover {
+      border-color: var(--cyan);
+      text-decoration: none;
+    }
+
+    button.primary {
+      background: var(--green);
+      border-color: var(--green);
+      color: #fff;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 340px minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .panel.pad { padding: 18px; }
+
+    .dashboard {
+      position: sticky;
+      top: 16px;
+    }
+
+    .diagram {
+      height: 218px;
+      margin: 16px 0;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(8, 126, 164, .07), rgba(19, 121, 91, .07)),
+        radial-gradient(circle at 24% 16%, rgba(180, 83, 9, .16), transparent 28%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .dog-body,
+    .dog-head,
+    .dog-leg,
+    .dog-tail,
+    .dog-ear,
+    .dog-board,
+    .dog-voice {
+      position: absolute;
+      border: 2px solid #253044;
+      background: #fff;
+    }
+
+    .dog-body {
+      width: 178px;
+      height: 58px;
+      left: 72px;
+      top: 74px;
+      border-radius: 8px;
+    }
+
+    .dog-head {
+      width: 54px;
+      height: 44px;
+      left: 234px;
+      top: 64px;
+      border-radius: 8px;
+    }
+
+    .dog-ear {
+      width: 16px;
+      height: 18px;
+      left: 248px;
+      top: 50px;
+      border-radius: 4px;
+      transform: rotate(12deg);
+      background: var(--soft-amber);
+    }
+
+    .dog-tail {
+      width: 36px;
+      height: 9px;
+      left: 44px;
+      top: 82px;
+      transform: rotate(-22deg);
+      border-radius: 999px;
+      background: var(--soft-cyan);
+    }
+
+    .dog-leg {
+      width: 22px;
+      height: 66px;
+      top: 119px;
+      border-radius: 6px;
+      background: #f8fafc;
+    }
+
+    .leg-a { left: 86px; }
+    .leg-b { left: 128px; }
+    .leg-c { left: 195px; }
+    .leg-d { left: 235px; }
+
+    .dog-board {
+      width: 78px;
+      height: 34px;
+      left: 122px;
+      top: 84px;
+      border-color: var(--green);
+      background: var(--soft-green);
+      display: grid;
+      place-items: center;
+      font-size: .7rem;
+      font-weight: 800;
+      color: var(--green);
+    }
+
+    .dog-voice {
+      width: 34px;
+      height: 20px;
+      left: 246px;
+      top: 78px;
+      border-color: var(--cyan);
+      background: var(--soft-cyan);
+      border-radius: 999px;
+    }
+
+    .caption {
+      position: absolute;
+      left: 14px;
+      right: 14px;
+      bottom: 12px;
+      font-size: .78rem;
+      color: var(--muted);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .metrics {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      margin: 14px 0;
+    }
+
+    .metric {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      padding: 12px;
+      background: #fbfcfe;
+    }
+
+    .metric strong {
+      display: block;
+      font-size: 1.35rem;
+      color: var(--green);
+    }
+
+    .metric span {
+      color: var(--muted);
+      font-size: .82rem;
+    }
+
+    .progress-track {
+      height: 10px;
+      background: #e9edf4;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 10px 0 6px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--green), var(--cyan));
+      transition: width .18s ease;
+    }
+
+    .muted { color: var(--muted); }
+    .small { font-size: .86rem; }
+
+    .nav {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-top: 16px;
+    }
+
+    .nav a {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 10px 12px;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .nav a:hover { border-color: var(--cyan); }
+
+    .content {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    section {
+      scroll-margin-top: 18px;
+    }
+
+    .section-head {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .section-head p {
+      margin: 5px 0 0;
+      color: var(--muted);
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .item {
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fff;
+      padding: 14px;
+    }
+
+    .item h3 {
+      margin-bottom: 8px;
+    }
+
+    .item ul,
+    .item ol {
+      margin: 8px 0 0;
+      padding-left: 20px;
+    }
+
+    .item li { margin: 4px 0; }
+
+    .phase {
+      border-left: 5px solid var(--cyan);
+    }
+
+    .phase:nth-child(3n + 1) { border-left-color: var(--green); }
+    .phase:nth-child(3n + 2) { border-left-color: var(--amber); }
+
+    .phase-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin: 8px 0;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      min-height: 26px;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: var(--soft-cyan);
+      color: #0f5f75;
+      font-size: .78rem;
+      font-weight: 800;
+    }
+
+    .pill.green {
+      background: var(--soft-green);
+      color: var(--green);
+    }
+
+    .pill.amber {
+      background: var(--soft-amber);
+      color: var(--amber);
+    }
+
+    .checklist {
+      display: grid;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    label.check {
+      display: grid;
+      grid-template-columns: 22px minmax(0, 1fr);
+      gap: 9px;
+      align-items: start;
+      padding: 9px 10px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: #fbfcfe;
+      cursor: pointer;
+    }
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin: 2px 0 0;
+      accent-color: var(--green);
+    }
+
+    .resource-tools {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 0 0 14px;
+    }
+
+    .resource-tools input,
+    .resource-tools select {
+      min-height: 40px;
+      border: 1px solid var(--line-strong);
+      border-radius: 8px;
+      padding: 9px 10px;
+      background: #fff;
+      color: var(--ink);
+      font: inherit;
+    }
+
+    .resource-tools input {
+      flex: 1 1 240px;
+    }
+
+    .resource {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 12px;
+      align-items: start;
+    }
+
+    .resource + .resource {
+      margin-top: 10px;
+    }
+
+    .action-row {
+      padding: 12px 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .action-row:last-child {
+      border-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .danger {
+      border-color: rgba(180, 35, 24, .32);
+      background: var(--soft-red);
+    }
+
+    .danger h3 { color: var(--red); }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    table {
+      width: 100%;
+      min-width: 650px;
+      border-collapse: collapse;
+      background: #fff;
+    }
+
+    th, td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      background: #f1f5f9;
+      font-size: .8rem;
+      text-transform: uppercase;
+      letter-spacing: 0;
+      color: #475569;
+    }
+
+    tr:last-child td { border-bottom: 0; }
+
+    .footer {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: .84rem;
+      text-align: center;
+    }
+
+    @media (max-width: 920px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+
+      .dashboard {
+        position: static;
+      }
+
+      .grid.two,
+      .grid.three {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 560px) {
+      .shell {
+        width: min(100vw - 20px, 1180px);
+        padding-top: 14px;
+      }
+
+      .topbar,
+      .section-head {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .toolbar {
+        justify-content: stretch;
+      }
+
+      .toolbar button,
+      .toolbar .link-button {
+        flex: 1 1 auto;
+      }
+
+      .metrics {
+        grid-template-columns: 1fr;
+      }
+
+      .diagram {
+        height: 190px;
+      }
+
+      .dog-body { left: 42px; }
+      .dog-head { left: 204px; }
+      .dog-ear { left: 218px; }
+      .dog-tail { left: 14px; }
+      .dog-board { left: 92px; }
+      .dog-voice { left: 216px; }
+      .leg-a { left: 56px; }
+      .leg-b { left: 98px; }
+      .leg-c { left: 165px; }
+      .leg-d { left: 205px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell">
+    <div class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true"></div>
+        <div>
+          <h1 id="page-title">语音控制智能机器狗</h1>
+          <div class="subtitle" id="page-subtitle">Petoi Bittle X V2 + BiBoard V1 构建指南</div>
+        </div>
+      </div>
+      <div class="toolbar">
+        <button type="button" id="lang-toggle">English</button>
+        <button type="button" id="reset-progress">重置进度</button>
+        <a class="link-button" href="../">Robotics</a>
+        <a class="link-button" href="../../aidoctor/">AI Doctor</a>
+      </div>
+    </div>
+
+    <div class="layout">
+      <aside class="panel pad dashboard">
+        <h2 id="overview-title">构建面板</h2>
+        <p class="muted small" id="overview-copy">
+          按阶段完成组装、固件、校准、语音命令和自定义动作。
+        </p>
+
+        <div class="diagram" aria-label="Robot dog hardware diagram">
+          <div class="dog-tail"></div>
+          <div class="dog-body"></div>
+          <div class="dog-head"></div>
+          <div class="dog-ear"></div>
+          <div class="dog-leg leg-a"></div>
+          <div class="dog-leg leg-b"></div>
+          <div class="dog-leg leg-c"></div>
+          <div class="dog-leg leg-d"></div>
+          <div class="dog-board">BiBoard</div>
+          <div class="dog-voice"></div>
+          <div class="caption">
+            <span>ESP32 + servos</span>
+            <span>voice module</span>
+          </div>
+        </div>
+
+        <div class="metrics">
+          <div class="metric">
+            <strong id="phase-count">8</strong>
+            <span id="phase-label">构建阶段</span>
+          </div>
+          <div class="metric">
+            <strong id="check-count">0%</strong>
+            <span id="check-label">完成度</span>
+          </div>
+        </div>
+
+        <div class="progress-track" aria-label="Build progress">
+          <div class="progress-fill" id="progress-fill"></div>
+        </div>
+        <div class="muted small" id="progress-text">还没有勾选任务。</div>
+
+        <nav class="nav" aria-label="Page sections">
+          <a href="#bom"><span id="nav-bom">零件清单</span><span>01</span></a>
+          <a href="#phases"><span id="nav-phases">构建步骤</span><span>02</span></a>
+          <a href="#voice"><span id="nav-voice">语音控制</span><span>03</span></a>
+          <a href="#risks"><span id="nav-risks">风险排查</span><span>04</span></a>
+          <a href="#resources"><span id="nav-resources">参考资料</span><span>05</span></a>
+        </nav>
+      </aside>
+
+      <main class="content">
+        <section class="panel pad" id="goal">
+          <div class="section-head">
+            <div>
+              <h2 id="goal-title">项目目标</h2>
+              <p id="goal-copy">完成一只可以听懂语音命令并执行稳定动作的机器狗。</p>
+            </div>
+            <span class="pill green">Bittle X V2</span>
+          </div>
+          <div class="grid three">
+            <div class="item">
+              <h3 id="goal-a-title">最低演示</h3>
+              <p class="muted small" id="goal-a-copy">坐下、站立、行走、问候、组合展示。</p>
+            </div>
+            <div class="item">
+              <h3 id="goal-b-title">核心技术</h3>
+              <p class="muted small" id="goal-b-copy">语音命令转换为动作技能，BiBoard 控制舵机执行。</p>
+            </div>
+            <div class="item">
+              <h3 id="goal-c-title">交付成果</h3>
+              <p class="muted small" id="goal-c-copy">机器狗实物、演示视频、构建记录和资料链接。</p>
+            </div>
+          </div>
+        </section>
+
+        <section class="panel pad" id="bom">
+          <div class="section-head">
+            <div>
+              <h2 id="bom-title">零件清单</h2>
+              <p id="bom-copy">第一版建议直接使用官方套件，把精力放在语音动作演示。</p>
+            </div>
+          </div>
+          <div class="grid three" id="bom-grid"></div>
+        </section>
+
+        <section class="panel pad" id="phases">
+          <div class="section-head">
+            <div>
+              <h2 id="phases-title">构建步骤</h2>
+              <p id="phases-copy">每一阶段都有输出物和验收项，勾选后会自动保存到浏览器本地。</p>
+            </div>
+            <button type="button" class="primary" id="mark-critical">勾选关键项</button>
+          </div>
+          <div class="grid" id="phase-list"></div>
+        </section>
+
+        <section class="panel pad" id="voice">
+          <div class="section-head">
+            <div>
+              <h2 id="voice-title">语音控制与动作设计</h2>
+              <p id="voice-copy">先验证内置命令，再录制自定义命令，最后绑定到可展示动作。</p>
+            </div>
+          </div>
+          <div class="grid two">
+            <div class="item">
+              <h3 id="voice-command-title">常用语音命令</h3>
+              <div class="table-wrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th id="th-command">命令</th>
+                      <th id="th-purpose">作用</th>
+                    </tr>
+                  </thead>
+                  <tbody id="voice-table"></tbody>
+                </table>
+              </div>
+            </div>
+            <div class="item">
+              <h3 id="demo-action-title">建议演示动作</h3>
+              <div id="demo-actions"></div>
+            </div>
+          </div>
+          <div class="item" style="margin-top:12px;">
+            <h3 id="expression-title">表情动作设计</h3>
+            <p class="muted small" id="expression-copy">
+              第一版用身体姿态、头部动作、声音反馈和短动作序列来表达情绪；屏幕表情作为后续扩展。
+            </p>
+            <div class="grid two" id="expression-actions"></div>
+          </div>
+        </section>
+
+        <section class="panel pad" id="risks">
+          <div class="section-head">
+            <div>
+              <h2 id="risks-title">风险排查</h2>
+              <p id="risks-copy">先排除电源、校准、线缆和语音模式问题，再进入复杂动作。</p>
+            </div>
+          </div>
+          <div class="grid two" id="risk-grid"></div>
+        </section>
+
+        <section class="panel pad" id="acceptance">
+          <div class="section-head">
+            <div>
+              <h2 id="acceptance-title">验收标准</h2>
+              <p id="acceptance-copy">达到这些标准后，就可以录制作品集演示视频。</p>
+            </div>
+          </div>
+          <div class="checklist" id="acceptance-list"></div>
+        </section>
+
+        <section class="panel pad" id="resources">
+          <div class="section-head">
+            <div>
+              <h2 id="resources-title">参考资料</h2>
+              <p id="resources-copy">官方文档、GitHub 仓库、语音模块、校准和扩展资料集中在这里。</p>
+            </div>
+          </div>
+          <div class="resource-tools">
+            <input id="resource-search" type="search" placeholder="搜索资料..." />
+            <select id="resource-filter" aria-label="Resource category"></select>
+          </div>
+          <div id="resource-list"></div>
+        </section>
+
+        <div class="footer" id="footer">
+          Robotics 01: Voice Dog · static offline project under public/robotics/voice-dog
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="data/build-plan.js"></script>
+  <script>
+    const data = window.SMARTDOG_BUILD;
+    const storeKey = "robotics-voice-dog-progress-v1";
+    const langKey = "robotics-voice-dog-lang-v1";
+
+    const text = {
+      zh: {
+        title: data.project.zhTitle,
+        subtitle: "机器人分类第一个实现：语音触发表情和动作",
+        lang: "English",
+        reset: "重置进度",
+        overviewTitle: "构建面板",
+        overviewCopy: "按阶段完成组装、固件、校准、语音命令和自定义动作。",
+        phaseLabel: "构建阶段",
+        checkLabel: "完成度",
+        emptyProgress: "还没有勾选任务。",
+        progress: (done, total) => `已完成 ${done} / ${total} 项。`,
+        nav: ["零件清单", "构建步骤", "语音控制", "风险排查", "参考资料"],
+        goalTitle: "项目目标",
+        goalCopy: data.project.zhGoal,
+        goalA: ["最低演示", "坐下、站立、行走、问候、开心/倾听/困了等表情动作。"],
+        goalB: ["核心技术", "语音命令转换为动作技能，BiBoard 控制舵机执行表情化动作。"],
+        goalC: ["交付成果", "机器狗实物、演示视频、版本记录和资料链接。"],
+        bomTitle: "零件清单",
+        bomCopy: "第一版建议直接使用官方套件，把精力放在语音动作演示。",
+        phasesTitle: "构建步骤",
+        phasesCopy: "每一阶段都有输出物和验收项，勾选后会自动保存到浏览器本地。",
+        markCritical: "勾选关键项",
+        duration: "时间",
+        output: "输出",
+        steps: "操作步骤",
+        checks: "验收项",
+        voiceTitle: "语音控制与动作设计",
+        voiceCopy: "先验证内置命令，再录制自定义命令，最后绑定到可展示动作。",
+        voiceCommandTitle: "常用语音命令",
+        demoActionTitle: "建议演示动作",
+        expressionTitle: "表情动作设计",
+        expressionCopy: "第一版用身体姿态、头部动作、声音反馈和短动作序列来表达情绪；屏幕表情作为后续扩展。",
+        command: "命令",
+        purpose: "作用",
+        trigger: "触发词",
+        risksTitle: "风险排查",
+        risksCopy: "先排除电源、校准、线缆和语音模式问题，再进入复杂动作。",
+        risk: "问题",
+        mitigation: "处理",
+        acceptanceTitle: "验收标准",
+        acceptanceCopy: "达到这些标准后，就可以录制作品集演示视频。",
+        resourcesTitle: "参考资料",
+        resourcesCopy: "官方文档、GitHub 仓库、语音模块、校准和扩展资料集中在这里。",
+        search: "搜索资料...",
+        all: "全部类别",
+        open: "打开",
+        footer: "Robotics 01: Voice Dog · 位于 public/robotics/voice-dog 的离线静态项目",
+        resetConfirm: "确定要清空构建进度吗？"
+      },
+      en: {
+        title: data.project.title,
+        subtitle: "First robotics implementation: voice-triggered expressions and actions",
+        lang: "中文",
+        reset: "Reset progress",
+        overviewTitle: "Build Dashboard",
+        overviewCopy: "Move through assembly, firmware, calibration, voice commands, and custom actions.",
+        phaseLabel: "Build phases",
+        checkLabel: "Complete",
+        emptyProgress: "No tasks checked yet.",
+        progress: (done, total) => `${done} / ${total} tasks completed.`,
+        nav: ["Bill of Materials", "Build Steps", "Voice Control", "Troubleshooting", "References"],
+        goalTitle: "Project Goal",
+        goalCopy: data.project.goal,
+        goalA: ["Minimum demo", "Sit, stand, walk, greeting, and expressive behaviors such as happy, listening, and sleepy."],
+        goalB: ["Core idea", "Voice commands map to robot skills, then BiBoard drives expressive servo actions."],
+        goalC: ["Deliverables", "Working robot, demo video, version notes, and reference links."],
+        bomTitle: "Bill of Materials",
+        bomCopy: "Use the official kit for version one and focus engineering time on the voice-action demo.",
+        phasesTitle: "Build Steps",
+        phasesCopy: "Each phase has outputs and acceptance checks. Checked items are saved locally in the browser.",
+        markCritical: "Check critical items",
+        duration: "Duration",
+        output: "Output",
+        steps: "Steps",
+        checks: "Checks",
+        voiceTitle: "Voice Control and Action Design",
+        voiceCopy: "Validate built-in commands first, then record custom commands and bind them to visible actions.",
+        voiceCommandTitle: "Useful voice commands",
+        demoActionTitle: "Suggested demo actions",
+        expressionTitle: "Expression-action design",
+        expressionCopy: "Version one uses body posture, head motion, audio feedback, and short motion sequences for expression; screen-based faces are a later extension.",
+        command: "Command",
+        purpose: "Purpose",
+        trigger: "Trigger",
+        risksTitle: "Troubleshooting",
+        risksCopy: "Clear power, calibration, cable, and voice-mode issues before testing complex actions.",
+        risk: "Issue",
+        mitigation: "Fix",
+        acceptanceTitle: "Acceptance Criteria",
+        acceptanceCopy: "Once these pass, the project is ready for a portfolio demo video.",
+        resourcesTitle: "References",
+        resourcesCopy: "Official docs, GitHub source, voice module, calibration, and extension links.",
+        search: "Search references...",
+        all: "All categories",
+        open: "Open",
+        footer: "Robotics 01: Voice Dog · static offline project under public/robotics/voice-dog",
+        resetConfirm: "Clear all build progress?"
+      }
+    };
+
+    let lang = localStorage.getItem(langKey) || "zh";
+    let checked = loadChecked();
+
+    function loadChecked() {
+      try {
+        return JSON.parse(localStorage.getItem(storeKey) || "{}");
+      } catch {
+        return {};
+      }
+    }
+
+    function saveChecked() {
+      localStorage.setItem(storeKey, JSON.stringify(checked));
+    }
+
+    function t() {
+      return text[lang];
+    }
+
+    function setText(id, value) {
+      const node = document.getElementById(id);
+      if (node) node.textContent = value;
+    }
+
+    function checklistKey(scope, index) {
+      return `${scope}:${index}`;
+    }
+
+    function allCheckItems() {
+      const phaseItems = data.phases.flatMap((phase) =>
+        phase.checks.map((_, index) => checklistKey(phase.id, index))
+      );
+      const acceptanceItems = data.acceptance.map((_, index) => checklistKey("acceptance", index));
+      return phaseItems.concat(acceptanceItems);
+    }
+
+    function renderStaticText() {
+      document.documentElement.lang = lang === "zh" ? "zh-CN" : "en";
+      setText("page-title", t().title);
+      setText("page-subtitle", t().subtitle);
+      setText("lang-toggle", t().lang);
+      setText("reset-progress", t().reset);
+      setText("overview-title", t().overviewTitle);
+      setText("overview-copy", t().overviewCopy);
+      setText("phase-label", t().phaseLabel);
+      setText("check-label", t().checkLabel);
+      setText("nav-bom", t().nav[0]);
+      setText("nav-phases", t().nav[1]);
+      setText("nav-voice", t().nav[2]);
+      setText("nav-risks", t().nav[3]);
+      setText("nav-resources", t().nav[4]);
+      setText("goal-title", t().goalTitle);
+      setText("goal-copy", t().goalCopy);
+      setText("goal-a-title", t().goalA[0]);
+      setText("goal-a-copy", t().goalA[1]);
+      setText("goal-b-title", t().goalB[0]);
+      setText("goal-b-copy", t().goalB[1]);
+      setText("goal-c-title", t().goalC[0]);
+      setText("goal-c-copy", t().goalC[1]);
+      setText("bom-title", t().bomTitle);
+      setText("bom-copy", t().bomCopy);
+      setText("phases-title", t().phasesTitle);
+      setText("phases-copy", t().phasesCopy);
+      setText("mark-critical", t().markCritical);
+      setText("voice-title", t().voiceTitle);
+      setText("voice-copy", t().voiceCopy);
+      setText("voice-command-title", t().voiceCommandTitle);
+      setText("demo-action-title", t().demoActionTitle);
+      setText("expression-title", t().expressionTitle);
+      setText("expression-copy", t().expressionCopy);
+      setText("th-command", t().command);
+      setText("th-purpose", t().purpose);
+      setText("risks-title", t().risksTitle);
+      setText("risks-copy", t().risksCopy);
+      setText("acceptance-title", t().acceptanceTitle);
+      setText("acceptance-copy", t().acceptanceCopy);
+      setText("resources-title", t().resourcesTitle);
+      setText("resources-copy", t().resourcesCopy);
+      setText("footer", t().footer);
+      document.getElementById("resource-search").placeholder = t().search;
+    }
+
+    function renderBom() {
+      const grid = document.getElementById("bom-grid");
+      grid.innerHTML = "";
+      data.bom.forEach((group) => {
+        const item = document.createElement("article");
+        item.className = "item";
+        const title = lang === "zh" ? group.zhGroup : group.group;
+        item.innerHTML = `<h3>${title}</h3><ul>${group.items.map((entry) => `<li>${entry}</li>`).join("")}</ul>`;
+        grid.appendChild(item);
+      });
+    }
+
+    function renderPhases() {
+      const list = document.getElementById("phase-list");
+      list.innerHTML = "";
+      data.phases.forEach((phase) => {
+        const item = document.createElement("article");
+        item.className = "item phase";
+        const title = lang === "zh" ? phase.zhTitle : phase.title;
+        const output = lang === "zh" ? phase.zhOutput : phase.output;
+        const checks = phase.checks.map((check, index) => {
+          const key = checklistKey(phase.id, index);
+          const isChecked = checked[key] ? "checked" : "";
+          return `
+            <label class="check">
+              <input type="checkbox" data-key="${key}" ${isChecked} />
+              <span>${check}</span>
+            </label>
+          `;
+        }).join("");
+
+        item.innerHTML = `
+          <h3>${title}</h3>
+          <div class="phase-meta">
+            <span class="pill">${t().duration}: ${phase.duration}</span>
+            <span class="pill green">${t().output}: ${output}</span>
+          </div>
+          <h3 class="small">${t().steps}</h3>
+          <ol>${phase.steps.map((step) => `<li>${step}</li>`).join("")}</ol>
+          <h3 class="small" style="margin-top:12px;">${t().checks}</h3>
+          <div class="checklist">${checks}</div>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    function renderVoice() {
+      const table = document.getElementById("voice-table");
+      table.innerHTML = data.voiceCommands.map((row) => `
+        <tr>
+          <td><strong>${row.command}</strong></td>
+          <td>${lang === "zh" ? row.zhPurpose : row.purpose}</td>
+        </tr>
+      `).join("");
+
+      const actions = document.getElementById("demo-actions");
+      actions.innerHTML = data.demoActions.map((action) => `
+        <div class="action-row">
+          <h3>${action.name}</h3>
+          <div class="phase-meta"><span class="pill amber">${t().trigger}: ${action.trigger}</span></div>
+          <p class="muted small">${lang === "zh" ? action.zhIdea : action.idea}</p>
+        </div>
+      `).join("");
+
+      const expressions = document.getElementById("expression-actions");
+      expressions.innerHTML = data.expressionActions.map((action) => `
+        <article class="item">
+          <h3>${lang === "zh" ? action.zhName : action.name}</h3>
+          <div class="phase-meta"><span class="pill amber">${t().trigger}: ${action.trigger}</span></div>
+          <p class="muted small">${lang === "zh" ? action.zhDesign : action.design}</p>
+        </article>
+      `).join("");
+    }
+
+    function renderRisks() {
+      const grid = document.getElementById("risk-grid");
+      grid.innerHTML = "";
+      data.risks.forEach((entry) => {
+        const item = document.createElement("article");
+        item.className = "item danger";
+        item.innerHTML = `
+          <h3>${lang === "zh" ? entry.zhRisk : entry.risk}</h3>
+          <p><strong>${t().mitigation}:</strong> ${lang === "zh" ? entry.zhMitigation : entry.mitigation}</p>
+        `;
+        grid.appendChild(item);
+      });
+    }
+
+    function renderAcceptance() {
+      const list = document.getElementById("acceptance-list");
+      list.innerHTML = data.acceptance.map((item, index) => {
+        const key = checklistKey("acceptance", index);
+        return `
+          <label class="check">
+            <input type="checkbox" data-key="${key}" ${checked[key] ? "checked" : ""} />
+            <span>${item}</span>
+          </label>
+        `;
+      }).join("");
+    }
+
+    function categories() {
+      const values = data.resources.map((resource) =>
+        lang === "zh" ? resource.zhCategory : resource.category
+      );
+      return Array.from(new Set(values)).sort((a, b) => a.localeCompare(b));
+    }
+
+    function renderResourceFilter() {
+      const select = document.getElementById("resource-filter");
+      const current = select.value;
+      select.innerHTML = `<option value="">${t().all}</option>` +
+        categories().map((category) => `<option value="${category}">${category}</option>`).join("");
+      if ([...select.options].some((option) => option.value === current)) {
+        select.value = current;
+      }
+    }
+
+    function renderResources() {
+      renderResourceFilter();
+      const q = document.getElementById("resource-search").value.trim().toLowerCase();
+      const category = document.getElementById("resource-filter").value;
+      const list = document.getElementById("resource-list");
+
+      const filtered = data.resources.filter((resource) => {
+        const cat = lang === "zh" ? resource.zhCategory : resource.category;
+        const haystack = `${resource.title} ${resource.note} ${cat}`.toLowerCase();
+        return (!category || cat === category) && (!q || haystack.includes(q));
+      });
+
+      list.innerHTML = filtered.map((resource) => {
+        const cat = lang === "zh" ? resource.zhCategory : resource.category;
+        return `
+          <article class="item resource">
+            <div>
+              <div class="phase-meta"><span class="pill">${cat}</span></div>
+              <h3>${resource.title}</h3>
+              <p class="muted small">${resource.note}</p>
+            </div>
+            <a class="link-button" href="${resource.url}" target="_blank" rel="noopener">${t().open}</a>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function bindChecklistEvents() {
+      document.querySelectorAll('input[type="checkbox"][data-key]').forEach((box) => {
+        box.addEventListener("change", () => {
+          checked[box.dataset.key] = box.checked;
+          saveChecked();
+          updateProgress();
+        });
+      });
+    }
+
+    function updateProgress() {
+      const keys = allCheckItems();
+      const total = keys.length;
+      const done = keys.filter((key) => checked[key]).length;
+      const pct = total ? Math.round((done / total) * 100) : 0;
+      setText("phase-count", data.phases.length);
+      setText("check-count", `${pct}%`);
+      setText("progress-text", done ? t().progress(done, total) : t().emptyProgress);
+      document.getElementById("progress-fill").style.width = `${pct}%`;
+    }
+
+    function renderAll() {
+      renderStaticText();
+      renderBom();
+      renderPhases();
+      renderVoice();
+      renderRisks();
+      renderAcceptance();
+      renderResources();
+      bindChecklistEvents();
+      updateProgress();
+    }
+
+    document.getElementById("lang-toggle").addEventListener("click", () => {
+      lang = lang === "zh" ? "en" : "zh";
+      localStorage.setItem(langKey, lang);
+      renderAll();
+    });
+
+    document.getElementById("reset-progress").addEventListener("click", () => {
+      if (!confirm(t().resetConfirm)) return;
+      checked = {};
+      saveChecked();
+      renderAll();
+    });
+
+    document.getElementById("mark-critical").addEventListener("click", () => {
+      [
+        checklistKey("research", 1),
+        checklistKey("unbox", 2),
+        checklistKey("firmware", 2),
+        checklistKey("calibrate", 3),
+        checklistKey("voice", 2),
+        checklistKey("custom", 4)
+      ].forEach((key) => { checked[key] = true; });
+      saveChecked();
+      renderAll();
+    });
+
+    document.getElementById("resource-search").addEventListener("input", renderResources);
+    document.getElementById("resource-filter").addEventListener("change", renderResources);
+
+    renderAll();
+  </script>
+</body>
+</html>
