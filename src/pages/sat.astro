@@ -1,0 +1,566 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+const sections = {
+  en: {
+    projectUrl: "/projects/sat-prep-en/",
+    title: "SAT Study Hub",
+    subtitle:
+      "A bilingual SAT study system: exam overview, knowledge maps, interactive practice, and study tools.",
+    intro:
+      "Start with the overview, learn each skill, then practise — your accuracy and mistakes are saved in your browser.",
+    overviewTitle: "How The SAT Works",
+    overviewCards: [
+      ["Format", "Digital SAT in Bluebook: Reading & Writing and Math, each split into two adaptive modules."],
+      ["Timing", "2 hours 14 minutes total: 64 minutes for Reading & Writing, 70 minutes for Math, plus a 10-minute break."],
+      ["Questions", "98 total questions: 54 Reading & Writing and 44 Math. Most questions are multiple choice; some Math answers are typed."],
+    ],
+    roadmapTitle: "Study Roadmap",
+    roadmap: [
+      ["1. Diagnose", "Take a Bluebook practice test or mini mock. Record section scores, timing issues, and mistake types."],
+      ["2. Build Knowledge", "Use the Learn tab and knowledge-point notes as compact references before drilling."],
+      ["3. Practice By Domain", "Separate Reading & Writing from Math so every error has a category and a fix."],
+      ["4. Simulate", "Use timed sets and mini practice tests to train pacing before full-length practice."],
+    ],
+    rwTitle: "Reading & Writing",
+    mathTitle: "Math",
+    practiceTitle: "Practice",
+    projectTitle: "Project",
+    projectCopy:
+      "The SAT project page explains why this study system was built, how it is organized, and how it supports a repeatable review workflow.",
+    officialTitle: "Official Resources",
+    officialCopy:
+      "Official structure and practice tools change over time, so test logistics should always be checked on College Board pages.",
+    open: "Open",
+    official: [
+      ["College Board SAT Structure", "https://satsuite.collegeboard.org/sat/whats-on-the-test/structure"],
+      ["College Board Practice", "https://satsuite.collegeboard.org/practice"],
+      ["Bluebook", "https://bluebook.collegeboard.org/"],
+    ],
+    groups: {
+      rw: [
+        ["Review & Practice", "/notes/sat-reading-writing-review-en/", "Core strategies, grammar rules, and worked questions."],
+        ["Knowledge Points", "/notes/sat-rw-knowledge-points-en/", "High-yield grammar and reading/writing rules."],
+        ["Problem Set", "/notes/sat-rw-problem-set-en/", "A focused question set with answer key."],
+        ["Hard Types", "/notes/sat-rw-advanced-en/", "Cross-text, evidence, synthesis, and punctuation traps."],
+        ["Vocabulary", "/notes/sat-vocabulary-en/", "Words in context and academic-tone vocabulary."],
+      ],
+      math: [
+        ["Review & Practice", "/notes/sat-math-review-en/", "Four-domain review with worked problems."],
+        ["Knowledge Points", "/notes/sat-math-knowledge-points-en/", "Compact formula and concept sheet."],
+        ["Problem Set", "/notes/sat-math-problem-set-en/", "Eighteen questions with answer key."],
+        ["Hard Topics", "/notes/sat-math-advanced-en/", "Functions, quadratics, exponential models, and data subtleties."],
+      ],
+      practice: [
+        ["Mini Practice Test", "/notes/sat-practice-test-mini-en/", "Timed Reading & Writing and Math mini mock."],
+      ],
+    },
+  },
+  zh: {
+    projectUrl: "/projects/sat-prep-zh/",
+    title: "SAT 学习专题",
+    subtitle:
+      "一个中英文 SAT 学习系统：考试说明、知识地图、互动练习和学习工具。",
+    intro:
+      "先看总览，再逐个技能学习，然后练习——你的正确率和错题会保存在浏览器中。",
+    overviewTitle: "SAT 如何考试",
+    overviewCards: [
+      ["形式", "机考 SAT 在 Bluebook 中完成，分为 Reading & Writing 和 Math，两科各有两个自适应模块。"],
+      ["时间", "总时长 2 小时 14 分钟：读写 64 分钟、数学 70 分钟，中间休息 10 分钟。"],
+      ["题量", "共 98 题：读写 54 题、数学 44 题。多数为选择题，部分数学题需要手动输入答案。"],
+    ],
+    roadmapTitle: "复习路线",
+    roadmap: [
+      ["1. 诊断", "先做 Bluebook 官方练习或迷你模拟，记录分数、时间问题和错题类型。"],
+      ["2. 建知识框架", "先用“学习”标签页和知识点笔记建立框架，再进入题集训练。"],
+      ["3. 按领域练习", "把读写和数学分开训练，让每个错误都能归类、复盘和修正。"],
+      ["4. 限时模拟", "用限时题组和迷你模拟训练节奏，再进入完整模拟。"],
+    ],
+    rwTitle: "读写 Reading & Writing",
+    mathTitle: "数学 Math",
+    practiceTitle: "练习 Practice",
+    projectTitle: "项目说明",
+    projectCopy:
+      "SAT 项目页说明这套学习体系为什么建立、如何组织，以及如何支持可重复的复习流程。",
+    officialTitle: "官方资源",
+    officialCopy:
+      "考试结构和备考工具可能更新，考试日期、报名、设备要求等应以 College Board 官方页面为准。",
+    open: "打开",
+    official: [
+      ["College Board SAT 结构", "https://satsuite.collegeboard.org/sat/whats-on-the-test/structure"],
+      ["College Board 官方练习", "https://satsuite.collegeboard.org/practice"],
+      ["Bluebook", "https://bluebook.collegeboard.org/"],
+    ],
+    groups: {
+      rw: [
+        ["复习与练习", "/notes/sat-reading-writing-review/", "核心策略、语法规则和带解析练习。"],
+        ["知识点速查", "/notes/sat-rw-knowledge-points/", "高频语法与读写规则速查。"],
+        ["题集", "/notes/sat-rw-problem-set/", "专项练习题，附答案解析。"],
+        ["难题题型", "/notes/sat-rw-advanced/", "双篇关系、证据题、综合题和标点陷阱。"],
+        ["语境词汇", "/notes/sat-vocabulary/", "语境词义和学术语气高频词。"],
+      ],
+      math: [
+        ["复习与练习", "/notes/sat-math-review/", "四大领域复习和带解析练习。"],
+        ["知识点速查", "/notes/sat-math-knowledge-points/", "公式与高频结论速查。"],
+        ["题集", "/notes/sat-math-problem-set/", "18 道练习题，附答案解析。"],
+        ["难题专项", "/notes/sat-math-advanced/", "函数、二次、指数模型和数据陷阱。"],
+      ],
+      practice: [
+        ["迷你模拟卷", "/notes/sat-practice-test-mini/", "限时读写 + 数学迷你模拟。"],
+      ],
+    },
+  },
+};
+---
+
+<BaseLayout title="SAT Study Hub | Linkaili" sideBarActiveItemID="sat">
+  <style is:inline>
+    .sat-view[data-lang="zh"] { display: none; }
+  </style>
+  <script is:inline>
+    (function () {
+      const lang = localStorage.getItem("language");
+      if (lang === "zh") {
+        document.write('<style>.sat-view[data-lang="en"]{display:none}.sat-view[data-lang="zh"]{display:block}</style>');
+      }
+    })();
+  </script>
+
+  <!-- Hero (static, bilingual) -->
+  {(["en", "zh"] as const).map((lang) => {
+    const content = sections[lang];
+    return (
+      <div class="sat-view" data-lang={lang}>
+        <section class="mb-6">
+          <div class="badge badge-secondary mb-3">SAT</div>
+          <h1 class="text-4xl font-bold font-serif mb-3">{content.title}</h1>
+          <p class="text-lg opacity-80">{content.subtitle}</p>
+          <p class="mt-3 opacity-80">{content.intro}</p>
+        </section>
+      </div>
+    );
+  })}
+
+  <!-- Tabs -->
+  <div role="tablist" class="tabs tabs-boxed mb-6" id="sat-tabs">
+    <a class="tab tab-active" data-tab="overview"><span class="tab-label" data-key="overview"></span></a>
+    <a class="tab" data-tab="learn"><span class="tab-label" data-key="learn"></span></a>
+    <a class="tab" data-tab="practice"><span class="tab-label" data-key="practice"></span></a>
+    <a class="tab" data-tab="tools"><span class="tab-label" data-key="tools"></span></a>
+    <a class="tab" data-tab="notes"><span class="tab-label" data-key="notes"></span></a>
+  </div>
+
+  <!-- ===== OVERVIEW panel (static, bilingual) ===== -->
+  <div class="sat-panel" data-panel="overview">
+    {(["en", "zh"] as const).map((lang) => {
+      const content = sections[lang];
+      return (
+        <div class="sat-view" data-lang={lang}>
+          <section class="mb-8">
+            <div class="divider text-xl font-bold">{content.overviewTitle}</div>
+            <div class="grid gap-4 md:grid-cols-3">
+              {content.overviewCards.map((card) => (
+                <div class="rounded-lg border border-base-300 bg-base-100 p-4">
+                  <div class="font-bold">{card[0]}</div>
+                  <p class="mt-2 text-sm opacity-80">{card[1]}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+          <section class="mb-8">
+            <div class="divider text-xl font-bold">{content.roadmapTitle}</div>
+            <div class="grid gap-4 md:grid-cols-4">
+              {content.roadmap.map((step) => (
+                <div class="rounded-lg bg-base-200 p-4">
+                  <div class="font-bold">{step[0]}</div>
+                  <p class="mt-2 text-sm opacity-80">{step[1]}</p>
+                </div>
+              ))}
+            </div>
+          </section>
+          <section class="mb-8">
+            <div class="divider text-xl font-bold">{content.projectTitle}</div>
+            <div class="rounded-lg border border-base-300 bg-base-100 p-5">
+              <p>{content.projectCopy}</p>
+              <a class="btn btn-sm btn-outline mt-4" href={content.projectUrl}>{content.open}</a>
+            </div>
+          </section>
+          <section class="mb-8">
+            <div class="divider text-xl font-bold">{content.officialTitle}</div>
+            <p class="opacity-80 mb-4">{content.officialCopy}</p>
+            <div class="flex flex-wrap gap-3">
+              {content.official.map((link) => (
+                <a class="btn btn-sm btn-outline" href={link[1]} target="_blank" rel="noopener">{link[0]}</a>
+              ))}
+            </div>
+          </section>
+        </div>
+      );
+    })}
+  </div>
+
+  <!-- ===== interactive panels (JS islands) ===== -->
+  <div class="sat-panel hidden" data-panel="learn"><div id="learn-root"></div></div>
+  <div class="sat-panel hidden" data-panel="practice"><div id="practice-root"></div></div>
+  <div class="sat-panel hidden" data-panel="tools"><div id="tools-root"></div></div>
+
+  <!-- ===== NOTES panel (static, bilingual) ===== -->
+  <div class="sat-panel hidden" data-panel="notes">
+    {(["en", "zh"] as const).map((lang) => {
+      const content = sections[lang];
+      return (
+        <div class="sat-view" data-lang={lang}>
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold mb-3">{content.rwTitle}</h2>
+            <div class="grid gap-4 md:grid-cols-2">
+              {content.groups.rw.map((item) => (
+                <a href={item[1]} class="block rounded-lg border border-base-300 bg-base-100 p-4 hover:shadow-lg transition">
+                  <div class="text-lg font-bold">{item[0]}</div>
+                  <p class="mt-1 text-sm opacity-80">{item[2]}</p>
+                  <div class="mt-3 badge badge-outline">{content.open}</div>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold mb-3">{content.mathTitle}</h2>
+            <div class="grid gap-4 md:grid-cols-2">
+              {content.groups.math.map((item) => (
+                <a href={item[1]} class="block rounded-lg border border-base-300 bg-base-100 p-4 hover:shadow-lg transition">
+                  <div class="text-lg font-bold">{item[0]}</div>
+                  <p class="mt-1 text-sm opacity-80">{item[2]}</p>
+                  <div class="mt-3 badge badge-outline">{content.open}</div>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div class="mb-6">
+            <h2 class="text-2xl font-bold mb-3">{content.practiceTitle}</h2>
+            <div class="grid gap-4 md:grid-cols-2">
+              {content.groups.practice.map((item) => (
+                <a href={item[1]} class="block rounded-lg border border-base-300 bg-base-100 p-4 hover:shadow-lg transition">
+                  <div class="text-lg font-bold">{item[0]}</div>
+                  <p class="mt-1 text-sm opacity-80">{item[2]}</p>
+                  <div class="mt-3 badge badge-outline">{content.open}</div>
+                </a>
+              ))}
+            </div>
+          </div>
+        </div>
+      );
+    })}
+  </div>
+
+  <script>
+    import { SAT_CONTENT } from "../data/satContent";
+    import { SAT_QUESTIONS } from "../data/satQuestions";
+
+    type Bil = { en: string; zh: string };
+    let lang: "en" | "zh" = localStorage.getItem("language") === "zh" ? "zh" : "en";
+    const t = (b: Bil) => (b ? (b[lang] ?? b.en) : "");
+    const C = SAT_CONTENT;
+    const Q = SAT_QUESTIONS;
+    const skillByKey = Object.fromEntries(C.skills.map((s) => [s.key, s]));
+    const sectionByKey = Object.fromEntries(C.sections.map((s) => [s.key, s]));
+
+    const L = (en: string, zh: string): Bil => ({ en, zh });
+    const UI = {
+      overview: L("Overview", "总览"), learn: L("Learn", "学习"),
+      practice: L("Practice", "练习"), tools: L("Tools", "工具"), notes: L("Notes", "笔记"),
+      pickSkill: L("Pick a skill to read a short lesson, an example, and tips.",
+                   "选择一个技能，阅读简短课程、例题和技巧。"),
+      lessonH: L("Lesson", "课程"), exampleH: L("Worked example", "例题讲解"), tipsH: L("Tips", "技巧"),
+      practiceThis: L("Practice this skill →", "练习该技能 →"), back: L("← All skills", "← 所有技能"),
+      filterIntro: L("Filter the question bank, then answer with instant bilingual explanations.",
+                     "筛选题库，作答后即时查看中英解析。"),
+      section: L("Section", "板块"), skill: L("Skill", "技能"), difficulty: L("Difficulty", "难度"),
+      all: L("All", "全部"), any: L("Any", "任意"),
+      d1: L("Easy", "简单"), d2: L("Medium", "中等"), d3: L("Hard", "困难"),
+      start: L("Start", "开始"), matches: L("questions match", "道题匹配"), noMatch: L("No questions match.", "没有匹配的题目。"),
+      check: L("Check answer", "查看答案"), next: L("Next →", "下一题 →"), finish: L("Finish", "完成"),
+      correct: L("Correct!", "回答正确！"), incorrect: L("Not quite.", "答错了。"),
+      correctAns: L("Correct answer", "正确答案"),
+      acc: L("Accuracy", "正确率"), answered: L("Answered", "已作答"),
+      qOf: L("of", "/"), done: L("Session complete", "本次练习完成"),
+      mistakesH: L("Mistake log", "错题本"),
+      mistakesIntro: L("Questions you most recently got wrong. Answer one correctly in Practice and it leaves the log.",
+                       "你最近答错的题。在“练习”中答对一次即从错题本移除。"),
+      noMistakes: L("No mistakes logged — answer some questions in Practice.", "暂无错题——先去“练习”做几道题。"),
+      retry: L("Retry these →", "重做这些 →"), clear: L("Clear log", "清空错题本"),
+      review: L("Show explanation", "查看解析"),
+      moreTools: L("More tools coming: diagnostic, timed drill, score planner, flashcards.",
+                   "更多工具即将上线：弱项诊断、限时训练、目标分规划、单词卡。"),
+      yourMistakes: L("In your mistake log", "在你的错题本中"),
+    };
+
+    // ---------- progress (localStorage; no backend on GitHub Pages) ----------
+    const PKEY = "satHubProgress";
+    type Attempt = { id: string; skill: string; section: string; correct: boolean; ts: string };
+    function load(): { attempts: Attempt[] } {
+      try {
+        const d = JSON.parse(localStorage.getItem(PKEY) || "");
+        return d && Array.isArray(d.attempts) ? d : { attempts: [] };
+      } catch { return { attempts: [] }; }
+    }
+    function record(a: Attempt) { const d = load(); d.attempts.push(a); localStorage.setItem(PKEY, JSON.stringify(d)); }
+    function clearAll() { localStorage.removeItem(PKEY); }
+    function stats() {
+      const d = load(); const total = d.attempts.length;
+      const correct = d.attempts.filter((a) => a.correct).length;
+      return { total, correct, acc: total ? Math.round((correct / total) * 100) : 0 };
+    }
+    function mistakeIds(): string[] {
+      const last: Record<string, boolean> = {};
+      for (const a of load().attempts) last[a.id] = a.correct;
+      return Object.keys(last).filter((id) => !last[id] && Q.some((q) => q.id === id));
+    }
+
+    // ---------- helpers ----------
+    const $ = (s: string) => document.querySelector(s) as HTMLElement;
+    const $$ = (s: string) => Array.from(document.querySelectorAll(s)) as HTMLElement[];
+    const esc = (s: string) => s.replace(/[&<>"']/g, (c) =>
+      ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c] as string));
+    const now = () => new Date().toISOString();
+    const diffLabel = (d: number) => t([UI.d1, UI.d2, UI.d3][d - 1]);
+
+    // ---------- tabs ----------
+    function showTab(name: string) {
+      $$(".sat-panel").forEach((p) => p.classList.toggle("hidden", p.dataset.panel !== name));
+      $$("#sat-tabs .tab").forEach((a) => a.classList.toggle("tab-active", a.dataset.tab === name));
+      if (name === "learn") renderLearn();
+      if (name === "practice") renderPractice();
+      if (name === "tools") renderTools();
+    }
+
+    // ---------- LEARN ----------
+    function renderLearn() {
+      const root = $("#learn-root");
+      let h = `<p class="opacity-80 mb-4">${t(UI.pickSkill)}</p>`;
+      for (const sec of C.sections) {
+        h += `<h2 class="text-2xl font-bold mb-1">${sec.icon} ${t(sec.label)}</h2>`;
+        h += `<p class="text-sm opacity-70 mb-3">${t(sec.blurb)}</p><div class="grid gap-3 md:grid-cols-2 mb-6">`;
+        for (const s of C.skills.filter((x) => x.section === sec.key)) {
+          h += `<button class="text-left rounded-lg border border-base-300 bg-base-100 p-4 hover:shadow-lg transition" data-skill="${s.key}">
+                  <div class="font-bold">${t(s.label)}</div>
+                  <p class="mt-1 text-sm opacity-80">${t(s.summary)}</p></button>`;
+        }
+        h += `</div>`;
+      }
+      root.innerHTML = h;
+      root.querySelectorAll("[data-skill]").forEach((b) =>
+        b.addEventListener("click", () => showSkill((b as HTMLElement).dataset.skill!)));
+    }
+
+    function showSkill(key: string) {
+      const s = skillByKey[key];
+      let h = `<button class="btn btn-sm btn-ghost mb-3" id="learn-back">${t(UI.back)}</button>`;
+      h += `<h2 class="text-2xl font-bold">${t(s.label)}</h2><p class="opacity-80 mt-1">${t(s.summary)}</p>`;
+      h += `<div class="divider text-lg font-bold">${t(UI.lessonH)}</div>`;
+      for (const b of s.lesson)
+        h += `<div class="rounded-lg bg-base-200 p-4 mb-3"><div class="font-bold">${t(b.h)}</div><p class="mt-1 text-sm opacity-80">${t(b.body)}</p></div>`;
+      if (s.examples?.length) {
+        h += `<div class="divider text-lg font-bold">${t(UI.exampleH)}</div>`;
+        for (const e of s.examples)
+          h += `<div class="rounded-lg bg-base-200 p-4 mb-3"><b>Q.</b> ${t(e.q)}<p class="mt-1"><b>→</b> ${t(e.sol)}</p></div>`;
+      }
+      h += `<div class="divider text-lg font-bold">${t(UI.tipsH)}</div><ul class="list-disc pl-5">`;
+      for (const tip of s.tips) h += `<li class="mb-1">${t(tip)}</li>`;
+      h += `</ul><div class="mt-4"><button class="btn btn-primary btn-sm" id="learn-practice">${t(UI.practiceThis)}</button></div>`;
+      $("#learn-root").innerHTML = h;
+      $("#learn-back").addEventListener("click", renderLearn);
+      $("#learn-practice").addEventListener("click", () => { pendingSkill = key; showTab("practice"); });
+    }
+
+    // ---------- PRACTICE ----------
+    let pendingSkill: string | null = null;
+    type PState = { ids: string[]; idx: number; picked: number | null; locked: boolean; correct: number };
+    let ps: PState | null = null;
+
+    function filteredIds(): string[] {
+      const sec = ($("#f-section") as HTMLSelectElement)?.value || "";
+      const sk = ($("#f-skill") as HTMLSelectElement)?.value || "";
+      const df = ($("#f-diff") as HTMLSelectElement)?.value || "";
+      return Q.filter((q) => (!sec || q.section === sec) && (!sk || q.skill === sk) && (!df || q.difficulty === +df)).map((q) => q.id);
+    }
+
+    function renderPractice() {
+      const st = stats();
+      const opt = (v: string, label: string) => `<option value="${v}">${label}</option>`;
+      const secOpts = opt("", t(UI.all)) + C.sections.map((s) => opt(s.key, t(s.label))).join("");
+      const root = $("#practice-root");
+      root.innerHTML = `
+        <p class="opacity-80 mb-3">${t(UI.filterIntro)}</p>
+        <div class="flex flex-wrap items-end gap-3 mb-3">
+          <label class="form-control"><span class="label-text text-xs opacity-70">${t(UI.section)}</span>
+            <select id="f-section" class="select select-bordered select-sm">${secOpts}</select></label>
+          <label class="form-control"><span class="label-text text-xs opacity-70">${t(UI.skill)}</span>
+            <select id="f-skill" class="select select-bordered select-sm"></select></label>
+          <label class="form-control"><span class="label-text text-xs opacity-70">${t(UI.difficulty)}</span>
+            <select id="f-diff" class="select select-bordered select-sm">
+              ${opt("", t(UI.any))}${opt("1", t(UI.d1))}${opt("2", t(UI.d2))}${opt("3", t(UI.d3))}</select></label>
+          <button class="btn btn-primary btn-sm" id="p-start">${t(UI.start)}</button>
+          <span class="text-sm opacity-70" id="p-count"></span>
+        </div>
+        <div class="text-sm opacity-70 mb-4">${t(UI.answered)}: ${st.total} · ${t(UI.acc)}: ${st.acc}%</div>
+        <div id="p-run"></div>`;
+      fillSkillSelect();
+      if (pendingSkill) {
+        const sk = skillByKey[pendingSkill];
+        if (sk) {
+          ($("#f-section") as HTMLSelectElement).value = sk.section;
+          fillSkillSelect();
+          ($("#f-skill") as HTMLSelectElement).value = pendingSkill;
+        }
+        pendingSkill = null;
+      }
+      updateCount();
+      ($("#f-section") as HTMLSelectElement).addEventListener("change", () => { fillSkillSelect(); updateCount(); });
+      ($("#f-skill") as HTMLSelectElement).addEventListener("change", updateCount);
+      ($("#f-diff") as HTMLSelectElement).addEventListener("change", updateCount);
+      $("#p-start").addEventListener("click", () => startRun(filteredIds()));
+    }
+    function fillSkillSelect() {
+      const sec = ($("#f-section") as HTMLSelectElement).value;
+      const fk = $("#f-skill") as HTMLSelectElement;
+      fk.innerHTML = `<option value="">${t(UI.all)}</option>` +
+        C.skills.filter((s) => !sec || s.section === sec).map((s) => `<option value="${s.key}">${t(s.label)}</option>`).join("");
+    }
+    function updateCount() {
+      const n = filteredIds().length;
+      $("#p-count").textContent = `${n} ${t(UI.matches)}`;
+      ($("#p-start") as HTMLButtonElement).disabled = n === 0;
+    }
+
+    function startRun(ids: string[]) {
+      if (!ids.length) return;
+      ps = { ids, idx: 0, picked: null, locked: false, correct: 0 };
+      renderQuestion();
+    }
+    function renderQuestion() {
+      if (!ps) return;
+      const q = Q.find((x) => x.id === ps!.ids[ps!.idx])!;
+      const sec = sectionByKey[q.section], sk = skillByKey[q.skill];
+      const badges = `<span class="badge badge-outline">${sec.icon} ${t(sec.label)}</span>
+        <span class="badge badge-outline">${t(sk.label)}</span>
+        <span class="badge badge-outline">${diffLabel(q.difficulty)}</span>`;
+      const passage = q.passage ? `<div class="bg-base-200 border-l-4 border-primary rounded p-3 my-3 whitespace-pre-wrap text-sm">${esc(q.passage)}</div>` : "";
+      const choices = q.choices.map((c, i) =>
+        `<button class="btn btn-block justify-start normal-case font-normal" data-i="${i}">${String.fromCharCode(65 + i)}. ${esc(c)}</button>`).join("");
+      $("#p-run").innerHTML = `
+        <div class="card bg-base-100 border border-base-300"><div class="card-body">
+          <div class="flex justify-between items-center text-sm opacity-70">
+            <span>${ps.idx + 1} ${t(UI.qOf)} ${ps.ids.length}</span><div class="flex gap-1">${badges}</div></div>
+          ${passage}
+          <div class="font-semibold my-2">${esc(q.stem)}</div>
+          <div class="flex flex-col gap-2" id="p-opts">${choices}</div>
+          <div id="p-feedback"></div>
+          <div class="mt-2"><button class="btn btn-primary btn-sm" id="p-check" disabled>${t(UI.check)}</button>
+            <button class="btn btn-sm hidden" id="p-next"></button></div>
+        </div></div>`;
+      ps.picked = null; ps.locked = false;
+      $$("#p-opts button").forEach((b) => b.addEventListener("click", () => {
+        if (ps!.locked) return;
+        ps!.picked = +b.dataset.i!;
+        $$("#p-opts button").forEach((x) => x.classList.toggle("btn-primary", x === b));
+        ($("#p-check") as HTMLButtonElement).disabled = false;
+      }));
+      $("#p-check").addEventListener("click", submitAnswer);
+    }
+    function submitAnswer() {
+      if (!ps || ps.picked === null) return;
+      const q = Q.find((x) => x.id === ps!.ids[ps!.idx])!;
+      const ok = ps.picked === q.answer;
+      ps.locked = true; if (ok) ps.correct++;
+      $$("#p-opts button").forEach((b) => {
+        const i = +b.dataset.i!;
+        (b as HTMLButtonElement).disabled = true;
+        b.classList.remove("btn-primary");
+        if (i === q.answer) b.classList.add("btn-success");
+        else if (i === ps!.picked) b.classList.add("btn-error");
+      });
+      const ansLetter = String.fromCharCode(65 + q.answer);
+      $("#p-feedback").innerHTML =
+        `<div class="alert ${ok ? "alert-success" : "alert-error"} mt-3 block">
+          <div class="font-bold">${ok ? t(UI.correct) : t(UI.incorrect)}${ok ? "" : ` (${t(UI.correctAns)}: ${ansLetter})`}</div>
+          <div class="mt-1 text-sm">${t(q.explain)}</div></div>`;
+      record({ id: q.id, skill: q.skill, section: q.section, correct: ok, ts: now() });
+      $("#p-check").classList.add("hidden");
+      const last = ps.idx === ps.ids.length - 1;
+      const nx = $("#p-next") as HTMLButtonElement;
+      nx.classList.remove("hidden");
+      nx.textContent = last ? t(UI.finish) : t(UI.next);
+      nx.addEventListener("click", nextQuestion, { once: true });
+    }
+    function nextQuestion() {
+      if (!ps) return;
+      if (ps.idx === ps.ids.length - 1) {
+        const c = ps.correct, n = ps.ids.length;
+        $("#p-run").innerHTML =
+          `<div class="alert alert-info block"><div class="font-bold">${t(UI.done)}</div>
+           <div class="mt-1">${c}/${n} · ${Math.round((c / n) * 100)}% ${t(UI.acc)}</div></div>`;
+        ps = null; renderPractice(); // refresh accuracy header; keep result above
+        return;
+      }
+      ps.idx++; renderQuestion();
+    }
+
+    // ---------- TOOLS: mistake log ----------
+    function renderTools() {
+      const ids = mistakeIds();
+      let h = `<h2 class="text-2xl font-bold mb-1">${t(UI.mistakesH)}</h2>
+               <p class="opacity-80 mb-4">${t(UI.mistakesIntro)}</p>`;
+      if (!ids.length) {
+        h += `<div class="alert">${t(UI.noMistakes)}</div>`;
+      } else {
+        h += `<div class="flex gap-2 mb-4">
+                <button class="btn btn-primary btn-sm" id="m-retry">${t(UI.retry)} (${ids.length})</button>
+                <button class="btn btn-ghost btn-sm" id="m-clear">${t(UI.clear)}</button></div>`;
+        for (const id of ids) {
+          const q = Q.find((x) => x.id === id)!;
+          const sk = skillByKey[q.skill];
+          h += `<div class="collapse collapse-arrow bg-base-100 border border-base-300 mb-2">
+                  <input type="checkbox" />
+                  <div class="collapse-title text-sm font-medium">
+                    <span class="badge badge-outline mr-2">${t(sk.label)}</span>${esc(q.stem)}</div>
+                  <div class="collapse-content text-sm">
+                    <p><b>${t(UI.correctAns)}:</b> ${String.fromCharCode(65 + q.answer)}. ${esc(q.choices[q.answer])}</p>
+                    <p class="mt-1 opacity-80">${t(q.explain)}</p></div></div>`;
+        }
+      }
+      h += `<div class="divider"></div><p class="text-sm opacity-60">${t(UI.moreTools)}</p>`;
+      $("#tools-root").innerHTML = h;
+      if (ids.length) {
+        $("#m-retry").addEventListener("click", () => { pendingRetry = ids.slice(); showTab("practice"); startRun(pendingRetry); });
+        $("#m-clear").addEventListener("click", () => { clearAll(); renderTools(); });
+      }
+    }
+    let pendingRetry: string[] = [];
+
+    // ---------- boot ----------
+    function activeTab(): string {
+      const cur = $$("#sat-tabs .tab").find((a) => a.classList.contains("tab-active"));
+      return (cur as HTMLElement)?.dataset.tab || "overview";
+    }
+    function applyStaticLang() {
+      // Static (Astro-rendered) panels use .sat-view[data-lang]; toggle them explicitly.
+      $$(".sat-view").forEach((el) => {
+        (el as HTMLElement).style.display = (el as HTMLElement).dataset.lang === lang ? "block" : "none";
+      });
+    }
+    function relabelTabs() { $$(".tab-label").forEach((el) => { el.textContent = t((UI as any)[el.dataset.key!]); }); }
+
+    relabelTabs();
+    applyStaticLang();
+    $$("#sat-tabs .tab").forEach((a) => a.addEventListener("click", () => showTab((a as HTMLElement).dataset.tab!)));
+
+    // Re-render live when the site's language toggle flips <html lang>.
+    new MutationObserver(() => {
+      const l = document.documentElement.lang === "zh" ? "zh" : "en";
+      if (l !== lang) { lang = l; applyStaticLang(); relabelTabs(); showTab(activeTab()); }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
+
+    // deep link: /sat#practice etc.
+    const hash = location.hash.replace("#", "");
+    if (["learn", "practice", "tools", "notes"].includes(hash)) showTab(hash);
+  </script>
+</BaseLayout>
