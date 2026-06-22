@@ -1,0 +1,128 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+
+// Learning Lab landing — organizes the site's hands-on learning modules.
+// Bilingual via the same .sat-view[data-lang] + inline toggle pattern as /sat.
+const lab = {
+  en: {
+    title: "Learning Lab",
+    subtitle: "Hands-on learning modules — study the idea, practise with tools, and track your progress.",
+    intro: "Each module pairs knowledge with something you can actually do. SAT is the first complete learn → practise → track system; the other directions are growing.",
+    featuredBadge: "Complete learning system",
+    satTitle: "SAT Study System",
+    satCopy: "Lessons across all eight Digital SAT skills, a question bank with bilingual explanations, an adaptive tutor and study tools, and progress tracking — all in your browser.",
+    satLinks: [["Learn", "/sat#learn"], ["Practice", "/sat#practice"], ["Tools", "/sat#tools"], ["Skill pages", "/sat/skills/rw-info/"]],
+    open: "Open",
+    modulesTitle: "More learning directions",
+    modules: [
+      {
+        badge: "Math · Calculus", title: "Solids of Revolution",
+        copy: "Visual walkthroughs of how volumes are built from cross-sections and the washer method, with worked steps.",
+        links: [["Cross-section volume", "/notes/cross-section-volume-en/"], ["Washer method", "/notes/washer-method-volume-en/"]],
+      },
+      {
+        badge: "Medical AI · Health", title: "AI Doctor & Ultrasound",
+        copy: "A rule-based symptom-checker demo and a B-ultrasound annotation tool — learn how simple medical AI workflows are built.",
+        links: [["AI Doctor", "/aidoctor/"], ["Ultrasound tool", "/projects/ultrasound-tool/"], ["Project notes", "/projects/ultrasound-en/"]],
+      },
+      {
+        badge: "Robotics · Embedded", title: "Robotics: Voice Dog",
+        copy: "A voice-controlled quadruped built on Petoi Bittle — design, firmware notes, and a reproducible build log.",
+        links: [["Project page", "/projects/smart-dog-en/"], ["Code repo ↗", "https://github.com/linkailical/robot4Doctor"]],
+      },
+    ],
+    note: "More interactive modules are planned. Suggestions welcome.",
+  },
+  zh: {
+    title: "学习实验室",
+    subtitle: "动手学习模块——学概念、用工具练习、追踪你的进度。",
+    intro: "每个模块都把知识和“能真正动手做的东西”配对。SAT 是第一套完整的“学习 → 练习 → 追踪”系统，其他方向也在不断完善。",
+    featuredBadge: "完整学习系统",
+    satTitle: "SAT 学习系统",
+    satCopy: "覆盖机考 SAT 全部八个技能的课程、带中英解析的题库、自适应辅导与学习工具，以及进度追踪——全部在浏览器中运行。",
+    satLinks: [["学习", "/sat#learn"], ["练习", "/sat#practice"], ["工具", "/sat#tools"], ["技能页", "/sat/skills/rw-info/"]],
+    open: "打开",
+    modulesTitle: "更多学习方向",
+    modules: [
+      {
+        badge: "数学 · 微积分", title: "旋转体体积",
+        copy: "用可视化讲解如何用横截面和垫圈法（washer method）求体积，附详细步骤。",
+        links: [["横截面体积", "/notes/cross-section-volume/"], ["垫圈法", "/notes/washer-method-volume/"]],
+      },
+      {
+        badge: "医疗 AI · 健康", title: "AI 医生 与 B超标注",
+        copy: "一个基于规则的症状自查 demo，以及一个 B 超影像标注工具——了解简单医疗 AI 工作流是如何搭建的。",
+        links: [["AI 医生", "/aidoctor/"], ["B超标注工具", "/projects/ultrasound-tool/"], ["项目说明", "/projects/ultrasound-zh/"]],
+      },
+      {
+        badge: "机器人 · 嵌入式", title: "机器人：语音小狗",
+        copy: "基于 Petoi Bittle 的语音控制四足机器人——设计、固件笔记和可复现的构建记录。",
+        links: [["项目页", "/projects/smart-dog-zh/"], ["代码仓库 ↗", "https://github.com/linkailical/robot4Doctor"]],
+      },
+    ],
+    note: "更多互动模块正在规划中，欢迎提建议。",
+  },
+} as const;
+---
+
+<BaseLayout title="Learning Lab | Linkaili" sideBarActiveItemID="learn">
+  <style is:inline>
+    .sat-view[data-lang="zh"] { display: none; }
+  </style>
+  <script is:inline>
+    (function () {
+      if (localStorage.getItem("language") === "zh") {
+        document.write('<style>.sat-view[data-lang="en"]{display:none}.sat-view[data-lang="zh"]{display:block}</style>');
+      }
+    })();
+  </script>
+
+  {(["en", "zh"] as const).map((lang) => {
+    const c = lab[lang];
+    return (
+      <div class="sat-view" data-lang={lang}>
+        <section class="mb-6">
+          <div class="badge badge-secondary mb-3">{lang === "zh" ? "学习" : "Learn"}</div>
+          <h1 class="text-4xl font-bold font-serif mb-3">{c.title}</h1>
+          <p class="text-lg opacity-80">{c.subtitle}</p>
+          <p class="mt-3 opacity-80">{c.intro}</p>
+        </section>
+
+        <section class="mb-8">
+          <div class="rounded-xl border-2 border-primary bg-base-100 p-6">
+            <div class="badge badge-primary mb-3">{c.featuredBadge}</div>
+            <h2 class="text-2xl font-bold mb-2">📚 {c.satTitle}</h2>
+            <p class="opacity-80 mb-4">{c.satCopy}</p>
+            <div class="flex flex-wrap gap-2">
+              <a class="btn btn-primary btn-sm" href="/sat/">{c.open}</a>
+              {c.satLinks.map((l) => (
+                <a class="btn btn-outline btn-sm" href={l[1]}>{l[0]}</a>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section class="mb-8">
+          <div class="divider text-xl font-bold">{c.modulesTitle}</div>
+          <div class="grid gap-4 md:grid-cols-3">
+            {c.modules.map((m) => (
+              <div class="rounded-lg border border-base-300 bg-base-100 p-5 flex flex-col">
+                <div class="badge badge-outline mb-3">{m.badge}</div>
+                <h3 class="text-xl font-bold mb-2">{m.title}</h3>
+                <p class="opacity-80 text-sm grow">{m.copy}</p>
+                <div class="mt-4 flex flex-wrap gap-2">
+                  {m.links.map((l) => (
+                    <a class="btn btn-xs btn-outline" href={l[1]}
+                       target={l[1].startsWith("http") ? "_blank" : undefined}
+                       rel={l[1].startsWith("http") ? "noopener" : undefined}>{l[0]}</a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+          <p class="text-sm opacity-60 mt-4">{c.note}</p>
+        </section>
+      </div>
+    );
+  })}
+</BaseLayout>
