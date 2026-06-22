@@ -13,6 +13,8 @@ const translations = {
       home: 'Biography',
       cv: 'Academic Profile (CV)',
       projects: 'Research & Inquiry',
+      learn: 'Learning Lab',
+      sat: 'SAT Hub',
       blog: 'Selected Essays',
       notes: 'Study Notes',
       book: 'My Book',
@@ -58,6 +60,8 @@ const translations = {
       home: '个人简介',
       cv: '学术履历',
       projects: '研究与探索',
+      learn: '学习实验室',
+      sat: 'SAT 专题',
       blog: '精选文章',
       notes: '学习笔记',
       book: '我的书籍',
@@ -116,6 +120,8 @@ function updateLanguage(lang) {
     home: document.getElementById('home'),
     cv: document.getElementById('cv'),
     projects: document.getElementById('projects'),
+    learn: document.getElementById('learn'),
+    sat: document.getElementById('sat'),
     blog: document.getElementById('blog'),
     notes: document.getElementById('notes'),
     book: document.getElementById('book'),
@@ -124,6 +130,8 @@ function updateLanguage(lang) {
   if (menuItems.home && translations[lang]) menuItems.home.textContent = translations[lang].menu.home;
   if (menuItems.cv && translations[lang]) menuItems.cv.textContent = translations[lang].menu.cv;
   if (menuItems.projects && translations[lang]) menuItems.projects.textContent = translations[lang].menu.projects;
+  if (menuItems.learn && translations[lang]) menuItems.learn.textContent = translations[lang].menu.learn;
+  if (menuItems.sat && translations[lang]) menuItems.sat.textContent = translations[lang].menu.sat;
   if (menuItems.blog && translations[lang]) menuItems.blog.textContent = translations[lang].menu.blog;
   if (menuItems.notes && translations[lang]) menuItems.notes.textContent = translations[lang].menu.notes;
   if (menuItems.book && translations[lang]) menuItems.book.textContent = translations[lang].menu.book;
