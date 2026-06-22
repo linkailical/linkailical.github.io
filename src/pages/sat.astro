@@ -291,6 +291,32 @@ const sections = {
       moreTools: L("More tools coming: diagnostic, timed drill, score planner, flashcards.",
                    "更多工具即将上线：弱项诊断、限时训练、目标分规划、单词卡。"),
       yourMistakes: L("In your mistake log", "在你的错题本中"),
+      // Phase 2 tools
+      diagH: L("Diagnostic", "弱项诊断"),
+      diagIntro: L("A short quiz across every skill to estimate where you stand. Your results highlight what to study first.",
+                   "覆盖每个技能的简短测验，用来评估你的水平，结果会指出应优先复习的内容。"),
+      diagStart: L("Start diagnostic", "开始诊断"),
+      diagReportH: L("Your diagnostic report", "你的诊断报告"),
+      strong: L("Strong", "较强"), weak: L("Needs work", "待加强"),
+      practiceSkill: L("Practice →", "练习 →"), retryDiag: L("Retake diagnostic", "重新诊断"),
+      timedH: L("Timed drill", "限时训练"),
+      timedIntro: L("Answer as many questions as you can before the clock runs out. Trains pacing.",
+                    "在时间用完前尽量多答题，用来训练答题节奏。"),
+      timedStart: L("Start 10-min drill", "开始 10 分钟训练"),
+      timedReportH: L("Time's up", "时间到"),
+      timedAnswered: L("Answered", "已作答"), timedCorrect: L("Correct", "答对"),
+      plannerH: L("Score planner", "目标分规划"),
+      plannerIntro: L("Set a target and your current section scores to see the gap to close.",
+                      "输入目标分和当前各科分数，查看需要弥补的差距。"),
+      plTarget: L("Target total (400–1600)", "目标总分（400–1600）"),
+      plRW: L("Current Reading & Writing (200–800)", "当前读写（200–800）"),
+      plMath: L("Current Math (200–800)", "当前数学（200–800）"),
+      plCompute: L("Plan", "规划"),
+      plGapNone: L("You're already at or above your target — keep it steady!", "你已达到或超过目标——保持住！"),
+      plNeed: L("To reach", "要达到"), plAddRW: L("gain in Reading & Writing", "读写需提升"),
+      plAddMath: L("gain in Math", "数学需提升"), plFrom: L("from", "从"), plTo: L("to", "到"),
+      plCapNote: L("Each section caps at 800, so the plan stays within reach.", "每科上限为 800，规划已控制在可达范围内。"),
+      retake: L("Retake", "重做"),
     };
 
     // ---------- progress (localStorage; no backend on GitHub Pages) ----------
@@ -373,8 +399,6 @@ const sections = {
 
     // ---------- PRACTICE ----------
     let pendingSkill: string | null = null;
-    type PState = { ids: string[]; idx: number; picked: number | null; locked: boolean; correct: number };
-    let ps: PState | null = null;
 
     function filteredIds(): string[] {
       const sec = ($("#f-section") as HTMLSelectElement)?.value || "";
@@ -431,9 +455,39 @@ const sections = {
       ($("#p-start") as HTMLButtonElement).disabled = n === 0;
     }
 
-    function startRun(ids: string[]) {
+    // ---------- generic, reusable runner (Practice / Diagnostic / Timed) ----------
+    type RunOpts = {
+      container: string;
+      onFinish?: (r: { correct: number; total: number; answers: { id: string; correct: boolean }[] }) => void;
+      timedSec?: number;
+    };
+    type Runner = {
+      ids: string[]; idx: number; picked: number | null; locked: boolean;
+      correct: number; answers: { id: string; correct: boolean }[]; opts: RunOpts;
+      remain?: number; timer?: number;
+    };
+    let ps: Runner | null = null;
+
+    function clearTimer() { if (ps?.timer) { clearInterval(ps.timer); ps.timer = undefined; } }
+    function startTimer() {
+      const tick = () => {
+        if (!ps) return;
+        const m = Math.floor(ps.remain! / 60), s = ps.remain! % 60;
+        const el = $("#run-timer");
+        if (el) el.innerHTML = `<span class="badge badge-lg ${ps.remain! <= 30 ? "badge-error" : "badge-neutral"}">⏱ ${m}:${String(s).padStart(2, "0")}</span>`;
+        if (ps.remain! <= 0) { finishRun(); return; }
+        ps.remain!--;
+      };
+      tick();
+      ps!.timer = window.setInterval(tick, 1000);
+    }
+
+    function startRun(ids: string[], opts: RunOpts = { container: "#p-run" }) {
       if (!ids.length) return;
-      ps = { ids, idx: 0, picked: null, locked: false, correct: 0 };
+      clearTimer();
+      ps = { ids, idx: 0, picked: null, locked: false, correct: 0, answers: [], opts };
+      $(opts.container).innerHTML = `<div id="run-timer" class="mb-2"></div><div id="run-body"></div>`;
+      if (opts.timedSec) { ps.remain = opts.timedSec; startTimer(); }
       renderQuestion();
     }
     function renderQuestion() {
@@ -446,7 +500,7 @@ const sections = {
       const passage = q.passage ? `<div class="bg-base-200 border-l-4 border-primary rounded p-3 my-3 whitespace-pre-wrap text-sm">${esc(q.passage)}</div>` : "";
       const choices = q.choices.map((c, i) =>
         `<button class="btn btn-block justify-start normal-case font-normal" data-i="${i}">${String.fromCharCode(65 + i)}. ${esc(c)}</button>`).join("");
-      $("#p-run").innerHTML = `
+      $("#run-body").innerHTML = `
         <div class="card bg-base-100 border border-base-300"><div class="card-body">
           <div class="flex justify-between items-center text-sm opacity-70">
             <span>${ps.idx + 1} ${t(UI.qOf)} ${ps.ids.length}</span><div class="flex gap-1">${badges}</div></div>
@@ -471,6 +525,7 @@ const sections = {
       const q = Q.find((x) => x.id === ps!.ids[ps!.idx])!;
       const ok = ps.picked === q.answer;
       ps.locked = true; if (ok) ps.correct++;
+      ps.answers.push({ id: q.id, correct: ok });
       $$("#p-opts button").forEach((b) => {
         const i = +b.dataset.i!;
         (b as HTMLButtonElement).disabled = true;
@@ -493,22 +548,51 @@ const sections = {
     }
     function nextQuestion() {
       if (!ps) return;
-      if (ps.idx === ps.ids.length - 1) {
-        const c = ps.correct, n = ps.ids.length;
-        $("#p-run").innerHTML =
-          `<div class="alert alert-info block"><div class="font-bold">${t(UI.done)}</div>
-           <div class="mt-1">${c}/${n} · ${Math.round((c / n) * 100)}% ${t(UI.acc)}</div></div>`;
-        ps = null; renderPractice(); // refresh accuracy header; keep result above
-        return;
-      }
+      if (ps.idx === ps.ids.length - 1) { finishRun(); return; }
       ps.idx++; renderQuestion();
     }
+    function finishRun() {
+      if (!ps) return;
+      clearTimer();
+      const res = { correct: ps.correct, total: ps.answers.length, answers: ps.answers.slice() };
+      const { onFinish, container } = ps.opts;
+      ps = null;
+      if (onFinish) { onFinish(res); return; }
+      // default (Practice): refresh accuracy header, then show the result
+      renderPractice();
+      $("#p-run").innerHTML =
+        `<div class="alert alert-info block"><div class="font-bold">${t(UI.done)}</div>
+         <div class="mt-1">${res.correct}/${res.total} · ${res.total ? Math.round((res.correct / res.total) * 100) : 0}% ${t(UI.acc)}</div></div>`;
+    }
 
-    // ---------- TOOLS: mistake log ----------
+    const shuffle = <T,>(a: T[]) => a.map((v) => [Math.random(), v] as [number, T]).sort((x, y) => x[0] - y[0]).map(([, v]) => v);
+
+    // ---------- TOOLS: sub-nav ----------
+    let pendingRetry: string[] = [];
     function renderTools() {
+      $("#tools-root").innerHTML = `
+        <div role="tablist" class="tabs tabs-bordered mb-4" id="tools-sub-nav">
+          <a class="tab tab-active" data-tool="mistakes">${t(UI.mistakesH)}</a>
+          <a class="tab" data-tool="diagnostic">${t(UI.diagH)}</a>
+          <a class="tab" data-tool="timed">${t(UI.timedH)}</a>
+          <a class="tab" data-tool="planner">${t(UI.plannerH)}</a>
+        </div>
+        <div id="tools-sub"></div>`;
+      $$("#tools-sub-nav .tab").forEach((a) => a.addEventListener("click", () => showTool((a as HTMLElement).dataset.tool!)));
+      showTool("mistakes");
+    }
+    function showTool(name: string) {
+      $$("#tools-sub-nav .tab").forEach((a) => a.classList.toggle("tab-active", (a as HTMLElement).dataset.tool === name));
+      if (name === "mistakes") renderMistakes();
+      if (name === "diagnostic") renderDiagnostic();
+      if (name === "timed") renderTimed();
+      if (name === "planner") renderPlanner();
+    }
+
+    // ---------- TOOL: mistake log ----------
+    function renderMistakes() {
       const ids = mistakeIds();
-      let h = `<h2 class="text-2xl font-bold mb-1">${t(UI.mistakesH)}</h2>
-               <p class="opacity-80 mb-4">${t(UI.mistakesIntro)}</p>`;
+      let h = `<p class="opacity-80 mb-4">${t(UI.mistakesIntro)}</p>`;
       if (!ids.length) {
         h += `<div class="alert">${t(UI.noMistakes)}</div>`;
       } else {
@@ -527,14 +611,109 @@ const sections = {
                     <p class="mt-1 opacity-80">${t(q.explain)}</p></div></div>`;
         }
       }
-      h += `<div class="divider"></div><p class="text-sm opacity-60">${t(UI.moreTools)}</p>`;
-      $("#tools-root").innerHTML = h;
+      $("#tools-sub").innerHTML = h;
       if (ids.length) {
         $("#m-retry").addEventListener("click", () => { pendingRetry = ids.slice(); showTab("practice"); startRun(pendingRetry); });
-        $("#m-clear").addEventListener("click", () => { clearAll(); renderTools(); });
+        $("#m-clear").addEventListener("click", () => { clearAll(); renderMistakes(); });
       }
     }
-    let pendingRetry: string[] = [];
+
+    // ---------- TOOL: diagnostic (2 per skill) ----------
+    function diagnosticIds(): string[] {
+      const ids: string[] = [];
+      for (const s of C.skills) {
+        const qs = shuffle(Q.filter((q) => q.skill === s.key)).slice(0, 2);
+        ids.push(...qs.map((q) => q.id));
+      }
+      return shuffle(ids);
+    }
+    function renderDiagnostic() {
+      const ids = diagnosticIds();
+      $("#tools-sub").innerHTML =
+        `<p class="opacity-80 mb-4">${t(UI.diagIntro)}</p>
+         <button class="btn btn-primary btn-sm" id="diag-start">${t(UI.diagStart)} (${ids.length})</button>`;
+      $("#diag-start").addEventListener("click", () =>
+        startRun(ids, { container: "#tools-sub", onFinish: showDiagReport }));
+    }
+    function showDiagReport(res: { answers: { id: string; correct: boolean }[] }) {
+      const per: Record<string, { c: number; n: number }> = {};
+      for (const a of res.answers) {
+        const q = Q.find((x) => x.id === a.id)!;
+        (per[q.skill] ||= { c: 0, n: 0 }).n++; if (a.correct) per[q.skill].c++;
+      }
+      const rows = Object.keys(per).map((k) => ({ k, ...per[k], acc: per[k].c / per[k].n }))
+        .sort((a, b) => a.acc - b.acc);
+      let h = `<h3 class="text-xl font-bold mb-3">${t(UI.diagReportH)}</h3>`;
+      for (const r of rows) {
+        const pct = Math.round(r.acc * 100);
+        const weak = r.acc < 0.6;
+        h += `<div class="flex items-center gap-3 mb-2">
+                <div class="w-40 text-sm">${t(skillByKey[r.k].label)}</div>
+                <progress class="progress ${weak ? "progress-error" : "progress-success"} w-40" value="${pct}" max="100"></progress>
+                <span class="text-sm opacity-70">${r.c}/${r.n}</span>
+                <span class="badge ${weak ? "badge-error" : "badge-success"} badge-sm">${weak ? t(UI.weak) : t(UI.strong)}</span>
+                <button class="btn btn-xs btn-outline" data-prac="${r.k}">${t(UI.practiceSkill)}</button></div>`;
+      }
+      h += `<button class="btn btn-sm btn-ghost mt-3" id="diag-again">${t(UI.retryDiag)}</button>`;
+      $("#tools-sub").innerHTML = h;
+      $$("#tools-sub [data-prac]").forEach((b) =>
+        b.addEventListener("click", () => { pendingSkill = (b as HTMLElement).dataset.prac!; showTab("practice"); }));
+      $("#diag-again").addEventListener("click", renderDiagnostic);
+    }
+
+    // ---------- TOOL: timed drill ----------
+    function renderTimed() {
+      $("#tools-sub").innerHTML =
+        `<p class="opacity-80 mb-4">${t(UI.timedIntro)}</p>
+         <button class="btn btn-primary btn-sm" id="timed-start">${t(UI.timedStart)}</button>`;
+      $("#timed-start").addEventListener("click", () =>
+        startRun(shuffle(Q.map((q) => q.id)), { container: "#tools-sub", timedSec: 600, onFinish: showTimedReport }));
+    }
+    function showTimedReport(res: { correct: number; total: number }) {
+      $("#tools-sub").innerHTML =
+        `<div class="alert alert-info block mb-3"><div class="font-bold">${t(UI.timedReportH)}</div>
+          <div class="mt-1">${t(UI.timedAnswered)}: ${res.total} · ${t(UI.timedCorrect)}: ${res.correct} · ${res.total ? Math.round((res.correct / res.total) * 100) : 0}% ${t(UI.acc)}</div></div>
+         <button class="btn btn-sm btn-ghost" id="timed-again">${t(UI.retake)}</button>`;
+      $("#timed-again").addEventListener("click", renderTimed);
+    }
+
+    // ---------- TOOL: score planner ----------
+    function renderPlanner() {
+      $("#tools-sub").innerHTML = `
+        <p class="opacity-80 mb-4">${t(UI.plannerIntro)}</p>
+        <div class="grid gap-3 sm:grid-cols-3 max-w-2xl">
+          <label class="form-control"><span class="label-text text-xs opacity-70">${t(UI.plTarget)}</span>
+            <input id="pl-target" type="number" min="400" max="1600" value="1400" class="input input-bordered input-sm" /></label>
+          <label class="form-control"><span class="label-text text-xs opacity-70">${t(UI.plRW)}</span>
+            <input id="pl-rw" type="number" min="200" max="800" value="600" class="input input-bordered input-sm" /></label>
+          <label class="form-control"><span class="label-text text-xs opacity-70">${t(UI.plMath)}</span>
+            <input id="pl-math" type="number" min="200" max="800" value="600" class="input input-bordered input-sm" /></label>
+        </div>
+        <button class="btn btn-primary btn-sm mt-3" id="pl-go">${t(UI.plCompute)}</button>
+        <div id="pl-out" class="mt-4"></div>`;
+      $("#pl-go").addEventListener("click", computePlan);
+    }
+    function clamp(v: number, lo: number, hi: number) { return Math.max(lo, Math.min(hi, v)); }
+    function computePlan() {
+      const target = clamp(+(($("#pl-target") as HTMLInputElement).value) || 0, 400, 1600);
+      const rw = clamp(+(($("#pl-rw") as HTMLInputElement).value) || 0, 200, 800);
+      const math = clamp(+(($("#pl-math") as HTMLInputElement).value) || 0, 200, 800);
+      const gap = target - (rw + math);
+      const out = $("#pl-out");
+      if (gap <= 0) { out.innerHTML = `<div class="alert alert-success block">${t(UI.plGapNone)}</div>`; return; }
+      const roomRW = 800 - rw, roomMath = 800 - math, room = roomRW + roomMath || 1;
+      let addRW = Math.round(gap * (roomRW / room));
+      addRW = clamp(addRW, 0, roomRW);
+      let addMath = gap - addRW;
+      if (addMath > roomMath) { addMath = roomMath; addRW = clamp(gap - addMath, 0, roomRW); }
+      out.innerHTML = `
+        <div class="alert alert-info block">
+          <div class="font-bold mb-1">${t(UI.plNeed)} ${target}:</div>
+          <div>📖 ${t(UI.plAddRW)} <b>+${addRW}</b> (${t(UI.plFrom)} ${rw} ${t(UI.plTo)} ${rw + addRW})</div>
+          <div>➗ ${t(UI.plAddMath)} <b>+${addMath}</b> (${t(UI.plFrom)} ${math} ${t(UI.plTo)} ${math + addMath})</div>
+          <div class="text-xs opacity-70 mt-1">${t(UI.plCapNote)}</div>
+        </div>`;
+    }
 
     // ---------- boot ----------
     function activeTab(): string {
