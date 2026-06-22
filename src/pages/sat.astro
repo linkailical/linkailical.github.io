@@ -254,6 +254,7 @@ const sections = {
   <script>
     import { SAT_CONTENT } from "../data/satContent";
     import { SAT_QUESTIONS } from "../data/satQuestions";
+    import { SAT_VOCAB, SAT_QUICKCARDS } from "../data/satTools";
 
     type Bil = { en: string; zh: string };
     let lang: "en" | "zh" = localStorage.getItem("language") === "zh" ? "zh" : "en";
@@ -317,6 +318,18 @@ const sections = {
       plAddMath: L("gain in Math", "数学需提升"), plFrom: L("from", "从"), plTo: L("to", "到"),
       plCapNote: L("Each section caps at 800, so the plan stays within reach.", "每科上限为 800，规划已控制在可达范围内。"),
       retake: L("Retake", "重做"),
+      // Flashcards + Quick cards
+      flashH: L("Flashcards", "单词卡"),
+      flashIntro: L("Context vocabulary. Tap a card to flip; mark words you know to drop them from this round.",
+                    "语境词汇。点击卡片翻面；标记“认识”可在本轮中移除该词。"),
+      flashTapHint: L("Tap to flip", "点击翻面"),
+      flashKnow: L("I know this", "认识"), flashAgain: L("Review again", "再复习"),
+      flashShuffle: L("Shuffle", "打乱"), flashReset: L("Reset round", "重置本轮"),
+      flashDone: L("Round complete — you reviewed every card!", "本轮完成——所有卡片都复习过了！"),
+      quickH: L("Quick cards", "速查卡"),
+      quickIntro: L("A compact formula and grammar reference to internalize.",
+                    "需要熟记的公式与语法速查表。"),
+      openPage: L("Open full lesson page →", "打开完整知识页 →"),
     };
 
     // ---------- progress (localStorage; no backend on GitHub Pages) ----------
@@ -391,7 +404,9 @@ const sections = {
       }
       h += `<div class="divider text-lg font-bold">${t(UI.tipsH)}</div><ul class="list-disc pl-5">`;
       for (const tip of s.tips) h += `<li class="mb-1">${t(tip)}</li>`;
-      h += `</ul><div class="mt-4"><button class="btn btn-primary btn-sm" id="learn-practice">${t(UI.practiceThis)}</button></div>`;
+      h += `</ul><div class="mt-4 flex flex-wrap gap-2">
+              <button class="btn btn-primary btn-sm" id="learn-practice">${t(UI.practiceThis)}</button>
+              <a class="btn btn-outline btn-sm" href="/sat/skills/${s.key}/">${t(UI.openPage)}</a></div>`;
       $("#learn-root").innerHTML = h;
       $("#learn-back").addEventListener("click", renderLearn);
       $("#learn-practice").addEventListener("click", () => { pendingSkill = key; showTab("practice"); });
@@ -575,6 +590,8 @@ const sections = {
           <a class="tab tab-active" data-tool="mistakes">${t(UI.mistakesH)}</a>
           <a class="tab" data-tool="diagnostic">${t(UI.diagH)}</a>
           <a class="tab" data-tool="timed">${t(UI.timedH)}</a>
+          <a class="tab" data-tool="flashcards">${t(UI.flashH)}</a>
+          <a class="tab" data-tool="quickcards">${t(UI.quickH)}</a>
           <a class="tab" data-tool="planner">${t(UI.plannerH)}</a>
         </div>
         <div id="tools-sub"></div>`;
@@ -586,6 +603,8 @@ const sections = {
       if (name === "mistakes") renderMistakes();
       if (name === "diagnostic") renderDiagnostic();
       if (name === "timed") renderTimed();
+      if (name === "flashcards") renderFlashcards();
+      if (name === "quickcards") renderQuickcards();
       if (name === "planner") renderPlanner();
     }
 
@@ -677,6 +696,58 @@ const sections = {
       $("#timed-again").addEventListener("click", renderTimed);
     }
 
+    // ---------- TOOL: flashcards ----------
+    let fcOrder: number[] = [];
+    let fcPos = 0;
+    let fcFlipped = false;
+    function renderFlashcards(reset = true) {
+      if (reset || !fcOrder.length) { fcOrder = shuffle(SAT_VOCAB.map((_, i) => i)); fcPos = 0; fcFlipped = false; }
+      if (fcPos >= fcOrder.length) {
+        $("#tools-sub").innerHTML =
+          `<div class="alert alert-success block mb-3">${t(UI.flashDone)}</div>
+           <button class="btn btn-sm btn-primary" id="fc-reset">${t(UI.flashReset)}</button>`;
+        $("#fc-reset").addEventListener("click", () => renderFlashcards(true));
+        return;
+      }
+      const card = SAT_VOCAB[fcOrder[fcPos]];
+      const faceFront = `<div class="text-3xl font-bold">${esc(card.word)}</div>
+        <div class="opacity-60 mt-1">${esc(card.pos)}</div>
+        <div class="text-xs opacity-50 mt-4">${t(UI.flashTapHint)}</div>`;
+      const faceBack = `<div class="text-lg font-semibold mb-2">${t(card.def)}</div>
+        <div class="text-sm opacity-80 italic">"${esc(card.example)}"</div>`;
+      $("#tools-sub").innerHTML = `
+        <p class="opacity-80 mb-3">${t(UI.flashIntro)}</p>
+        <div class="text-sm opacity-60 mb-2">${fcPos + 1} ${t(UI.qOf)} ${fcOrder.length}</div>
+        <div id="fc-card" class="card bg-base-100 border border-base-300 cursor-pointer select-none mb-3"
+             style="min-height:180px"><div class="card-body items-center justify-center text-center">
+          ${fcFlipped ? faceBack : faceFront}</div></div>
+        <div class="flex flex-wrap gap-2">
+          <button class="btn btn-sm btn-success" id="fc-know">${t(UI.flashKnow)}</button>
+          <button class="btn btn-sm btn-outline" id="fc-again">${t(UI.flashAgain)}</button>
+          <button class="btn btn-sm btn-ghost" id="fc-shuffle">${t(UI.flashShuffle)}</button>
+        </div>`;
+      $("#fc-card").addEventListener("click", () => { fcFlipped = !fcFlipped; renderFlashcards(false); });
+      // "know" drops the card from this round; "again" sends it to the back
+      $("#fc-know").addEventListener("click", () => { fcOrder.splice(fcPos, 1); fcFlipped = false; renderFlashcards(false); });
+      $("#fc-again").addEventListener("click", () => { fcOrder.push(fcOrder.splice(fcPos, 1)[0]); fcFlipped = false; renderFlashcards(false); });
+      $("#fc-shuffle").addEventListener("click", () => renderFlashcards(true));
+    }
+
+    // ---------- TOOL: quick cards ----------
+    function renderQuickcards() {
+      let h = `<p class="opacity-80 mb-4">${t(UI.quickIntro)}</p>`;
+      for (const g of SAT_QUICKCARDS) {
+        h += `<h3 class="text-lg font-bold mb-2">${t(g.label)}</h3><div class="grid gap-3 md:grid-cols-2 mb-6">`;
+        for (const c of g.cards) {
+          h += `<div class="rounded-lg border border-base-300 bg-base-100 p-3">
+                  <div class="font-mono text-sm font-semibold">${esc(c.front)}</div>
+                  <div class="text-sm opacity-80 mt-1">${t(c.back)}</div></div>`;
+        }
+        h += `</div>`;
+      }
+      $("#tools-sub").innerHTML = h;
+    }
+
     // ---------- TOOL: score planner ----------
     function renderPlanner() {
       $("#tools-sub").innerHTML = `
@@ -738,8 +809,10 @@ const sections = {
       if (l !== lang) { lang = l; applyStaticLang(); relabelTabs(); showTab(activeTab()); }
     }).observe(document.documentElement, { attributes: true, attributeFilter: ["lang"] });
 
-    // deep link: /sat#practice etc.
+    // deep links: /sat?skill=KEY#practice (from a skill page) and /sat#practice
+    const skillParam = new URLSearchParams(location.search).get("skill");
     const hash = location.hash.replace("#", "");
-    if (["learn", "practice", "tools", "notes"].includes(hash)) showTab(hash);
+    if (skillParam && skillByKey[skillParam]) { pendingSkill = skillParam; showTab("practice"); }
+    else if (["learn", "practice", "tools", "notes"].includes(hash)) showTab(hash);
   </script>
 </BaseLayout>

@@ -1,0 +1,78 @@
+---
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { SAT_CONTENT } from "../../../data/satContent";
+
+export function getStaticPaths() {
+  return SAT_CONTENT.skills.map((s) => ({ params: { skill: s.key }, props: { skill: s } }));
+}
+
+const { skill } = Astro.props;
+const section = SAT_CONTENT.sections.find((s) => s.key === skill.section)!;
+const ui = {
+  en: { back: "← All skills", overview: "Overview", lesson: "Lesson", example: "Worked example",
+        tips: "Tips", practice: "Practice this skill →", section: "Section" },
+  zh: { back: "← 所有技能", overview: "总览", lesson: "课程", example: "例题讲解",
+        tips: "技巧", practice: "练习该技能 →", section: "板块" },
+} as const;
+---
+
+<BaseLayout title={`${skill.label.en} | SAT Study Hub`} sideBarActiveItemID="sat">
+  <style is:inline>
+    .sat-view[data-lang="zh"] { display: none; }
+  </style>
+  <script is:inline>
+    (function () {
+      if (localStorage.getItem("language") === "zh") {
+        document.write('<style>.sat-view[data-lang="en"]{display:none}.sat-view[data-lang="zh"]{display:block}</style>');
+      }
+    })();
+  </script>
+
+  {(["en", "zh"] as const).map((lang) => {
+    const c = ui[lang];
+    return (
+      <div class="sat-view" data-lang={lang}>
+        <div class="text-sm breadcrumbs opacity-70 mb-2">
+          <ul><li><a href="/sat#learn">SAT</a></li><li>{section.label[lang]}</li></ul>
+        </div>
+        <div class="badge badge-secondary mb-2">{section.icon} {section.label[lang]}</div>
+        <h1 class="text-4xl font-bold font-serif mb-2">{skill.label[lang]}</h1>
+        <p class="text-lg opacity-80">{skill.summary[lang]}</p>
+
+        <div class="mt-4 flex flex-wrap gap-3">
+          <a class="btn btn-primary btn-sm" href={`/sat?skill=${skill.key}#practice`}>{c.practice}</a>
+          <a class="btn btn-outline btn-sm" href="/sat#learn">{c.back}</a>
+        </div>
+
+        <div class="divider text-xl font-bold">{c.lesson}</div>
+        {skill.lesson.map((b) => (
+          <div class="rounded-lg bg-base-200 p-4 mb-3">
+            <div class="font-bold">{b.h[lang]}</div>
+            <p class="mt-1 opacity-80">{b.body[lang]}</p>
+          </div>
+        ))}
+
+        {skill.examples?.length > 0 && (
+          <>
+            <div class="divider text-xl font-bold">{c.example}</div>
+            {skill.examples.map((e) => (
+              <div class="rounded-lg bg-base-200 p-4 mb-3">
+                <p><b>Q.</b> {e.q[lang]}</p>
+                <p class="mt-1"><b>→</b> {e.sol[lang]}</p>
+              </div>
+            ))}
+          </>
+        )}
+
+        <div class="divider text-xl font-bold">{c.tips}</div>
+        <ul class="list-disc pl-5">
+          {skill.tips.map((tip) => <li class="mb-1">{tip[lang]}</li>)}
+        </ul>
+
+        <div class="mt-6">
+          <a class="btn btn-primary btn-sm" href={`/sat?skill=${skill.key}#practice`}>{c.practice}</a>
+        </div>
+      </div>
+    );
+  })}
+</BaseLayout>
