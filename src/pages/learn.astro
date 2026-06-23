@@ -13,6 +13,7 @@ const lab = {
     satCopy: "Lessons across all eight Digital SAT skills, a question bank with bilingual explanations, an adaptive tutor and study tools, and progress tracking — all in your browser.",
     satLinks: [["Learn", "/sat#learn"], ["Practice", "/sat#practice"], ["Tools", "/sat#tools"], ["Skill pages", "/sat/skills/rw-info/"]],
     open: "Open",
+    pdf: "Study guide (PDF)",
     modulesTitle: "More learning directions",
     modules: [
       {
@@ -42,6 +43,7 @@ const lab = {
     satCopy: "覆盖机考 SAT 全部八个技能的课程、带中英解析的题库、自适应辅导与学习工具，以及进度追踪——全部在浏览器中运行。",
     satLinks: [["学习", "/sat#learn"], ["练习", "/sat#practice"], ["工具", "/sat#tools"], ["技能页", "/sat/skills/rw-info/"]],
     open: "打开",
+    pdf: "学习手册 (PDF)",
     modulesTitle: "更多学习方向",
     modules: [
       {
@@ -98,6 +100,7 @@ const lab = {
               {c.satLinks.map((l) => (
                 <a class="btn btn-outline btn-sm" href={l[1]}>{l[0]}</a>
               ))}
+              <a class="btn btn-outline btn-sm" href="/satStudy/book/main.pdf" target="_blank" rel="noopener">⬇ {c.pdf}</a>
             </div>
           </div>
         </section>

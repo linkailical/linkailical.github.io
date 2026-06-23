@@ -9,6 +9,7 @@ const sections = {
       "A bilingual SAT study system: exam overview, knowledge maps, interactive practice, and study tools.",
     intro:
       "Start with the overview, learn each skill, then practise — your accuracy and mistakes are saved in your browser.",
+    pdfLabel: "Study guide (PDF)",
     overviewTitle: "How The SAT Works",
     overviewCards: [
       ["Format", "Digital SAT in Bluebook: Reading & Writing and Math, each split into two adaptive modules."],
@@ -63,6 +64,7 @@ const sections = {
       "一个中英文 SAT 学习系统：考试说明、知识地图、互动练习和学习工具。",
     intro:
       "先看总览，再逐个技能学习，然后练习——你的正确率和错题会保存在浏览器中。",
+    pdfLabel: "学习手册 (PDF)",
     overviewTitle: "SAT 如何考试",
     overviewCards: [
       ["形式", "机考 SAT 在 Bluebook 中完成，分为 Reading & Writing 和 Math，两科各有两个自适应模块。"],
@@ -136,6 +138,9 @@ const sections = {
           <h1 class="text-4xl font-bold font-serif mb-3">{content.title}</h1>
           <p class="text-lg opacity-80">{content.subtitle}</p>
           <p class="mt-3 opacity-80">{content.intro}</p>
+          <div class="mt-4">
+            <a class="btn btn-outline btn-sm" href="/satStudy/book/main.pdf" target="_blank" rel="noopener">⬇ {content.pdfLabel}</a>
+          </div>
         </section>
       </div>
     );
