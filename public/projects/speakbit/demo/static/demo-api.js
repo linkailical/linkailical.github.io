@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const DEMO_PROJECT_ID = "voiceweave-demo";
+  const DEMO_PROJECT_ID = "speakbit-cultural-night";
   const DEMO_MEETING_ID = "demo-meeting-learned";
   const now = Date.UTC(2026, 8, 3, 17, 30, 0);
   const clone = (value) => JSON.parse(JSON.stringify(value));
@@ -20,33 +20,33 @@
 
   const knownSpeakers = [
     {
-      speaker_id: "demo_person_lin_kai",
+      speaker_id: "demo_person_jordan",
       local_id: "spk0",
-      display_name: "林楷",
-      canonical_name: "林楷",
-      role: "产品负责人",
+      display_name: "Jordan",
+      canonical_name: "Jordan",
+      role: "Project Lead",
       conf: 0.94,
       matched: true,
       identity_status: "confirmed",
       identity_source: "voiceprint",
     },
     {
-      speaker_id: "demo_person_chen_yu",
+      speaker_id: "demo_person_ava",
       local_id: "spk1",
-      display_name: "陈雨",
-      canonical_name: "陈雨",
-      role: "演示负责人",
+      display_name: "Ava",
+      canonical_name: "Ava",
+      role: "Event Coordinator",
       conf: 0.91,
       matched: true,
       identity_status: "confirmed",
       identity_source: "voiceprint",
     },
     {
-      speaker_id: "demo_person_alex",
+      speaker_id: "demo_person_maya",
       local_id: "spk2",
-      display_name: "Alex Chen",
-      canonical_name: "Alex Chen",
-      role: "国际交流",
+      display_name: "Maya",
+      canonical_name: "Maya",
+      role: "Design Lead",
       conf: 0.89,
       matched: true,
       identity_status: "confirmed",
@@ -60,9 +60,9 @@
       ...knownSpeakers[0],
       t0: 0,
       t1: 4.2,
-      text: "大家好，我是林楷。今天确认路演版本的核心流程。",
-      source_text: "大家好，我是林楷。今天确认路演版本的核心流程。",
-      language: "zh-CN",
+      text: "The cafeteria is already booked. Let's use the auditorium.",
+      source_text: "The cafeteria is already booked. Let's use the auditorium.",
+      language: "en",
       voice_similarity: 0.94,
       speaker_decision: "known_voiceprint",
     },
@@ -71,10 +71,10 @@
       ...knownSpeakers[2],
       t0: 4.4,
       t1: 9.6,
-      text: "现场录音会同步显示英文发言的中文翻译。",
-      source_text: "The live transcript will show a Chinese translation while I am speaking.",
+      text: "Jordan will take the posters, and we should use packaged food only.",
+      source_text: "Jordan will take the posters, and we should use packaged food only.",
       language: "en",
-      translation_target: "zh-CN",
+      translation_target: "en",
       translation_fallback: false,
       voice_similarity: 0.89,
       speaker_decision: "known_voiceprint",
@@ -84,9 +84,9 @@
       ...knownSpeakers[1],
       t0: 10,
       t1: 15.3,
-      text: "我负责展示第一次未知、人工确认、第二次自动命中的过程。",
-      source_text: "我负责展示第一次未知、人工确认、第二次自动命中的过程。",
-      language: "zh-CN",
+      text: "I'll update the floor plan for the auditorium.",
+      source_text: "I'll update the floor plan for the auditorium.",
+      language: "en",
       voice_similarity: 0.91,
       speaker_decision: "known_voiceprint",
     },
@@ -95,9 +95,11 @@
       ...knownSpeakers[0],
       t0: 15.7,
       t1: 21.4,
-      text: "所有长期记忆都要经过人工确认，自动猜测不会写入正式声纹库。",
-      source_text: "所有长期记忆都要经过人工确认，自动猜测不会写入正式声纹库。",
+      text: "Add eighty dollars for lighting. The new budget is two hundred eighty dollars.",
+      source_text: "灯光再增加八十美元，新预算是二百八十美元。",
       language: "zh-CN",
+      translation_target: "en",
+      translation_fallback: false,
       voice_similarity: 0.96,
       speaker_decision: "known_voiceprint",
     },
@@ -106,10 +108,10 @@
       ...knownSpeakers[2],
       t0: 21.8,
       t1: 27.5,
-      text: "演示结束后，我们导出会议纪要并检查人物关系图。",
-      source_text: "After the demo, we will export the notes and inspect the people graph.",
+      text: "I'll confirm the room, owners, food plan, and budget in the final checklist.",
+      source_text: "I'll confirm the room, owners, food plan, and budget in the final checklist.",
       language: "en",
-      translation_target: "zh-CN",
+      translation_target: "en",
       translation_fallback: false,
       voice_similarity: 0.92,
       speaker_decision: "known_voiceprint",
@@ -117,23 +119,23 @@
   ];
 
   function summaryFor(utterances, complete) {
-    const hasAlex = utterances.some((item) => item.speaker_id === "demo_person_alex");
-    const hasChen = utterances.some((item) => item.speaker_id === "demo_person_chen_yu");
+    const hasMaya = utterances.some((item) => item.speaker_id === "demo_person_maya");
+    const hasAva = utterances.some((item) => item.speaker_id === "demo_person_ava");
     const bySpeaker = {};
-    if (utterances.some((item) => item.speaker_id === "demo_person_lin_kai")) {
-      bySpeaker["林楷"] = "确认路演核心流程，并强调只有人工确认的证据才能进入长期记忆。";
+    if (utterances.some((item) => item.speaker_id === "demo_person_jordan")) {
+      bySpeaker.Jordan = "Moved Cultural Night to the auditorium and will verify the final checklist.";
     }
-    if (hasAlex) bySpeaker["Alex Chen"] = "验证英文发言可在录音中同步翻译，并提出演示后检查关系图。";
-    if (hasChen) bySpeaker["陈雨"] = "负责展示首次未知、人工确认和下一场自动命中的学习闭环。";
+    if (hasMaya) bySpeaker.Maya = "Will update the auditorium floor plan.";
+    if (hasAva) bySpeaker.Ava = "Reassigned the posters, changed the food plan, and raised the lighting budget.";
     return {
       brief: complete
-        ? "路演版已覆盖录音中转写、翻译、发言人识别、会议纪要和确认后持续学习。"
+        ? "Cultural Night moved to the auditorium; ownership, food, and budget changes are now traceable to their speakers."
         : utterances.length
-          ? "正在根据已定稿发言增量更新会议纪要……"
+          ? "Updating the meeting record from finalized transcript segments…"
           : "",
       by_speaker: bySpeaker,
       actions: complete
-        ? ["陈雨完成两场“越用越准”演示。", "Alex Chen 检查双语字幕与关系图。"]
+        ? ["Jordan confirms the final event checklist.", "Maya updates the auditorium floor plan."]
         : [],
     };
   }
@@ -153,27 +155,30 @@
       summary: summaryFor(utterances, complete),
       transcript_meta: {
         source: "live_recording",
-        source_label: complete ? "录音中实时识别 · Pages 演示数据" : "录音中实时识别 · 正在生成",
+        source_label: complete ? "Live recognition · Pages demo data" : "Live recognition · generating",
         utterance_count: utterances.length,
         speaker_count: speakers.length,
       },
       translation: {
         translation_mode: "follow-locale",
-        translation_targets: ["zh-CN"],
+        translation_targets: ["en"],
         translation_fallback: false,
       },
       project_memory: {
         current: [
-          { fact_key: "demo_date", label: "路演日期", value: "9 月 12 日", version: 2 },
-          { fact_key: "demo_owner", label: "演示负责人", value: "陈雨", version: 1 },
+          { fact_key: "event_date", label: "Event date", value: "March 22", version: 2 },
+          { fact_key: "event_room", label: "Room", value: "Auditorium", version: 2 },
+          { fact_key: "poster_owner", label: "Poster owner", value: "Jordan", version: 2 },
+          { fact_key: "food_plan", label: "Food plan", value: "Packaged", version: 2 },
+          { fact_key: "event_budget", label: "Budget", value: "$280", version: 2 },
         ],
         proposals: complete
           ? [{
               proposal_id: "memory_demo_export",
               meeting_id: DEMO_MEETING_ID,
-              fact_key: "demo_check",
-              label: "路演检查项",
-              value: "导出纪要并检查人物关系图",
+              fact_key: "final_checklist",
+              label: "Final checklist",
+              value: "Confirm room, owners, food plan, and budget",
               evidence: { utterance_id: "utt-demo-05", t0: 21.8, t1: 27.5, text: learnedUtterances[4].source_text },
             }]
           : [],
@@ -191,13 +196,13 @@
         utterance_id: "utt-first-01",
         speaker_id: "pending:spk0",
         local_id: "spk0",
-        display_name: "未知说话人 1",
+        display_name: "Unknown speaker 1",
         role: "",
         t0: 0,
         t1: 7.5,
-        text: "大家好，我是林楷。第一次见面时系统还没有我的声纹。",
-        source_text: "大家好，我是林楷。第一次见面时系统还没有我的声纹。",
-        language: "zh-CN",
+        text: "Hi, I'm Jordan. I'll coordinate the Cultural Night plan.",
+        source_text: "Hi, I'm Jordan. I'll coordinate the Cultural Night plan.",
+        language: "en",
         conf: 0.78,
         identity_status: "resolved",
         identity_source: "voice_cluster",
@@ -208,13 +213,13 @@
         utterance_id: "utt-first-02",
         speaker_id: "pending:spk0",
         local_id: "spk0",
-        display_name: "未知说话人 1",
+        display_name: "Unknown speaker 1",
         role: "",
         t0: 8,
         t1: 15.8,
-        text: "人工确认后，这段声音才会进入长期库。",
-        source_text: "人工确认后，这段声音才会进入长期库。",
-        language: "zh-CN",
+        text: "The event is planned for March 15 in the cafeteria.",
+        source_text: "The event is planned for March 15 in the cafeteria.",
+        language: "en",
         conf: 0.81,
         identity_status: "resolved",
         identity_source: "voice_cluster",
@@ -226,18 +231,18 @@
     speakers: [{
       speaker_id: "pending:spk0",
       local_id: "spk0",
-      display_name: "未知说话人 1",
+      display_name: "Unknown speaker 1",
       conf: 0.78,
       identity_status: "resolved",
       identity_source: "voice_cluster",
       unidentified: true,
     }],
     summary: {
-      brief: "第一场只形成临时说话人；确认之前不写入长期声纹库。",
-      by_speaker: { "未知说话人 1": "自我介绍为林楷，并说明确认后才允许写入长期记忆。" },
-      actions: ["人工复核未知说话人 1 的身份。"],
+      brief: "Meeting one creates a temporary speaker; no long-term voice memory is written before human confirmation.",
+      by_speaker: { "Unknown speaker 1": "Introduced themself as Jordan and set the initial date and room." },
+      actions: ["Review and confirm Unknown speaker 1."],
     },
-    transcript_meta: { source: "live_recording", source_label: "首次识别 · 待人工确认", utterance_count: 2, speaker_count: 1 },
+    transcript_meta: { source: "live_recording", source_label: "First recognition · awaiting confirmation", utterance_count: 2, speaker_count: 1 },
     confirmation: { proposal_id: "demo-proposal-first", status: "pending" },
     speaker_review: {
       status: "pending",
@@ -248,7 +253,7 @@
       items: [{
         speaker_id: "pending:spk0",
         local_id: "spk0",
-        display_name: "未知说话人 1",
+        display_name: "Unknown speaker 1",
         confidence: 0.78,
         needs_review: true,
         suggested_resolution: "new",
@@ -259,8 +264,8 @@
 
   const projects = [{
     project_id: DEMO_PROJECT_ID,
-    name: "VoiceWeave 创新赛演示",
-    description: "录音中转写、翻译、发言人识别与确认后持续学习。",
+    name: "Cultural Night",
+    description: "SpeakBit demo: transcription, translation, confirmed speakers, and cross-meeting change tracking.",
     created_at: now - 86400000 * 8,
     updated_at: now,
   }];
@@ -268,12 +273,23 @@
   const meetingsByProject = {
     [DEMO_PROJECT_ID]: [
       {
+        meeting_id: "demo-meeting-date",
+        project_id: DEMO_PROJECT_ID,
+        title: "Meeting 3 · Final date update",
+        status: "ready",
+        duration_s: 12,
+        summary_brief: "The event date changed from March 15 to March 22; the rest of the confirmed plan remains current.",
+        source: "demo",
+        created_at: now - 1800000,
+        updated_at: now,
+      },
+      {
         meeting_id: DEMO_MEETING_ID,
         project_id: DEMO_PROJECT_ID,
-        title: "路演准备会 · 第二场（已学习）",
+        title: "Meeting 2 · Plan changes",
         status: "ready",
         duration_s: 28,
-        summary_brief: "已同步完成转写、翻译和三位发言人识别。",
+        summary_brief: "Room, poster owner, food plan, and budget changes are linked to three speakers.",
         source: "demo",
         created_at: now - 3600000,
         updated_at: now,
@@ -281,10 +297,10 @@
       {
         meeting_id: "demo-meeting-first",
         project_id: DEMO_PROJECT_ID,
-        title: "第一次见面 · 未知声音待确认",
+        title: "Meeting 1 · Baseline and speaker confirmation",
         status: "ready",
         duration_s: 16,
-        summary_brief: "首次出现的声音保持未知，人工确认前不进入长期库。",
+        summary_brief: "A new voice stays unknown until a person confirms Jordan's identity.",
         source: "demo",
         created_at: now - 86400000,
         updated_at: now - 86400000,
@@ -295,6 +311,30 @@
   const resultsByMeeting = {
     [DEMO_MEETING_ID]: learnedResult(),
     "demo-meeting-first": firstMeetingResult,
+    "demo-meeting-date": {
+      ...learnedResult(),
+      session_id: "demo-meeting-date",
+      meeting_id: "demo-meeting-date",
+      duration_s: 12,
+      utterances: [{
+        utterance_id: "utt-date-01",
+        ...knownSpeakers[2],
+        t0: 0,
+        t1: 7.8,
+        text: "The auditorium is available on March 22, so that is our final event date.",
+        source_text: "The auditorium is available on March 22, so that is our final event date.",
+        language: "en",
+        voice_similarity: 0.93,
+        speaker_decision: "known_voiceprint",
+      }],
+      speakers: [knownSpeakers[2]],
+      summary: {
+        brief: "The event date changed from March 15 to March 22.",
+        by_speaker: { Maya: "Confirmed March 22 as the final event date." },
+        actions: ["Jordan updates the final checklist with the March 22 date."],
+      },
+      transcript_meta: { source: "live_recording", source_label: "Live recognition · confirmed speaker", utterance_count: 1, speaker_count: 1 },
+    },
   };
 
   const evaluationResult = {
@@ -339,7 +379,7 @@
       live_chunk: true,
       language: "auto",
       translation_mode: "follow-locale",
-      translation_target: "zh-CN",
+      translation_target: "en",
     };
   }
 
@@ -376,12 +416,12 @@
   function graphSnapshot() {
     const people = voiceprintPeople.map((person) => ({ id: person.person_id, label: person.display_name, type: "person" }));
     const featured = people.slice(0, 4);
-    if (gmaCompleted) featured.push({ id: "demo_person_lin_kai", label: "林楷", type: "person" });
+    if (gmaCompleted) featured.push({ id: "demo_person_jordan", label: "Jordan", type: "person" });
     return {
       nodes: [
         ...featured,
-        { id: "session_demo_first", label: "第一次见面", type: "session" },
-        { id: "session_demo_learned", label: "路演准备会", type: "session" },
+        { id: "session_demo_first", label: "Meeting 1", type: "session" },
+        { id: "session_demo_learned", label: "Meeting 2", type: "session" },
       ],
       edges: [
         { source: featured[0].id, target: "session_demo_first", type: "attended", weight: 1 },
@@ -389,7 +429,7 @@
         { source: featured[1].id, target: "session_demo_learned", type: "attended", weight: 1 },
         { source: featured[2].id, target: "session_demo_learned", type: "attended", weight: 1 },
         { source: featured[0].id, target: featured[1].id, type: "co_present", weight: 2 },
-        ...(gmaCompleted ? [{ source: "demo_person_lin_kai", target: "session_demo_learned", type: "attended", weight: 2 }] : []),
+        ...(gmaCompleted ? [{ source: "demo_person_jordan", target: "session_demo_learned", type: "attended", weight: 2 }] : []),
       ],
     };
   }
@@ -461,7 +501,7 @@
     if (path === "/api/app-config") {
       return {
         edition: "speakbit",
-        display_name: "VoiceWeave · 中学生创新比赛",
+        display_name: "SpeakBit · Student Innovation Project",
         legacy_data: false,
         demo_mode: true,
         features: {
@@ -507,7 +547,7 @@
     if (path === "/api/projects" && method === "POST") {
       const body = bodyFrom(options);
       const id = `demo-project-${Date.now()}`;
-      const project = { project_id: id, name: body.name || "新建演示项目", description: "仅保存在本次浏览器演示中", created_at: Date.now(), updated_at: Date.now() };
+      const project = { project_id: id, name: body.name || "New demo project", description: "Stored only for this browser demo session", created_at: Date.now(), updated_at: Date.now() };
       projects.push(project);
       meetingsByProject[id] = [];
       return clone(project);
@@ -516,12 +556,12 @@
     if (parts[0] === "api" && parts[1] === "projects" && parts[3] === "meetings") {
       const projectId = parts[2];
       const project = projects.find((item) => item.project_id === projectId);
-      if (!project) throw new Error("演示项目不存在");
+      if (!project) throw new Error("Demo project not found");
       if (method === "GET") return { project: clone(project), meetings: clone(meetingsByProject[projectId] || []) };
       if (method === "POST") {
         const body = bodyFrom(options);
         const meetingId = `demo-meeting-${Date.now()}`;
-        const meeting = { meeting_id: meetingId, project_id: projectId, title: body.title || "新的演示会议", status: "draft", duration_s: 0, summary_brief: "点击开始录音运行静态演示", source: "demo", created_at: Date.now(), updated_at: Date.now() };
+        const meeting = { meeting_id: meetingId, project_id: projectId, title: body.title || "New demo meeting", status: "draft", duration_s: 0, summary_brief: "Select Start Recording to run the browser simulation", source: "demo", created_at: Date.now(), updated_at: Date.now() };
         meetingsByProject[projectId].unshift(meeting);
         resultsByMeeting[meetingId] = { ...learnedResult({ utterances: [], complete: false }), meeting_id: meetingId, session_id: meetingId, project_id: projectId };
         return clone(meeting);
@@ -529,7 +569,7 @@
     }
     if (parts[0] === "api" && parts[1] === "meetings" && parts.length === 3) {
       const meeting = findMeeting(parts[2]);
-      if (!meeting) throw new Error("演示会议不存在");
+      if (!meeting) throw new Error("Demo meeting not found");
       if (method === "DELETE") return { ok: true };
       return { meeting: clone(meeting), result: clone(resultsByMeeting[meeting.meeting_id]) };
     }
@@ -545,7 +585,7 @@
       return { meeting: clone(meeting || meetingsByProject[DEMO_PROJECT_ID][0]), result: clone(result) };
     }
     if (parts[0] === "api" && parts[1] === "meetings" && parts[3] === "speakers" && parts[4] === "confirm") {
-      const meeting = findMeeting(parts[2]) || meetingsByProject[DEMO_PROJECT_ID][1];
+      const meeting = findMeeting(parts[2]) || findMeeting("demo-meeting-first");
       const result = learnedResult();
       result.meeting_id = meeting.meeting_id;
       result.session_id = meeting.meeting_id;
@@ -559,40 +599,40 @@
     }
     if (parts[0] === "api" && parts[1] === "projects" && parts[3] === "memory" && parts[4] === "confirm") {
       const memory = learnedResult().project_memory;
-      memory.current.push({ fact_key: "demo_check", label: "路演检查项", value: "导出纪要并检查人物关系图", version: 1 });
+      memory.current.push({ fact_key: "final_checklist", label: "Final checklist", value: "Confirm room, owners, food plan, and budget", version: 1 });
       memory.proposals = [];
       return { ok: true, memory };
     }
     if (parts[0] === "api" && parts[1] === "projects" && parts[3] === "query") {
       return {
-        answer: "项目已进入路演演示阶段。当前重点是稳定展示录音中转写、双语翻译、发言人识别，以及人工确认后下一场自动命中的闭环。",
+        answer: "Cultural Night is scheduled for March 22 in the auditorium. Jordan owns the posters, packaged food is required, and the current budget is $280.",
         evidence: [
-          { meeting_title: "路演准备会 · 第二场（已学习）", time_label: "00:15", speaker: "林楷", text: learnedUtterances[3].source_text, source: "ASR" },
-          { meeting_title: "路演准备会 · 第二场（已学习）", time_label: "00:21", speaker: "Alex Chen", text: learnedUtterances[4].source_text, source: "ASR" },
+          { meeting_title: "Meeting 2 · Plan changes", time_label: "00:15", speaker: "Ava", text: learnedUtterances[3].source_text, source: "ASR" },
+          { meeting_title: "Meeting 3 · Final date update", time_label: "00:00", speaker: "Maya", text: "The auditorium is available on March 22, so that is our final event date.", source: "ASR" },
         ],
       };
     }
     if (path === "/api/graph") return graphSnapshot();
     if (path === "/api/knowledge") return knowledgeSnapshot();
     if (path === "/api/demo/getting-more-accurate" && method === "POST") {
-      const personName = String(bodyFrom(options).person_name || "林楷");
+      const personName = String(bodyFrom(options).person_name || "Jordan");
       await wait(450);
       gmaCompleted = true;
-      if (!voiceprintPeople.some((item) => item.person_id === "demo_person_lin_kai")) {
-        voiceprintPeople = [...voiceprintPeople, { person_id: "demo_person_lin_kai", display_name: personName, sample_count: 2, prototype_count: 1, hit_count: 1, embedding_dim: 512, identity_scope: "browser_demo_only" }];
+      if (!voiceprintPeople.some((item) => item.person_id === "demo_person_jordan")) {
+        voiceprintPeople = [...voiceprintPeople, { person_id: "demo_person_jordan", display_name: personName, sample_count: 2, prototype_count: 1, hit_count: 1, embedding_dim: 512, identity_scope: "browser_demo_only" }];
       }
       return {
         person_name: personName,
         before: { people: 10, samples: 60 },
         after: { people: 11, samples: 62 },
-        note: "Pages 运行的是同构流程模拟；真实声纹推理请使用本地完整版。",
+        note: "Pages runs the same interaction flow with simulated data. Use the portable edition for real local voiceprint inference.",
         steps: [
-          { id: 1, title: "开始前：未确认不进长期库", ok: true, counts: { people: 10, samples: 60, graph_nodes: 12, graph_edges: 5 } },
-          { id: 2, title: "第一场：处理停在待确认", ok: true, counts: { people: 10, samples: 60, graph_nodes: 12, graph_edges: 5 } },
-          { id: 3, title: "确认写入：样本和人物进入长期库", ok: true, counts: { people: 11, samples: 61, graph_nodes: 13, graph_edges: 6 } },
-          { id: 4, title: "第二场：未再点名即命中已确认人物", ok: true, matched_person_id: "demo_person_lin_kai" },
-          { id: 5, title: "再确认：同人样本继续增加", ok: true, counts: { people: 11, samples: 62, graph_nodes: 13, graph_edges: 6 } },
-          { id: 6, title: "慢路径：fine_tune → evaluate → promote", ok: true, adapter_id: "A_demo_v2" },
+          { id: 1, title: "Before confirmation: long-term memory is unchanged", ok: true, counts: { people: 10, samples: 60, graph_nodes: 12, graph_edges: 5 } },
+          { id: 2, title: "Meeting 1: processing pauses for identity review", ok: true, counts: { people: 10, samples: 60, graph_nodes: 12, graph_edges: 5 } },
+          { id: 3, title: "Confirm Jordan: add the person and voice sample", ok: true, counts: { people: 11, samples: 61, graph_nodes: 13, graph_edges: 6 } },
+          { id: 4, title: "Meeting 2: recognize Jordan without another introduction", ok: true, matched_person_id: "demo_person_jordan" },
+          { id: 5, title: "Confirm again: add more evidence for the same person", ok: true, counts: { people: 11, samples: 62, graph_nodes: 13, graph_edges: 6 } },
+          { id: 6, title: "Slow path: fine_tune → evaluate → promote", ok: true, adapter_id: "A_demo_v2" },
         ],
       };
     }
@@ -603,9 +643,9 @@
     }
     if (path === "/api/voiceprints/enroll" && method === "POST") {
       const body = bodyFrom(options);
-      return { ok: true, person: { person_id: body.person_id || "demo_self", display_name: body.display_name || "演示用户", sample_count: 1, hit_count: 1 } };
+      return { ok: true, person: { person_id: body.person_id || "demo_self", display_name: body.display_name || "Demo user", sample_count: 1, hit_count: 1 } };
     }
-    throw new Error(`GitHub Pages 演示尚未模拟接口：${method} ${path}`);
+    throw new Error(`GitHub Pages demo endpoint is not simulated: ${method} ${path}`);
   }
 
   let bridge = null;
@@ -630,12 +670,12 @@
     document.body.classList.toggle("pages-demo-recording", active);
     if (elements.run) {
       elements.run.disabled = active;
-      elements.run.textContent = active ? "演示运行中…" : "运行录音识别演示";
+      elements.run.textContent = active ? "Demo running…" : "Run meeting demo";
     }
     if (elements.record) {
       elements.record.disabled = active;
       elements.record.classList.toggle("live", active);
-      elements.record.textContent = active ? "录音中 · Pages 演示" : "开始录音";
+      elements.record.textContent = active ? "Recording · Pages demo" : "Start Recording";
     }
     if (elements.stop) elements.stop.disabled = !active;
     if (elements.speaking) elements.speaking.classList.toggle("hidden", !active);
@@ -649,8 +689,8 @@
     const elements = demoButtons();
     if (elements.meter) elements.meter.style.width = complete ? "0%" : `${35 + (recordingIndex * 13) % 58}%`;
     bridge.setStatus(complete
-      ? "演示完成 · 已同步转写、翻译、发言人识别和纪要"
-      : `录音中 · 已定稿 ${recordingIndex}/${learnedUtterances.length} 段`);
+      ? "Demo complete · transcript, translation, speakers, and notes are synchronized"
+      : `Recording · ${recordingIndex}/${learnedUtterances.length} segments finalized`);
   }
 
   function finishRecordingDemo() {
@@ -674,7 +714,7 @@
     await bridge.loadTree();
     const node = bridge.state.tree.find((item) => item.project.project_id === DEMO_PROJECT_ID);
     const meeting = node && node.meetings.find((item) => item.meeting_id === DEMO_MEETING_ID);
-    if (!node || !meeting) throw new Error("演示会议未加载");
+    if (!node || !meeting) throw new Error("Demo meeting did not load");
     await bridge.openMeeting(node.project, meeting);
     bridge.state.showTranslation = true;
     const toggle = document.getElementById("toggleTranslation");
@@ -719,6 +759,9 @@
   window.VoiceWeaveDemoRuntime = {
     attach(appBridge) {
       bridge = appBridge;
+      if (window.VoiceGraphI18n && typeof window.VoiceGraphI18n.setLocale === "function") {
+        window.VoiceGraphI18n.setLocale("en-US");
+      }
       bridge.state.showTranslation = true;
       bindDemoControls();
       window.__VOICEWEAVE_DEMO_READY__ = true;

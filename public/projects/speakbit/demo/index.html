@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="en-US" data-speakbit-demo="pages">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SpeakBit · Interactive Meeting Memory Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./static/style.css?v=20260829-project-consultant" />
+  <link rel="stylesheet" href="./static/demo-mode.css?v=20260903-speakbit" />
+</head>
+<body>
+
+  <section class="pages-demo-notice" aria-label="SpeakBit browser demo notice">
+    <div class="pages-demo-notice-copy">
+      <span class="pages-demo-badge">Browser demo</span>
+      <strong>SpeakBit interactive demo</strong>
+      <span>Sample data stays in this browser. Use the portable edition for real local AI models.</span>
+    </div>
+    <div class="pages-demo-actions">
+      <button id="demoRunButton" class="pages-demo-action primary" type="button">Run meeting demo</button>
+      <button id="demoGraphButton" class="pages-demo-action" type="button">See how it learns</button>
+    </div>
+  </section>
+  <div class="shell">
+    <aside class="sidebar">
+      <div class="side-brand">
+        <span class="side-brand-mark" aria-hidden="true">S</span>
+        <span id="sideBrandName" data-i18n="brand.name">声脉 SpeakBit</span>
+      </div>
+
+      <nav class="side-menu">
+        <button id="navStartMeeting" class="side-item primary" type="button">
+          <span class="ico">＋</span><span data-i18n="nav.startMeeting">开始会议</span>
+        </button>
+        <button id="navNewProject" class="side-item" type="button">
+          <span class="ico">▣</span><span data-i18n="nav.newProject">新建项目</span>
+        </button>
+        <button id="navProjects" class="side-item active" type="button" data-nav="home">
+          <span class="ico">◈</span><span data-i18n="nav.projects">项目</span>
+        </button>
+        <button id="navPeople" class="side-item" type="button" data-nav="graph">
+          <span class="ico">◎</span><span data-i18n="nav.people">人员信息</span>
+        </button>
+        <button id="navVoiceprints" class="side-item ican-only" type="button">
+          <span class="ico">◉</span><span>声音管理</span>
+        </button>
+        <button id="navLearning" class="side-item ican-only" type="button">
+          <span class="ico">↻</span><span>持续学习</span>
+        </button>
+        <button id="navHardware" class="side-item ican-only" type="button">
+          <span class="ico">▤</span><span>RK3588 盒子</span>
+        </button>
+        <button id="navGraph" class="side-item" type="button" data-nav="graph">
+          <span class="ico">⬡</span><span data-i18n="nav.graph">关系图</span>
+        </button>
+        <button id="navEvaluation" class="side-item" type="button" data-nav="evaluation">
+          <span class="ico">◇</span><span data-i18n="nav.evaluation">方法评测</span>
+        </button>
+      </nav>
+
+      <div class="side-section">
+        <button id="toggleProjects" class="side-section-title" type="button">
+          <span data-i18n="nav.projectMeetings">项目与会议</span>
+          <span id="projectCount" class="count">0</span>
+        </button>
+        <div id="sideTree" class="side-tree"></div>
+        <p id="sideEmpty" class="side-empty" data-i18n="project.empty">暂无项目</p>
+      </div>
+    </aside>
+
+    <div class="main">
+      <header class="top">
+        <div>
+          <h1 id="pageTitle" data-i18n="page.home.title">项目</h1>
+          <p id="pageSub" class="sub" data-i18n="page.home.subtitle">选择左侧项目，或直接开始会议</p>
+        </div>
+        <div class="locale-switch" role="group" data-i18n-aria-label="locale.switcher">
+          <button class="locale-option" type="button" data-locale="zh-CN">中文</button>
+          <button class="locale-option" type="button" data-locale="en-US">English</button>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- 首页：最近会议 / 引导 -->
+        <section id="viewHome" class="panel">
+          <section id="icanOverview" class="ican-overview ican-only" aria-labelledby="icanHeroTitle">
+            <div class="ican-hero-copy">
+              <p class="ican-kicker">智会 AGENT · MEETING MEMORY</p>
+              <h2 id="icanHeroTitle">越用越准的会议记忆 Agent</h2>
+              <p>录音中完成转写、说话人分离、声纹识别和摘要更新；确认后的真人声音进入长期记忆，下一场优先命中。</p>
+              <div class="ican-hero-actions">
+                <button id="btnIcanStart" class="btn primary" type="button">开始会议</button>
+                <button id="btnIcanVoice" class="btn" type="button">管理声音</button>
+              </div>
+            </div>
+            <div class="ican-learning-claim" aria-label="持续学习闭环">
+              <strong>持续学习</strong>
+              <span>第一次：未知声音</span><i>→</i>
+              <span>人工确认声纹</span><i>→</i>
+              <span>下一次：优先识别</span>
+              <small>只有确认样本才进入长期人员库</small>
+            </div>
+          </section>
+
+          <section class="ican-status-grid ican-only" aria-label="智会 Agent 运行状态">
+            <article><span>语音转写</span><strong id="icanAsrModel">检查中</strong><small>本地 ASR 算子</small></article>
+            <article><span>声纹识别</span><strong id="icanVoiceModel">检查中</strong><small id="icanVoiceCount">0 个声音档案</small></article>
+            <article><span>持续学习</span><strong id="icanAdapter">A_v0</strong><small id="icanSampleCount">0 条确认样本</small></article>
+            <article id="icanHardware"><span>硬件盒子</span><strong id="icanHardwareState">RK3588 · 已接入</strong><small>硬件已接入，端侧模型与真机指标待验收</small></article>
+          </section>
+
+          <section id="projectConsultant" class="project-consultant ican-only" aria-labelledby="projectConsultantTitle">
+            <header class="project-consultant-head">
+              <div>
+                <div class="eyebrow">PROJECT CONSULTANT · GROUNDED Q&amp;A</div>
+                <h2 id="projectConsultantTitle">项目咨询 Agent</h2>
+                <p>提出项目问题，Agent 检索当前项目中的会议记录并用原句证据回答。</p>
+              </div>
+              <label class="project-consultant-scope">
+                <span>咨询范围</span>
+                <select id="projectConsultantProject" aria-label="选择咨询项目"></select>
+              </label>
+            </header>
+            <div id="projectConsultantMessages" class="project-consultant-messages" role="log" aria-live="polite">
+              <article class="consultant-message agent">
+                <span class="consultant-avatar">智</span>
+                <div>
+                  <strong>智会 Agent</strong>
+                  <p>请选择项目并提出问题。我会回答项目阶段、风险、负责人、下一步或查找相关会议原句。</p>
+                </div>
+              </article>
+            </div>
+            <div class="project-consultant-presets" aria-label="项目咨询快捷问题">
+              <button type="button" data-project-question="请总结一下这个项目目前处于什么阶段？">项目阶段总结</button>
+              <button type="button" data-project-question="当前最需要关注的风险是什么？">风险与阻塞</button>
+              <button type="button" data-project-question="下一步由谁负责什么？">负责人和下一步</button>
+              <button type="button" data-project-question="最近会议形成了哪些明确结论？">最近会议结论</button>
+            </div>
+            <form id="projectConsultantForm" class="project-consultant-form">
+              <textarea id="projectConsultantInput" rows="2" maxlength="300" placeholder="例如：请总结一下这个项目目前处于什么阶段？" aria-label="输入项目咨询问题"></textarea>
+              <button id="projectConsultantSend" class="btn primary" type="submit">发送问题</button>
+            </form>
+            <p class="project-consultant-note">只读咨询：回答不会修改会议、人员声纹或长期记忆。</p>
+          </section>
+
+          <h2 data-i18n="home.recentMeetings">最近会议</h2>
+          <div id="recentList" class="list"></div>
+          <p id="recentEmpty" class="empty" data-i18n="home.empty">还没有会议。点左侧「开始会议」即可。</p>
+        </section>
+
+        <!-- 会议详情：录音条 + 历史 | 转写 | 纪要 -->
+        <section id="viewDetail" class="hidden">
+          <div class="panel meeting-capture">
+            <div class="row-between">
+              <h2 id="detailTitle" data-i18n="meeting.detail">会议详情</h2>
+              <div class="meeting-capture-actions">
+                <button id="btnDownloadSummary" class="btn" type="button" data-i18n="summary.download">下载</button>
+                <span id="detailBadge" class="badge draft" data-i18n="status.draft">草稿</span>
+              </div>
+            </div>
+            <div id="asrControls" class="rec-controls asr-controls">
+              <select id="asrModelSelect" class="audio-input-select" data-i18n-aria-label="recording.asrModel"></select>
+              <select id="liveAsrModeSelect" class="audio-input-select" data-i18n-aria-label="recording.liveMode">
+                <option value="stream" data-i18n="recording.modeStream">流式转写</option>
+                <option value="chunk" data-i18n="recording.modeChunk">停顿分块</option>
+              </select>
+            </div>
+            <div id="captureControls" class="rec-controls">
+              <button id="btnRecord" class="btn primary" type="button" data-i18n="recording.start">开始录音</button>
+              <button id="btnStop" class="btn" type="button" disabled data-i18n="recording.stopAnalyze">停止并分析</button>
+              <select id="audioInputSelect" class="audio-input-select" data-i18n-aria-label="recording.microphone">
+                <option value="" data-i18n="recording.defaultMicrophone">默认麦克风</option>
+              </select>
+              <label class="btn file-btn">
+                <span data-i18n="common.upload">上传</span>
+                <input id="fileInput" type="file" accept="audio/*" hidden />
+              </label>
+              <span id="recStatus" class="status" data-i18n="status.standby">待命</span>
+            </div>
+            <div id="captureMeter" class="meter"><div id="meterBar" class="meter-bar"></div></div>
+            <section id="voiceprintEnroll" class="voiceprint-enroll hidden" aria-labelledby="voiceprintEnrollTitle">
+              <div>
+                <div class="eyebrow">VOICEPRINT</div>
+                <h3 id="voiceprintEnrollTitle" data-i18n="voiceprintEnroll.title">登记我的声纹</h3>
+                <p id="voiceprintEnrollHint" data-i18n="voiceprintEnroll.hint">用刚才的录音建立声纹档案，后续可自动识别你的发言。</p>
+              </div>
+              <div class="voiceprint-enroll-actions">
+                <input id="voiceprintEnrollName" class="voiceprint-enroll-name" value="段世红" data-i18n-placeholder="voiceprintEnroll.namePlaceholder" placeholder="姓名" />
+                <button id="btnEnrollVoiceprint" class="btn primary" type="button" data-i18n="voiceprintEnroll.submit">登记声纹</button>
+              </div>
+            </section>
+            <div id="testDataHint" class="test-data-hint hidden">
+              <div>
+                <strong data-i18n="recognition.singleMeeting">单会议播放识别</strong>
+                <span id="testDataHintText" data-i18n="recognition.playbackHint">「一段」= 录音里按停顿切出的语音区间。播放到该区间就转写；声纹判断并行进行。</span>
+              </div>
+              <span id="recognitionTopStatus" class="recognition-top-status" data-i18n="recognition.waitingPlayback">等待播放</span>
+            </div>
+            <audio id="playback" controls class="playback"></audio>
+          </div>
+
+          <div class="meeting-workspace">
+            <aside class="meeting-history-pane panel" aria-labelledby="meetingHistoryTitle">
+              <div class="meeting-history-head">
+                <div class="eyebrow" data-i18n="history.label">HISTORY</div>
+                <h3 id="meetingHistoryTitle" data-i18n="history.title">本项目会议</h3>
+                <p id="meetingHistoryDate" class="meeting-history-date"></p>
+              </div>
+              <div id="meetingHistoryList" class="meeting-history-list"></div>
+              <p id="meetingHistoryEmpty" class="empty small" data-i18n="history.empty">暂无其他会议</p>
+            </aside>
+
+            <div class="meeting-center-pane panel">
+              <div class="transcript-toolbar">
+                <div>
+                  <div class="eyebrow">TRANSCRIPT</div>
+                  <h2 data-i18n="record.title">会议记录</h2>
+                </div>
+                <div class="transcript-toolbar-controls">
+                  <div class="segmented" role="group" data-i18n-aria-label="record.viewMode">
+                    <button id="btnViewOriginal" class="segmented-btn active" type="button" data-view="original" data-i18n="record.original">原文</button>
+                    <button id="btnViewConcise" class="segmented-btn" type="button" data-view="concise" data-i18n="record.concise">AI精简</button>
+                  </div>
+                  <label class="toggle-pill">
+                    <input id="toggleTranslation" type="checkbox" />
+                    <span data-i18n="record.translation">Auto-translate</span>
+                  </label>
+                </div>
+              </div>
+
+              <div id="emptyState" class="empty" data-i18n="result.empty">录音或上传后显示</div>
+              <div id="resultView" class="hidden">
+                <div id="resultMeta" class="result-meta"></div>
+                <section id="liveRecognition" class="live-recognition hidden" aria-live="polite">
+                  <div class="live-recognition-copy">
+                    <span class="live-dot"></span>
+                    <div>
+                      <strong id="recognitionStage" data-i18n="recognition.waitingPlayback">等待播放</strong>
+                      <span id="recognitionRunInfo" data-i18n="recognition.independentRun">每次从头播放都会保存一份独立结果</span>
+                    </div>
+                  </div>
+                  <div class="recognition-progress"><div id="recognitionProgressBar"></div></div>
+                </section>
+                <div id="speakerRoster" class="speaker-roster"></div>
+                <p id="summaryBrief" class="summary hidden"></p>
+                <section id="speakerReview" class="speaker-review hidden" aria-labelledby="speakerReviewTitle">
+                  <div class="speaker-review-head">
+                    <div>
+                      <div class="eyebrow">SPEAKER REVIEW</div>
+                      <h3 id="speakerReviewTitle" data-i18n="speakerReview.title">确认谁说了什么</h3>
+                      <p id="speakerReviewHint"></p>
+                    </div>
+                    <span id="speakerReviewBadge" class="review-badge"></span>
+                  </div>
+                  <div id="speakerReviewList" class="speaker-review-list"></div>
+                  <div id="speakerReviewActions" class="speaker-review-actions">
+                    <span data-i18n="speakerReview.actionHint">高置信人物已预选，只需修改例外。</span>
+                    <button id="btnConfirmSpeakers" class="btn primary" type="button" data-i18n="speakerReview.confirmEnhance">确认并增强</button>
+                  </div>
+                </section>
+                <div class="transcript-heading">
+                  <div>
+                    <h3 data-i18n="transcript.title">逐句转写</h3>
+                  </div>
+                  <span data-i18n="transcript.seekHint">点击发言可跳转录音时间</span>
+                </div>
+                <div id="liveSpeakingRow" class="utt live-speaking hidden" aria-live="polite">
+                  <div class="live-speaking-who">
+                    <span class="voice-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+                    <span class="live-speaking-label" data-i18n="recording.speaking">发言中</span>
+                  </div>
+                  <div class="utt-copy">
+                    <div id="liveSpeakingHint" class="utt-text live-speaking-hint" data-i18n="recording.speakingHint">正在听语音…</div>
+                  </div>
+                </div>
+                <div id="transcript" class="transcript"></div>
+                <section id="recognitionHistory" class="recognition-history hidden">
+                  <div class="transcript-heading">
+                    <div>
+                      <div class="eyebrow">RUN HISTORY</div>
+                      <h3 data-i18n="recognition.historyTitle">多次播放识别记录</h3>
+                    </div>
+                    <span data-i18n="recognition.historyHint">每次播放独立保存</span>
+                  </div>
+                  <div id="recognitionHistoryList" class="recognition-history-list"></div>
+                </section>
+              </div>
+            </div>
+
+            <aside class="meeting-summary-pane panel" aria-labelledby="aiSummaryTitle">
+              <div class="meeting-summary-head">
+                <div>
+                  <div class="eyebrow">AI SUMMARY</div>
+                  <h2 id="aiSummaryTitle" data-i18n="summary.panelTitle">AI会议纪要</h2>
+                </div>
+                <button id="btnCopySummary" class="btn" type="button" data-i18n="summary.copy">复制</button>
+              </div>
+              <section class="meeting-query ican-only" aria-labelledby="meetingQueryTitle">
+                <div class="meeting-query-window-head">
+                  <div>
+                    <div class="eyebrow">MEETING AGENT QUERY</div>
+                    <h3 id="meetingQueryTitle">会议智能查询</h3>
+                  </div>
+                  <span class="meeting-query-state"><i></i>实际查询</span>
+                </div>
+                <p>理解自然语言并检索本次生成会议的 ASR 结果；回答附带时间点、说话人和原句证据。</p>
+                <div class="meeting-query-presets" aria-label="快捷问题">
+                  <button type="button" data-meeting-query="请总结一下这个项目目前处于什么阶段？">项目阶段</button>
+                  <button type="button" data-meeting-query="当前最需要关注的风险是什么？">主要风险</button>
+                  <button type="button" data-meeting-query="下一步由谁负责什么？">下一步</button>
+                </div>
+                <form id="meetingQueryForm">
+                  <input id="meetingQueryInput" value="请总结一下这个项目目前处于什么阶段？" maxlength="200" aria-label="输入会议问题" />
+                  <button id="meetingQueryButton" class="btn primary" type="submit" disabled>查询</button>
+                </form>
+                <div id="meetingQueryOutput" class="meeting-query-output" data-state="waiting">请选择生成会议，播放并完成识别后查询。</div>
+              </section>
+              <dl class="summary-fields">
+                <div>
+                  <dt data-i18n="summary.meetingName">会议名称</dt>
+                  <dd id="summaryMeetingName">—</dd>
+                </div>
+                <div>
+                  <dt data-i18n="summary.meetingTime">会议时间</dt>
+                  <dd id="summaryMeetingTime">—</dd>
+                </div>
+                <div>
+                  <dt data-i18n="summary.attendees">参会人员</dt>
+                  <dd id="summaryAttendees">—</dd>
+                </div>
+                <div>
+                  <dt data-i18n="summary.content">会议内容</dt>
+                  <dd id="summaryContent" class="summary-content">—</dd>
+                </div>
+                <div>
+                  <dt data-i18n="summary.actions">下一步</dt>
+                  <dd id="summaryActions" class="summary-actions">—</dd>
+                </div>
+              </dl>
+              <section class="project-memory" aria-labelledby="projectMemoryTitle">
+                <div class="project-memory-head">
+                  <div>
+                    <div class="eyebrow">PROJECT MEMORY</div>
+                    <h3 id="projectMemoryTitle" data-i18n="projectMemory.title">项目最新事实</h3>
+                  </div>
+                  <span class="badge" data-i18n="projectMemory.humanGate">人工确认后写入</span>
+                </div>
+                <p class="project-memory-lead" data-i18n="projectMemory.lead">从逐句原话提出日期、地点、预算和负责人变化；未确认内容不会覆盖旧事实。</p>
+                <h4 data-i18n="projectMemory.current">当前已确认</h4>
+                <div id="projectMemoryCurrent" class="project-memory-list"></div>
+                <h4 data-i18n="projectMemory.pending">本次待确认变化</h4>
+                <div id="projectMemoryProposals" class="project-memory-list"></div>
+                <button id="btnConfirmProjectMemory" class="btn primary project-memory-confirm" type="button" disabled data-i18n="projectMemory.confirm">确认选中变化</button>
+              </section>
+            </aside>
+          </div>
+        </section>
+
+        <!-- 全局关系图 / 知识库 -->
+        <section id="viewGraph" class="hidden">
+          <section id="voiceManagementIntro" class="panel voice-management-intro ican-only">
+            <div>
+              <div class="eyebrow">VOICE MANAGEMENT</div>
+              <h2>声音管理与持续学习</h2>
+              <p>查看已确认人员、声纹样本、原型和命中次数。新声音先保持未知，必须由真人确认后才能形成长期声纹。</p>
+            </div>
+            <button id="btnVoiceRecord" class="btn primary" type="button">录制并登记新声音</button>
+          </section>
+          <div class="panel">
+            <div class="row-between">
+              <div>
+                <div class="eyebrow">KNOWLEDGE</div>
+                <h2 data-i18n="knowledge.title">人物与项目记忆</h2>
+                <p class="eval-lead" data-i18n="knowledge.lead">只积累人工确认的人物、共同参会和项目事实；每条变化都可回到会议证据。</p>
+              </div>
+              <button id="btnRefreshKnowledge" class="btn" type="button" data-i18n="common.refresh">刷新</button>
+            </div>
+            <div id="knowledgeStats" class="knowledge-stats"></div>
+          </div>
+
+          <section id="gmaDemoPanel" class="panel gma-demo-panel">
+            <div class="row-between">
+              <div>
+                <div class="eyebrow">GETTING MORE ACCURATE</div>
+                <h2>Gets smarter · a two-meeting demo</h2>
+                <p class="eval-lead">Confirm a new speaker in meeting one, recognize the same person in meeting two, then evaluate the new evidence before promotion.</p>
+              </div>
+              <button id="btnRunGmaDemo" class="btn primary" type="button">Run the full loop</button>
+            </div>
+            <ol id="gmaDemoSteps" class="gma-demo-steps">
+              <li>Process meeting one; long-term memory stays unchanged</li>
+              <li>Confirm Jordan; add the person and voice sample</li>
+              <li>Process meeting two; recognize Jordan without another introduction</li>
+              <li>Add confirmed evidence, then fine_tune → evaluate → promote</li>
+            </ol>
+            <div id="gmaDemoResult" class="gma-demo-result" hidden></div>
+          </section>
+
+          <div class="knowledge-grid">
+            <div id="voiceprintSection" class="panel">
+              <div class="voice-section-heading ican-only"><span>声音档案</span><small>Sample → Prototype → Person</small></div>
+              <h2 data-i18n="knowledge.voiceprints">声纹样本</h2>
+              <div id="voiceprintTable" class="knowledge-table-wrap"></div>
+            </div>
+            <div id="continuousLearningPanel" class="panel">
+              <div class="voice-section-heading ican-only"><span>学习状态</span><small>确认 → 评测 → 晋级 → 可回滚</small></div>
+              <h2 data-i18n="knowledge.onlineAdapter">在线 A_v</h2>
+              <div id="adapterPanel" class="adapter-panel"></div>
+              <h3 class="subhead" data-i18n="knowledge.candidates">候选 Â</h3>
+              <div id="candidateList" class="candidate-list"></div>
+            </div>
+          </div>
+
+          <section class="panel relationship-design" aria-labelledby="relationshipDesignTitle">
+            <div class="row-between relationship-design-heading">
+              <div>
+                <div class="eyebrow">RELATIONSHIP MODEL</div>
+                <h2 id="relationshipDesignTitle" data-i18n="relationship.title">人物关系设计：只记录可验证的协作事实</h2>
+                <p class="eval-lead" data-i18n="relationship.lead">关系来自共同会议、项目经历以及本人确认的决定和任务，不根据音色推测亲密程度、上下级或私人社交关系。</p>
+              </div>
+              <span class="badge relationship-boundary-badge" data-i18n="relationship.boundaryBadge">不猜私人关系</span>
+            </div>
+
+            <div class="relationship-model-grid" role="list" data-i18n-aria-label="relationship.typesAria">
+              <article class="relationship-model-card supported" role="listitem">
+                <div class="relationship-symbol" aria-hidden="true"><span>A</span><i>↔</i><span>B</span></div>
+                <div class="relationship-card-head">
+                  <strong data-i18n="relationship.coMeeting.title">共同参会</strong>
+                  <span data-i18n="relationship.supported">已支持</span>
+                </div>
+                <p data-i18n="relationship.coMeeting.body">两个人出现在同一场已确认会议中，记录共同会议次数和最近一次时间。</p>
+                <small data-i18n="relationship.coMeeting.evidence">证据：会议记录＋人物确认</small>
+              </article>
+
+              <article class="relationship-model-card supported" role="listitem">
+                <div class="relationship-symbol repeated" aria-hidden="true"><span>A</span><i>⇄</i><span>B</span></div>
+                <div class="relationship-card-head">
+                  <strong data-i18n="relationship.recurring.title">长期协作</strong>
+                  <span data-i18n="relationship.supported">已支持</span>
+                </div>
+                <p data-i18n="relationship.recurring.body">两个人在同一项目的多次会议中重复出现，形成可回查的协作轨迹。</p>
+                <small data-i18n="relationship.recurring.evidence">证据：共同会议次数＋时间跨度</small>
+              </article>
+
+              <article class="relationship-model-card planned" role="listitem">
+                <div class="relationship-symbol decision" aria-hidden="true"><span>A</span><i>→</i><span>B</span></div>
+                <div class="relationship-card-head">
+                  <strong data-i18n="relationship.decision.title">决策协作</strong>
+                  <span data-i18n="relationship.planned">下一步</span>
+                </div>
+                <p data-i18n="relationship.decision.body">记录谁提出、谁补充或谁确认了一项决定，并关联对应原话和会议。</p>
+                <small data-i18n="relationship.decision.evidence">证据：逐句转写＋决定确认</small>
+              </article>
+
+              <article class="relationship-model-card planned" role="listitem">
+                <div class="relationship-symbol task" aria-hidden="true"><span>A</span><i>✓</i><span>B</span></div>
+                <div class="relationship-card-head">
+                  <strong data-i18n="relationship.task.title">任务协作</strong>
+                  <span data-i18n="relationship.planned">下一步</span>
+                </div>
+                <p data-i18n="relationship.task.body">记录谁提出任务、谁确认负责以及截止时间，后续会议继续追踪变化。</p>
+                <small data-i18n="relationship.task.evidence">证据：本人确认的负责人和日期</small>
+              </article>
+            </div>
+
+            <div class="relationship-evidence-flow" data-i18n-aria-label="relationship.flowAria">
+              <span data-i18n="relationship.flow.transcript">会议发言</span><i>→</i>
+              <span data-i18n="relationship.flow.person">确认人物</span><i>→</i>
+              <span data-i18n="relationship.flow.meetings">累积共同会议</span><i>→</i>
+              <span data-i18n="relationship.flow.work">确认决定与任务</span><i>→</i>
+              <span class="active" data-i18n="relationship.flow.update">更新协作关系</span>
+            </div>
+            <p class="relationship-boundary-note"><strong data-i18n="relationship.boundaryTitle">关系强度怎么算：</strong><span data-i18n="relationship.boundaryBody">只依据共同会议次数、最近协作时间和已确认的决定/任务；任何未确认推断都不进入长期关系库。</span></p>
+          </section>
+
+          <div class="panel">
+            <h2 data-i18n="graph.globalTitle">全局关系图</h2>
+            <svg id="graphSvg" viewBox="0 0 640 360" role="img" data-i18n-aria-label="graph.aria"></svg>
+            <div id="graphLegend" class="legend"></div>
+          </div>
+        </section>
+
+        <!-- 本地方法评测 -->
+        <section id="viewEvaluation" class="hidden">
+          <div class="panel eval-hero">
+            <div class="row-between eval-heading">
+              <div>
+                <div class="eyebrow">LOCAL BENCHMARK</div>
+                <h2 data-i18n="evaluation.title">确认写入机制评测</h2>
+                <p class="eval-lead" data-i18n="evaluation.lead">使用 test_data 的 10 场 TTS 合成会议、158 个语音分段，对比全局检索、图谱候选和确认后 enhance；当前不是真人会议准确率评测。</p>
+              </div>
+              <button id="btnRunEvaluation" class="btn primary" type="button" data-i18n="evaluation.rerun">重新运行测试</button>
+            </div>
+            <div class="eval-progress-track" data-i18n-aria-label="evaluation.progressAria">
+              <div id="evalProgressBar" class="eval-progress-bar"></div>
+            </div>
+            <div class="eval-progress-meta">
+              <span id="evalStage" data-i18n="evaluation.readingStatus">读取评测状态…</span>
+              <span id="evalProgressText">0%</span>
+            </div>
+          </div>
+
+          <div class="panel">
+            <div class="row-between">
+              <h2 data-i18n="evaluation.process">测试过程</h2>
+              <span id="evalStatusBadge" class="badge draft" data-i18n="evaluation.idle">待运行</span>
+            </div>
+            <div id="evalSteps" class="eval-steps"></div>
+          </div>
+
+          <div id="evalResults" class="hidden">
+            <div class="eval-metrics" id="evalMetricGrid"></div>
+
+            <div class="panel eval-truth-panel">
+              <div class="row-between">
+                <div>
+                  <div class="eyebrow">CLAIM BOUNDARY</div>
+                  <h2 data-i18n="evaluation.truthTitle">100% 的含义与数据真实性</h2>
+                </div>
+                <span class="badge failed" data-i18n="evaluation.realSpeechMissing">真人语音：未接入</span>
+              </div>
+              <div id="evalTruthGrid" class="eval-truth-grid"></div>
+            </div>
+
+            <div class="panel">
+              <div class="row-between">
+                <div>
+                  <div class="eyebrow">SPEAKER ID</div>
+                  <h2 data-i18n="evaluation.speakerGainTitle">声纹区分：算子在哪一步产生收益</h2>
+                </div>
+                <span class="badge">Top-1</span>
+              </div>
+              <div id="evalSpeakerBars" class="metric-bars"></div>
+              <p class="eval-note" data-i18n="evaluation.speakerNote">全局结果受“四种 TTS 音色复用于 40 个姓名”影响；候选集 C 的增益用于验证图谱裁剪机制，不代表真实 40 人声纹性能。</p>
+            </div>
+
+            <div class="eval-two-col">
+              <div class="panel">
+                <div class="eyebrow">CONFIRMED ENHANCE</div>
+                <h2 data-i18n="evaluation.learningTitle">确认样本增加后的准确率</h2>
+                <div id="evalLearningBars" class="metric-bars compact"></div>
+              </div>
+              <div class="panel">
+                <div class="eyebrow">PERSON NAME</div>
+                  <h2 data-i18n="evaluation.nameTitle">人名提取 F1（参考文本上界）</h2>
+                <div id="evalNameBars" class="metric-bars compact"></div>
+                <p class="eval-note" data-i18n="evaluation.nameNote">使用人工复核的参考文本，是人名模块上限，不是端到端音频结果。</p>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="eyebrow">OPERATOR LOOP</div>
+              <h2 data-i18n="evaluation.operatorTitle">本轮验证的算子作用</h2>
+              <div class="operator-flow" data-i18n-aria-label="evaluation.operatorAria">
+                <div><strong>retrieve</strong><span data-i18n="evaluation.operator.retrieve">图谱裁剪候选 C</span></div>
+                <i>→</i>
+                <div><strong>apply</strong><span data-i18n="evaluation.operator.apply">只读匹配</span></div>
+                <i>→</i>
+                <div><strong>propose</strong><span data-i18n="evaluation.operator.propose">提出变化</span></div>
+                <i>→</i>
+                <div><strong>confirm</strong><span data-i18n="evaluation.operator.confirm">确认凭证</span></div>
+                <i>→</i>
+                <div class="active"><strong>enhance</strong><span data-i18n="evaluation.operator.enhance">累积可信特征</span></div>
+              </div>
+            </div>
+          </div>
+
+          <section class="panel research-panel" aria-labelledby="researchTitle">
+            <div class="row-between research-heading">
+              <div>
+                <div class="eyebrow">USER RESEARCH</div>
+                <h2 id="researchTitle" data-i18n="research.title">创新比赛 · 用户调研设计</h2>
+                <p class="eval-lead" data-i18n="research.lead">依据正式调研文件整理 6 个核心问题、10 人回答记录和 4 项统计口径，用真实会议经历验证“决定、负责人和待办确认”是否构成高频痛点。</p>
+              </div>
+              <span class="badge research-badge">n=10</span>
+            </div>
+
+            <div class="research-grid">
+              <article class="research-card research-form-card">
+                <div class="eyebrow">FORM DESIGN</div>
+                <h3 data-i18n="research.formTitle">调研表单结构</h3>
+                <p class="research-card-lead" data-i18n="research.formLead">以下 6 题与调研 Markdown 保持一致。顺序从当前记录方式进入具体问题，最后验证用户对自动写入待办的接受边界。</p>
+                <ol class="survey-question-list">
+                  <li>
+                    <span class="survey-index">01</span>
+                    <div><strong data-i18n="research.q1">你们开会后通常如何记录？</strong><small data-i18n="research.q1Help">记录使用的工具、负责人和实际整理流程</small></div>
+                    <span class="survey-type" data-i18n="research.type.open">开放题</span>
+                  </li>
+                  <li>
+                    <span class="survey-index">02</span>
+                    <div><strong data-i18n="research.q2">是否发生过“每个人记得的决定不一样”？</strong><small data-i18n="research.q2Help">选择是或否，并追问最近一次具体例子</small></div>
+                    <span class="survey-type" data-i18n="research.type.yesFollowup">判断＋追问</span>
+                  </li>
+                  <li>
+                    <span class="survey-index">03</span>
+                    <div><strong data-i18n="research.q3">有没有弄错负责人或截止日期？</strong><small data-i18n="research.q3Help">记录错误类型、造成的后果和补救方式</small></div>
+                    <span class="survey-type" data-i18n="research.type.yesFollowup">判断＋追问</span>
+                  </li>
+                  <li>
+                    <span class="survey-index">04</span>
+                    <div><strong data-i18n="research.q4">两次会议的决定变化如何追踪？</strong><small data-i18n="research.q4Help">关注群聊、文档、白板或任务工具之间的信息断点</small></div>
+                    <span class="survey-type" data-i18n="research.type.open">开放题</span>
+                  </li>
+                  <li>
+                    <span class="survey-index">05</span>
+                    <div><strong data-i18n="research.q5">你会不会直接采用自动列出的待办？</strong><small data-i18n="research.q5Help">追问不信任的内容类型和接受条件</small></div>
+                    <span class="survey-type" data-i18n="research.type.yesReason">判断＋原因</span>
+                  </li>
+                  <li>
+                    <span class="survey-index">06</span>
+                    <div><strong data-i18n="research.q6">任务进入日历前，你希望先确认吗？</strong><small data-i18n="research.q6Help">确认由谁完成，以及是否需要修改和撤销</small></div>
+                    <span class="survey-type" data-i18n="research.type.singleReason">单选＋原因</span>
+                  </li>
+                </ol>
+              </article>
+
+              <article class="research-card research-chart-card">
+                <div class="eyebrow">RESEARCH RESULTS</div>
+                <h3 data-i18n="research.resultsTitle">调研统计结果</h3>
+                <p class="research-card-lead" data-i18n="research.resultsLead">样本 n=10。结果围绕信息连续性和待办确认边界，用人数与比例同时表达。</p>
+                <div class="research-bars" role="img" data-i18n-aria-label="research.resultsAria">
+                  <div class="research-bar-row risk">
+                    <div class="research-bar-label"><span data-i18n="research.stat.latestDecision">曾经找不到最新决定</span><strong>70%</strong></div>
+                    <div class="research-bar-track"><span style="width: 70%"></span></div>
+                    <small>7 / 10</small>
+                  </div>
+                  <div class="research-bar-row risk">
+                    <div class="research-bar-label"><span data-i18n="research.stat.ownerDate">负责人或日期理解不一致</span><strong>60%</strong></div>
+                    <div class="research-bar-track"><span style="width: 60%"></span></div>
+                    <small>6 / 10</small>
+                  </div>
+                  <div class="research-bar-row trust">
+                    <div class="research-bar-label"><span data-i18n="research.stat.aiTasks">不会直接采用自动待办</span><strong>80%</strong></div>
+                    <div class="research-bar-track"><span style="width: 80%"></span></div>
+                    <small>8 / 10</small>
+                  </div>
+                  <div class="research-bar-row trust">
+                    <div class="research-bar-label"><span data-i18n="research.stat.calendarConfirm">日历写入前希望本人确认</span><strong>80%</strong></div>
+                    <div class="research-bar-track"><span style="width: 80%"></span></div>
+                    <small>8 / 10</small>
+                  </div>
+                </div>
+                <div class="research-insight">
+                  <strong data-i18n="research.insightTitle">调研洞察</strong>
+                  <span data-i18n="research.insight">主要机会不是再做一份摘要，而是保留跨会议的最新决定，并让待办在写入日历前经过本人确认。</span>
+                </div>
+                <div class="research-outcome-viz" role="img" data-i18n-aria-label="research.outcomeAria">
+                  <article>
+                    <div class="research-donut" style="--pct: 70">
+                      <svg viewBox="0 0 88 88" aria-hidden="true">
+                        <circle class="research-donut-track" cx="44" cy="44" r="34"></circle>
+                        <circle class="research-donut-value risk" cx="44" cy="44" r="34"></circle>
+                      </svg>
+                      <div class="research-donut-label"><strong>70%</strong><span>7 / 10</span></div>
+                    </div>
+                    <div>
+                      <strong data-i18n="research.memoryTitle">跨会议记忆</strong>
+                      <span data-i18n="research.memoryBody">7 人曾经找不到最新决定，优先保留可回查的「谁说了什么」。</span>
+                    </div>
+                  </article>
+                  <article>
+                    <div class="research-donut" style="--pct: 80">
+                      <svg viewBox="0 0 88 88" aria-hidden="true">
+                        <circle class="research-donut-track" cx="44" cy="44" r="34"></circle>
+                        <circle class="research-donut-value trust" cx="44" cy="44" r="34"></circle>
+                      </svg>
+                      <div class="research-donut-label"><strong>80%</strong><span>8 / 10</span></div>
+                    </div>
+                    <div>
+                      <strong data-i18n="research.confirmGateTitle">先确认，再执行</strong>
+                      <span data-i18n="research.confirmGateBody">8 人不会直接采用自动列出的待办，任务写入日历前需要本人确认。</span>
+                    </div>
+                  </article>
+                </div>
+              </article>
+            </div>
+
+            <section class="competitor-comparison" aria-labelledby="competitorComparisonTitle">
+              <div class="row-between competitor-comparison-heading">
+                <div>
+                  <div class="eyebrow">COMPETITIVE LANDSCAPE</div>
+                  <h3 id="competitorComparisonTitle" data-i18n="comparison.title">与主流会议产品的差异</h3>
+                  <p data-i18n="comparison.lead">主流产品已经能做好转写、摘要和行动项；声脉 SpeakBit 重点补足“确认后形成可信的人物与协作记忆”。</p>
+                </div>
+                <span class="comparison-focus-badge" data-i18n="comparison.badge">核心：可信的跨会议协作记忆</span>
+              </div>
+
+              <article class="ppt-positioning-visual" aria-labelledby="pptFigureTitle">
+                <div class="ppt-positioning-toolbar">
+                  <div>
+                    <div class="eyebrow">PPT-READY VISUAL</div>
+                    <h4 id="pptFigureTitle" data-i18n="comparison.figureTitle">核心定位图 · 可直接用于路演 PPT</h4>
+                    <p data-i18n="comparison.figureLead">用一张图说明主流会议能力、声脉 SpeakBit 的确认环节，以及跨会议记忆如何形成闭环。</p>
+                  </div>
+                  <a id="downloadPositioningFigure" class="ppt-download" href="./static/assets/confirmvoice-positioning-en.svg?v=20260821-voiceweave" download="voiceweave-positioning-zh.svg">
+                    <span aria-hidden="true">↓</span>
+                    <span data-i18n="comparison.figureDownload">下载当前语言 SVG</span>
+                  </a>
+                </div>
+                <div class="ppt-positioning-frame">
+                  <img id="pptPositioningFigure" src="./static/assets/confirmvoice-positioning-en.svg?v=20260821-voiceweave" data-i18n-alt="comparison.figureAlt" alt="声脉 SpeakBit 产品定位图：从会议记录到可信协作记忆" loading="lazy" />
+                  <span class="ppt-format-tag" data-i18n="comparison.figureFormat">16:9 · 可编辑矢量图</span>
+                </div>
+              </article>
+
+              <div class="competitor-table-wrap">
+                <table class="competitor-table" data-i18n-aria-label="comparison.aria">
+                  <thead>
+                    <tr>
+                      <th scope="col" class="confirmvoice-column" data-i18n="brand.short">声脉 SpeakBit</th>
+                      <th scope="col" class="dimension-column" data-i18n="comparison.dimension">比较维度</th>
+                      <th scope="col">Zoom AI Companion</th>
+                      <th scope="col">Microsoft Teams</th>
+                      <th scope="col" data-i18n="comparison.feishu">飞书妙记</th>
+                      <th scope="col">Otter.ai</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td class="confirmvoice-column" data-i18n="comparison.confirmvoice.focus">面向反复开会小团队的可信跨会议协作记忆</td>
+                      <th scope="row" class="dimension-column" data-i18n="comparison.row.focus">主要目标</th>
+                      <td data-i18n="comparison.zoom.focus">会议平台中的 AI 助手：摘要、问答和任务</td>
+                      <td data-i18n="comparison.teams.focus">协作套件中的智能回顾与后续任务</td>
+                      <td data-i18n="comparison.feishu.focus">会议、文档和任务一体化的智能纪要</td>
+                      <td data-i18n="comparison.otter.focus">跨平台自动参会、转写、摘要和行动项</td>
+                    </tr>
+                    <tr>
+                      <td class="confirmvoice-column" data-i18n="comparison.confirmvoice.speaker">逐句保留原话；人物经用户确认后才进入长期库</td>
+                      <th scope="row" class="dimension-column" data-i18n="comparison.row.speaker">谁说了什么</th>
+                      <td data-i18n="comparison.zoom.speaker">基于会议参与者和转写进行回顾与问答</td>
+                      <td data-i18n="comparison.teams.speaker">可按说话人查看时间点和主要内容</td>
+                      <td data-i18n="comparison.feishu.speaker">支持声纹识别和发言人观点总结</td>
+                      <td data-i18n="comparison.otter.speaker">实时区分说话人，标注后可在后续会议复用</td>
+                    </tr>
+                    <tr>
+                      <td class="confirmvoice-column" data-i18n="comparison.confirmvoice.crossMeeting">按项目连接最新决定、人物协作和每次变化的证据</td>
+                      <th scope="row" class="dimension-column" data-i18n="comparison.row.crossMeeting">跨会议信息</th>
+                      <td data-i18n="comparison.zoom.crossMeeting">可查询过往会议与工作内容，侧重助手上下文</td>
+                      <td data-i18n="comparison.teams.crossMeeting">可浏览系列会议并生成多场回顾，侧重 M365 工作区</td>
+                      <td data-i18n="comparison.feishu.crossMeeting">历史妙记可搜索、分享并关联文档与任务</td>
+                      <td data-i18n="comparison.otter.crossMeeting">可集中多场行动项，并查询完整会议历史</td>
+                    </tr>
+                    <tr>
+                      <td class="confirmvoice-column" data-i18n="comparison.confirmvoice.actions">先给出待办建议；本人确认负责人和日期后再保存、执行（设计中）</td>
+                      <th scope="row" class="dimension-column" data-i18n="comparison.row.actions">待办如何执行</th>
+                      <td data-i18n="comparison.zoom.actions">AI 识别并可执行任务；摘要支持编辑</td>
+                      <td data-i18n="comparison.teams.actions">AI 推荐任务；会议笔记可协作编辑</td>
+                      <td data-i18n="comparison.feishu.actions">自动提取待办，可同步到飞书任务</td>
+                      <td data-i18n="comparison.otter.actions">自动提取、分配并集中管理行动项</td>
+                    </tr>
+                    <tr>
+                      <td class="confirmvoice-column" data-i18n="comparison.confirmvoice.relationships">显式记录共同参会、长期协作，并把决定/任务关系连回原话</td>
+                      <th scope="row" class="dimension-column" data-i18n="comparison.row.relationships">人物协作关系</th>
+                      <td data-i18n="comparison.zoom.relationships">能理解参与者与组织信息，但协作关系图不是会议核心输出</td>
+                      <td data-i18n="comparison.teams.relationships">以参会人、说话人和组织协作为主</td>
+                      <td data-i18n="comparison.feishu.relationships">以发言人、文档协同和任务协作为主</td>
+                      <td data-i18n="comparison.otter.relationships">以说话人、会议历史和行动项为主</td>
+                    </tr>
+                    <tr>
+                      <td class="confirmvoice-column" data-i18n="comparison.confirmvoice.improvement">只有确认证据才增加声纹样本、人物图谱和适配器候选</td>
+                      <th scope="row" class="dimension-column" data-i18n="comparison.row.improvement">如何持续改善</th>
+                      <td data-i18n="comparison.zoom.improvement">通过工作内容、应用连接和个性化上下文增强</td>
+                      <td data-i18n="comparison.teams.improvement">通过 M365 数据和会议上下文增强</td>
+                      <td data-i18n="comparison.feishu.improvement">结合企业信息、文档和任务上下文</td>
+                      <td data-i18n="comparison.otter.improvement">利用会议历史和已标注说话人档案</td>
+                    </tr>
+                    <tr>
+                      <td class="confirmvoice-column" data-i18n="comparison.confirmvoice.tradeoff">不替代视频会议，优先成为线上/线下会议的可信记忆层</td>
+                      <th scope="row" class="dimension-column" data-i18n="comparison.row.tradeoff">产品取舍</th>
+                      <td data-i18n="comparison.zoom.tradeoff">完整视频会议与工作平台</td>
+                      <td data-i18n="comparison.teams.tradeoff">成熟的企业协作与会议套件</td>
+                      <td data-i18n="comparison.feishu.tradeoff">成熟的一体化办公套件</td>
+                      <td data-i18n="comparison.otter.tradeoff">跨会议平台的 AI 会议助手</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+
+              <div class="comparison-note">
+                <p data-i18n="comparison.note">依据各产品官方公开功能整理；比较的是主要产品定位，不代表竞品完全没有某项能力。声脉 SpeakBit 标注“设计中”的能力尚未作为已完成功能。</p>
+                <div class="comparison-sources">
+                  <span data-i18n="comparison.sources">官方功能来源：</span>
+                  <a href="https://www.zoom.com/en/products/ai-assistant/" target="_blank" rel="noreferrer">Zoom</a>
+                  <a href="https://support.microsoft.com/en-us/teams/meetings/recap-in-microsoft-teams" target="_blank" rel="noreferrer">Teams</a>
+                  <a href="https://www.feishu.cn/content/article/7577317993749269689" target="_blank" rel="noreferrer" data-i18n="comparison.feishu">飞书妙记</a>
+                  <a href="https://otter.ai/blog/streamline-workflows-with-my-action-items-otter-ai-can-now-keep-track-of-all-your-action-items-across-all-your-meetings" target="_blank" rel="noreferrer">Otter.ai</a>
+                </div>
+              </div>
+            </section>
+
+            <div class="research-takeaway">
+              <div class="eyebrow">RESEARCH TAKEAWAY</div>
+              <h3 data-i18n="research.claimTitle">逐场增强身份，逐步形成联系人网络</h3>
+              <p class="research-claim-lead" data-i18n="research.claimLead">声脉 SpeakBit 按会议逐步学习：每次确认“谁说了什么”，都会补强该联系人的声纹与身份特征；共同参会、决定和任务则逐步连接成可回查的联系人协作网络。未确认的人物和自动待办只保留为建议，不会更新长期记忆。</p>
+              <ul>
+                <li>
+                  <strong data-i18n="research.claim1Title">身份特征逐步增强</strong>
+                  <span data-i18n="research.claim1Body">确认的语音片段、姓名与别名持续补强联系人档案。</span>
+                </li>
+                <li>
+                  <strong data-i18n="research.claim2Title">联系人网络逐步形成</strong>
+                  <span data-i18n="research.claim2Body">共同参会、决定与任务把联系人连接成可追溯的协作网络。</span>
+                </li>
+                <li>
+                  <strong data-i18n="research.claim3Title">确认后才学习</strong>
+                  <span data-i18n="research.claim3Body">未确认身份和自动待办只作建议，不进入长期记忆。</span>
+                </li>
+              </ul>
+            </div>
+
+          </section>
+        </section>
+      </main>
+
+      <footer id="workflowStatus" class="workflow-status" data-i18n-aria-label="workflow.aria">
+        <div class="workflow-status-inner">
+          <div class="workflow-status-title">
+            <div class="eyebrow">PROJECT FLOW</div>
+            <strong data-i18n="workflow.title">项目推进</strong>
+          </div>
+          <nav class="workflow-steps" data-i18n-aria-label="workflow.navAria">
+            <button class="workflow-step" type="button" data-workflow-stage="research">
+              <span class="workflow-number">01</span>
+              <span><strong data-i18n="workflow.research">调研</strong><small data-i18n="workflow.researchStatus">结论已呈现</small></span>
+            </button>
+            <button class="workflow-step" type="button" data-workflow-stage="design">
+              <span class="workflow-number">02</span>
+              <span><strong data-i18n="workflow.design">设计</strong><small data-i18n="workflow.designStatus">知识图谱方案</small></span>
+            </button>
+            <button class="workflow-step" type="button" data-workflow-stage="core">
+              <span class="workflow-number">03</span>
+              <span><strong data-i18n="workflow.core">核心开发</strong><small data-i18n="workflow.coreStatus">原型运行中</small></span>
+            </button>
+            <button class="workflow-step" type="button" data-workflow-stage="test">
+              <span class="workflow-number">04</span>
+              <span><strong data-i18n="workflow.test">测试</strong><small data-i18n="workflow.testStatus">60 项已通过</small></span>
+            </button>
+          </nav>
+        </div>
+      </footer>
+    </div>
+  </div>
+
+  <script>try { localStorage.setItem("voice-graph.locale", "en-US"); } catch (_) {}</script>
+  <script src="./static/i18n.js?v=20260826-auto-translate"></script>
+  <script src="./static/locales/zh-CN.js?v=20260826-auto-translate"></script>
+  <script src="./static/locales/en-US.js?v=20260826-auto-translate"></script>
+  <script src="./static/demo-api.js?v=20260903-speakbit"></script>
+  <script src="./static/app.js?v=20260829-project-consultant"></script>
+</body>
+</html>

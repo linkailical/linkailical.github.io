@@ -1,10 +1,119 @@
 <!doctype html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta http-equiv="refresh" content="0; url=../voiceweave/" />
-  <link rel="canonical" href="../voiceweave/" />
-  <title>正在前往 VoiceWeave</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="SpeakBit turns multi-meeting conversations into trusted, traceable project memory." />
+  <meta name="theme-color" content="#071d1a" />
+  <title>SpeakBit · Trusted Meeting Memory</title>
+  <link rel="stylesheet" href="./speakbit.css?v=20260903" />
 </head>
-<body><p><a href="../voiceweave/">前往 VoiceWeave 演示</a></p></body>
+<body>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="SpeakBit home">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span>SpeakBit</span>
+    </a>
+    <nav aria-label="Project navigation">
+      <a href="#story">How it works</a>
+      <a href="#video">Video</a>
+      <a href="#demo">Live demo</a>
+      <a class="nav-cta" href="./demo/">Open full demo</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-copy">
+        <p class="eyebrow">STUDENT-BUILT · PRIVACY-FIRST MEETING AI</p>
+        <h1 id="hero-title">Meetings should remember <em>what changed</em>—not just what was said.</h1>
+        <p class="hero-lead">
+          SpeakBit transcribes and translates conversations, confirms who said what,
+          and turns decisions across meetings into a living, evidence-backed project memory.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#demo">Try the interactive demo</a>
+          <a class="button secondary" href="#video">Watch the 60-second overview</a>
+        </div>
+        <ul class="proof-row" aria-label="Key capabilities">
+          <li><strong>Live</strong><span>transcription</span></li>
+          <li><strong>Cross-language</strong><span>translation</span></li>
+          <li><strong>Human-confirmed</strong><span>speaker identity</span></li>
+          <li><strong>Across meetings</strong><span>change tracking</span></li>
+        </ul>
+      </div>
+      <div class="memory-card" aria-label="Example SpeakBit project memory">
+        <div class="memory-card-head">
+          <span>Cultural Night</span>
+          <span class="live-pill"><i></i> Project memory</span>
+        </div>
+        <div class="meeting-strip"><span>Meeting 1</span><span>Meeting 2</span><span class="active">Meeting 3</span></div>
+        <div class="change-list">
+          <article><div class="icon">R</div><div><small>ROOM</small><p><s>Cafeteria</s> <b>Auditorium</b></p></div><span>Jordan</span></article>
+          <article><div class="icon">P</div><div><small>POSTER OWNER</small><p><s>Maya</s> <b>Jordan</b></p></div><span>Ava</span></article>
+          <article><div class="icon">F</div><div><small>FOOD PLAN</small><p><s>Homemade</s> <b>Packaged</b></p></div><span>Ava</span></article>
+          <article><div class="icon">$</div><div><small>BUDGET</small><p><s>$200</s> <b>$280</b></p></div><span>Ava</span></article>
+        </div>
+        <p class="evidence-note">Every update links back to the speaker, timestamp, and original words.</p>
+      </div>
+    </section>
+
+    <section id="story" class="section story">
+      <div class="section-heading">
+        <p class="eyebrow">ONE TRUSTED THREAD</p>
+        <h2>From conversation to accountable action</h2>
+        <p>SpeakBit keeps the original evidence visible while the project evolves.</p>
+      </div>
+      <div class="steps">
+        <article><span>01</span><h3>Capture</h3><p>Record speech and see the transcript appear while the meeting is still happening.</p></article>
+        <article><span>02</span><h3>Understand</h3><p>Translate across languages without hiding the original words.</p></article>
+        <article><span>03</span><h3>Confirm</h3><p>Let people verify speaker identities before they become long-term voice memory.</p></article>
+        <article><span>04</span><h3>Remember</h3><p>Track decisions, owners, budgets, and revisions across multiple meetings.</p></article>
+      </div>
+    </section>
+
+    <section id="video" class="section video-section">
+      <div class="video-copy">
+        <p class="eyebrow">60-SECOND PRODUCT OVERVIEW</p>
+        <h2>See the problem SpeakBit solves</h2>
+        <p>
+          Follow one school event through three meetings and see how SpeakBit preserves
+          speaker-attributed changes instead of producing another disconnected summary.
+        </p>
+        <div class="video-points">
+          <span>English narration</span><span>1080p</span><span>Captions in the product UI</span>
+        </div>
+      </div>
+      <div class="video-shell">
+        <video controls playsinline preload="metadata" poster="./media/speakbit-poster.jpg">
+          <source src="./media/SPEAKBIT_Functions_and_Difference_EN.mp4" type="video/mp4" />
+          Your browser does not support HTML5 video. <a href="./media/SPEAKBIT_Functions_and_Difference_EN.mp4">Download the video</a>.
+        </video>
+      </div>
+    </section>
+
+    <section id="demo" class="section demo-section">
+      <div class="section-heading demo-heading">
+        <div>
+          <p class="eyebrow">INTERACTIVE PRODUCT DEMO</p>
+          <h2>Explore the interface in your browser</h2>
+          <p>Run the guided recording flow, inspect translations and speaker evidence, then open the cross-meeting memory graph.</p>
+        </div>
+        <a class="button primary" href="./demo/">Open full-screen demo</a>
+      </div>
+      <div class="demo-frame-shell">
+        <iframe src="./demo/" title="SpeakBit interactive product demo" loading="lazy"></iframe>
+      </div>
+      <p class="demo-note">
+        GitHub Pages runs a deterministic browser simulation, so it does not request microphone access or upload audio.
+        The portable local edition connects this same interface to the real ASR, translation, diarization, and voiceprint pipeline.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    <span>SpeakBit · Student innovation project</span>
+    <a href="/projects/">Back to all projects</a>
+  </footer>
+</body>
 </html>

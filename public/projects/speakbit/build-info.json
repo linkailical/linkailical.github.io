@@ -1,0 +1,91 @@
+{
+  "schema_version": 2,
+  "built_at": "2026-09-04T04:11:06.942764+00:00",
+  "route": "/projects/speakbit/",
+  "demo_route": "/projects/speakbit/demo/",
+  "legacy_alias": "/projects/voiceweave/",
+  "mode": "static-browser-simulation",
+  "source_frontend": "frontend",
+  "video": {
+    "path": "media/SPEAKBIT_Functions_and_Difference_EN.mp4",
+    "bytes": 5275712,
+    "sha256": "b6734a354532a4e6351c2da78abc123634b41e6ac4ad768707f591dad12c67ae"
+  },
+  "files": [
+    {
+      "path": "build-info.json",
+      "bytes": 2741,
+      "sha256": "007ce8fc8813c47084ea8017ead47e4fac00a976a69bf489147cd327bd06be6d"
+    },
+    {
+      "path": "demo/index.html",
+      "bytes": 56512,
+      "sha256": "4086742beaea8c48ec91da472691d5188f34d2cdf0f547f2283c9f28a6c23cbd"
+    },
+    {
+      "path": "demo/static/app.js",
+      "bytes": 152712,
+      "sha256": "8dcf0f666686b9a72c57518089ea789c8d22094091f0b12f281d7b04d9bceeaf"
+    },
+    {
+      "path": "demo/static/assets/confirmvoice-positioning-en.svg",
+      "bytes": 9365,
+      "sha256": "01ad4a47f3cd81175476bb5ae34be0d5b8d571b4fd24307e87ab15f40b9bee21"
+    },
+    {
+      "path": "demo/static/assets/confirmvoice-positioning-zh.svg",
+      "bytes": 9315,
+      "sha256": "35900dc61d29264e273ae021b0f41baf2a80d21b720f93bc25b36700e0377e0b"
+    },
+    {
+      "path": "demo/static/demo-api.js",
+      "bytes": 31164,
+      "sha256": "4eff1e49a3562b4cc9c30d5bd8194f7ba300987bfa41339dd656f857dd44d105"
+    },
+    {
+      "path": "demo/static/demo-mode.css",
+      "bytes": 1745,
+      "sha256": "5cacfee674aec13159d2f9af347a7f07e5c1662bd094280bfc6468a253040e51"
+    },
+    {
+      "path": "demo/static/i18n.js",
+      "bytes": 4313,
+      "sha256": "3eccf3f468e64f4cc5acdb99b32f48d98ff7d590dbc62ef8a99ce019e3a2f3fc"
+    },
+    {
+      "path": "demo/static/locales/en-US.js",
+      "bytes": 37123,
+      "sha256": "8920365e5db86a4d8f6bc0db7f3a4328e41f26b535648bf1ef41a976bc404078"
+    },
+    {
+      "path": "demo/static/locales/zh-CN.js",
+      "bytes": 34166,
+      "sha256": "1c2d3433e7a547f3ecec2637fb9c9f597c2a7a6dd1184b84a0d881a29c5338a1"
+    },
+    {
+      "path": "demo/static/style.css",
+      "bytes": 60157,
+      "sha256": "fe4530795866c70a9a0098ccde2c7f08f37c89810c8f3acd981689f9d3660730"
+    },
+    {
+      "path": "index.html",
+      "bytes": 6001,
+      "sha256": "2718f0279163c72c0c5328ae5f8a5d3da5d8c3189a28ac5c58a5fdad6f41ec54"
+    },
+    {
+      "path": "media/SPEAKBIT_Functions_and_Difference_EN.mp4",
+      "bytes": 5275712,
+      "sha256": "b6734a354532a4e6351c2da78abc123634b41e6ac4ad768707f591dad12c67ae"
+    },
+    {
+      "path": "media/speakbit-poster.jpg",
+      "bytes": 171862,
+      "sha256": "71531686bec148f846837e6f5f701722d78a965d9cacdf9f80625c098a155b07"
+    },
+    {
+      "path": "speakbit.css",
+      "bytes": 8782,
+      "sha256": "06eac39e4dbfba85a939a1f1cc39dc9b2a776a998c74f086e8829aad00602faa"
+    }
+  ]
+}

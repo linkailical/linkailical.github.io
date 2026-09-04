@@ -2382,7 +2382,7 @@
     if (!box) return;
     box.hidden = false;
     if (errorText) {
-      box.innerHTML = `<div class="gma-demo-step fail"><span class="gma-demo-mark">FAIL</span><div><strong>演示未完成</strong><small>${escapeHtml(errorText)}</small></div></div>`;
+      box.innerHTML = `<div class="gma-demo-step fail"><span class="gma-demo-mark">FAIL</span><div><strong>Demo did not complete</strong><small>${escapeHtml(errorText)}</small></div></div>`;
       return;
     }
     const steps = report.steps || [];
@@ -2412,13 +2412,13 @@
     const button = $("btnRunGmaDemo");
     if (!button) return;
     button.disabled = true;
-    button.textContent = "正在跑两场演示…";
+    button.textContent = "Running the two-meeting demo…";
     renderGmaDemoReport({}, "处理中");
     try {
       const report = await api("/api/demo/getting-more-accurate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ include_slow_path: true, person_name: "林楷" }),
+        body: JSON.stringify({ include_slow_path: true, person_name: "Jordan" }),
       });
       renderGmaDemoReport(report);
       await refreshGraphView();
@@ -2427,7 +2427,7 @@
       renderGmaDemoReport({}, error.message || String(error));
     } finally {
       button.disabled = false;
-      button.textContent = "运行完整演示";
+      button.textContent = "Run the full loop";
     }
   }
 
