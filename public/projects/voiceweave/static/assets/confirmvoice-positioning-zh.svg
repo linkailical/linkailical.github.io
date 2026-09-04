@@ -1,0 +1,161 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">声脉 VoiceWeave 产品定位图</title>
+  <desc id="desc">主流会议软件提供转写、摘要和行动项。声脉 VoiceWeave 通过逐次确认增强说话人的身份特征，并把共同参会、决定和任务逐步连接成可信的联系人协作网络。</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fbfdfc"/>
+      <stop offset="1" stop-color="#eef7f3"/>
+    </linearGradient>
+    <linearGradient id="core" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0f6a4f"/>
+      <stop offset="1" stop-color="#123f32"/>
+    </linearGradient>
+    <pattern id="dots" width="28" height="28" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.4" fill="#0f6a4f" opacity="0.10"/>
+    </pattern>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="14" flood-color="#173c2f" flood-opacity="0.11"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#8ba79b"/>
+    </marker>
+    <style>
+      text { font-family: "PingFang SC", "Microsoft YaHei", Arial, sans-serif; fill: #1b2d25; }
+      .eyebrow { font-size: 19px; font-weight: 700; letter-spacing: 3px; fill: #0f6a4f; }
+      .title { font-size: 46px; font-weight: 700; letter-spacing: -1px; }
+      .subtitle { font-size: 21px; fill: #607168; }
+      .card-title { font-size: 25px; font-weight: 700; }
+      .card-sub { font-size: 17px; fill: #6b7b73; }
+      .label { font-size: 18px; font-weight: 650; }
+      .small { font-size: 15px; fill: #687870; }
+      .white { fill: #ffffff; }
+      .white-muted { fill: #d9ebe4; }
+      .metric { font-size: 36px; font-weight: 750; fill: #0f6a4f; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="900" rx="34" fill="url(#bg)"/>
+  <rect width="1600" height="900" rx="34" fill="url(#dots)"/>
+  <circle cx="1480" cy="80" r="190" fill="#dff1e9" opacity="0.72"/>
+  <circle cx="1520" cy="20" r="112" fill="#f6dccc" opacity="0.62"/>
+
+  <text x="72" y="76" class="eyebrow">声脉 VOICEWEAVE · 产品定位</text>
+  <text x="72" y="140" class="title">从「会议记录」到「可信协作记忆」</text>
+  <text x="72" y="183" class="subtitle">不替代 Zoom、Teams、飞书或 Otter.ai，而是在会议之后补上“确认—积累—复用”的可信记忆层</text>
+
+  <g filter="url(#shadow)">
+    <rect x="70" y="244" width="390" height="370" rx="26" fill="#ffffff"/>
+    <rect x="70" y="244" width="390" height="8" rx="4" fill="#a8b7b0"/>
+  </g>
+  <text x="104" y="295" class="card-title">主流会议软件的成熟能力</text>
+  <text x="104" y="326" class="card-sub">重点提升单场会议效率</text>
+
+  <g>
+    <rect x="104" y="350" width="147" height="42" rx="21" fill="#f0f3f1"/>
+    <text x="177.5" y="377" text-anchor="middle" class="label">Zoom</text>
+    <rect x="267" y="350" width="159" height="42" rx="21" fill="#f0f3f1"/>
+    <text x="346.5" y="377" text-anchor="middle" class="label">Teams</text>
+    <rect x="104" y="405" width="147" height="42" rx="21" fill="#f0f3f1"/>
+    <text x="177.5" y="432" text-anchor="middle" class="label">飞书妙记</text>
+    <rect x="267" y="405" width="159" height="42" rx="21" fill="#f0f3f1"/>
+    <text x="346.5" y="432" text-anchor="middle" class="label">Otter.ai</text>
+  </g>
+
+  <line x1="104" y1="474" x2="426" y2="474" stroke="#dce4e0" stroke-width="2"/>
+  <g>
+    <circle cx="137" cy="515" r="22" fill="#e8eeeb"/>
+    <path d="M129 514h16M129 508h16M129 520h11" stroke="#52655c" stroke-width="3" stroke-linecap="round"/>
+    <text x="171" y="522" class="label">转写</text>
+    <circle cx="250" cy="515" r="22" fill="#e8eeeb"/>
+    <path d="M242 507h16M242 514h13M242 521h10" stroke="#52655c" stroke-width="3" stroke-linecap="round"/>
+    <text x="284" y="522" class="label">摘要</text>
+    <circle cx="363" cy="515" r="22" fill="#e8eeeb"/>
+    <path d="M355 515l6 6 11-13" fill="none" stroke="#52655c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="397" y="522" class="label">行动项</text>
+  </g>
+  <text x="104" y="574" class="small">成熟、通用，解决“这场会发生了什么”</text>
+
+  <path d="M474 429 H505" stroke="#8ba79b" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="520" y="224" width="338" height="410" rx="30" fill="url(#core)"/>
+  </g>
+  <text x="558" y="277" class="eyebrow white-muted">声脉 VOICEWEAVE</text>
+  <circle cx="689" cy="359" r="57" fill="#ffffff" opacity="0.13"/>
+  <path d="M689 318l39 15v31c0 29-17 49-39 61-22-12-39-32-39-61v-31z" fill="none" stroke="#ffffff" stroke-width="5"/>
+  <path d="M671 365l13 13 25-28" fill="none" stroke="#ffffff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="689" y="465" text-anchor="middle" class="card-title white">每次确认，增强一点</text>
+  <text x="689" y="500" text-anchor="middle" class="card-sub white-muted">身份特征与联系人网络逐场成长</text>
+  <g>
+    <rect x="558" y="529" width="262" height="38" rx="19" fill="#ffffff" opacity="0.12"/>
+    <text x="689" y="554" text-anchor="middle" class="label white">声纹 + 姓名 + 别名</text>
+    <rect x="558" y="577" width="262" height="38" rx="19" fill="#ffffff" opacity="0.12"/>
+    <text x="689" y="602" text-anchor="middle" class="label white">共同参会 + 决定 + 任务</text>
+  </g>
+
+  <path d="M873 429 H904" stroke="#8ba79b" stroke-width="4" marker-end="url(#arrow)"/>
+
+  <g filter="url(#shadow)">
+    <rect x="920" y="244" width="610" height="370" rx="26" fill="#ffffff"/>
+    <rect x="920" y="244" width="610" height="8" rx="4" fill="#0f6a4f"/>
+  </g>
+  <text x="954" y="295" class="card-title">逐场增强的身份与联系人网络</text>
+  <text x="954" y="326" class="card-sub">确认越多，身份越清晰；协作事实越多，网络越完整</text>
+
+  <g stroke="#b9d3c8" stroke-width="3">
+    <path d="M1120 389 L1219 434"/>
+    <path d="M1370 389 L1271 434"/>
+    <path d="M1120 523 L1219 478"/>
+    <path d="M1370 523 L1271 478"/>
+  </g>
+  <circle cx="1245" cy="456" r="74" fill="#e5f4ed"/>
+  <circle cx="1245" cy="456" r="54" fill="#0f6a4f"/>
+  <text x="1245" y="449" text-anchor="middle" class="label white">可信</text>
+  <text x="1245" y="474" text-anchor="middle" class="label white">联系人网络</text>
+
+  <g>
+    <rect x="966" y="352" width="178" height="74" rx="18" fill="#eef8f3"/>
+    <circle cx="994" cy="389" r="15" fill="#0f6a4f" opacity="0.18"/>
+    <circle cx="994" cy="383" r="5" fill="#0f6a4f"/>
+    <path d="M984 400c3-10 17-10 20 0" fill="none" stroke="#0f6a4f" stroke-width="3" stroke-linecap="round"/>
+    <text x="1022" y="385" class="label">人物身份</text>
+    <text x="1022" y="407" class="small">特征逐步增强</text>
+
+    <rect x="1346" y="352" width="148" height="74" rx="18" fill="#eef8f3"/>
+    <path d="M1368 377h16M1368 388h16M1368 399h11" stroke="#0f6a4f" stroke-width="3" stroke-linecap="round"/>
+    <text x="1394" y="385" class="label">决定演进</text>
+    <text x="1394" y="407" class="small">保留新旧变化</text>
+
+    <rect x="966" y="486" width="178" height="74" rx="18" fill="#eef8f3"/>
+    <path d="M982 520l8 8 15-18" fill="none" stroke="#0f6a4f" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+    <text x="1022" y="519" class="label">任务协作</text>
+    <text x="1022" y="541" class="small">负责人 + 日期</text>
+
+    <rect x="1346" y="486" width="148" height="74" rx="18" fill="#eef8f3"/>
+    <circle cx="1371" cy="510" r="6" fill="#0f6a4f"/>
+    <circle cx="1391" cy="532" r="6" fill="#0f6a4f"/>
+    <circle cx="1364" cy="540" r="6" fill="#0f6a4f"/>
+    <path d="M1375 514l12 14M1369 535l16-2" stroke="#0f6a4f" stroke-width="3"/>
+    <text x="1410" y="519" class="label">联系人网络</text>
+    <text x="1410" y="541" class="small">逐步建立连接</text>
+  </g>
+
+  <path d="M1418 628 C1418 670 1335 680 1245 680 H260 C178 680 150 657 150 628" fill="none" stroke="#0f6a4f" stroke-width="3" stroke-dasharray="8 9" opacity="0.55" marker-end="url(#arrow)"/>
+  <text x="866" y="706" text-anchor="middle" class="small">下一场继续复用并校正：身份更清晰，联系人网络更完整</text>
+
+  <g>
+    <rect x="70" y="744" width="310" height="98" rx="22" fill="#fff2e9"/>
+    <text x="99" y="797" class="metric" fill="#b45528">70%</text>
+    <text x="199" y="782" class="label">曾找不到</text>
+    <text x="199" y="811" class="label">最新决定</text>
+
+    <rect x="398" y="744" width="310" height="98" rx="22" fill="#e8f5ef"/>
+    <text x="427" y="797" class="metric">80%</text>
+    <text x="527" y="782" class="label">希望日历写入前</text>
+    <text x="527" y="811" class="label">本人确认</text>
+  </g>
+
+  <rect x="740" y="744" width="790" height="98" rx="22" fill="#193b30"/>
+  <text x="779" y="783" class="small white-muted">一句话定位</text>
+  <text x="779" y="818" class="label white">每次确认都补强身份特征，并让联系人协作网络更完整、更可信。</text>
+</svg>
