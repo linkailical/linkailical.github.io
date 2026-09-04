@@ -25,9 +25,10 @@ const last_posts = posts.slice(0, 3);
       </p>
     </div>
 
-    <div class="mt-4 flex gap-4">
+    <div class="mt-4 flex flex-wrap gap-4">
       <a class="btn btn-primary" href="/cv" data-i18n="home-view-profile">View Academic Profile</a>
       <a class="btn btn-outline" href="mailto:linkaili.2008@gmail.com" data-i18n="home-contact-admissions">Contact for Admissions</a>
+      <a class="btn btn-secondary" href="/projects/speakbit/">Explore SpeakBit →</a>
     </div>
   </div>
 
@@ -36,6 +37,25 @@ const last_posts = posts.slice(0, 3);
   <div>
     <div class="text-3xl w-full font-bold mb-5 font-serif" data-i18n="home-research-title">Research & Leadership Highlights</div>
   </div>
+
+  <div class="rounded-lg border border-primary/40 bg-base-100 hover:shadow-xl transition ease-in-out hover:scale-[102%]">
+    <a href="/projects/speakbit/" target="_self">
+      <div class="hero-content flex-col md:flex-row">
+        <img src="/projects/speakbit/media/speakbit-poster.jpg" alt="SpeakBit meeting memory product demo" class="max-w-full md:max-w-[13rem] rounded-lg" />
+        <div class="grow w-full">
+          <h1 class="text-xl font-bold">
+            <span>SpeakBit — Trusted Meeting Memory</span>
+            <div class="badge badge-secondary mx-2">Student Innovation</div>
+          </h1>
+          <p class="py-1 text-1xl">
+            Explore the English competition showcase, watch the 60-second product video,
+            and run the interactive transcription, translation, and speaker-identification demo.
+          </p>
+        </div>
+      </div>
+    </a>
+  </div>
+  <div class="divider my-0"></div>
 
   <div class="rounded-lg bg-base-100 hover:shadow-xl transition ease-in-out hover:scale-[102%]">
     <a href="/cv" target="_blank">

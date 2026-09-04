@@ -12,7 +12,7 @@ const translations = {
     menu: {
       home: 'Biography',
       cv: 'Academic Profile (CV)',
-      projects: 'Research & Inquiry',
+      projects: 'Projects / Research',
       learn: 'Learning Lab',
       sat: 'SAT Hub',
       blog: 'Selected Essays',
@@ -59,7 +59,7 @@ const translations = {
     menu: {
       home: '个人简介',
       cv: '学术履历',
-      projects: '研究与探索',
+      projects: '项目 / 研究',
       learn: '学习实验室',
       sat: 'SAT 专题',
       blog: '精选文章',
