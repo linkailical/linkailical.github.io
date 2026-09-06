@@ -612,7 +612,7 @@
     }
     if (icanAdapter) icanAdapter.textContent = adapter.adapter_id || health.active_adapter || "A_v0";
     if (icanSampleCount) {
-      icanSampleCount.textContent = `${Number(evidence.confirmed_samples || 0)} 条确认样本`;
+      icanSampleCount.textContent = `${Number(evidence.confirmed_samples || 0)} confirmed samples`;
     }
     if (icanHardwareState) {
       const target = hardware.target || "RK3588";
@@ -2390,11 +2390,11 @@
     box.innerHTML = steps
       .map((step) => {
         const counts = step.counts
-          ? `人物 ${step.counts.people} · 样本 ${step.counts.samples} · 图谱 ${step.counts.graph_nodes}/${step.counts.graph_edges}`
+          ? `People ${step.counts.people} · samples ${step.counts.samples} · graph ${step.counts.graph_nodes}/${step.counts.graph_edges}`
           : step.matched_person_id
-            ? `命中 ${step.matched_person_id}`
+            ? `Matched ${step.matched_person_id}`
             : step.adapter_id
-              ? `晋级 ${step.adapter_id}`
+              ? `Promoted ${step.adapter_id}`
               : "";
         return `<div class="gma-demo-step ${step.ok ? "ok" : "fail"}">
           <span class="gma-demo-mark">${step.ok ? "OK" : "FAIL"}</span>
@@ -2404,7 +2404,7 @@
       .join("");
     box.insertAdjacentHTML(
       "beforeend",
-      `<div class="gma-demo-step ok"><span class="gma-demo-mark">DONE</span><div><strong>${escapeHtml(report.person_name || "")} · 样本 ${after.samples || 0}</strong><small>${escapeHtml(report.note || "")}</small></div></div>`,
+      `<div class="gma-demo-step ok"><span class="gma-demo-mark">DONE</span><div><strong>${escapeHtml(report.person_name || "")} · ${after.samples || 0} samples</strong><small>${escapeHtml(report.note || "")}</small></div></div>`,
     );
   }
 
@@ -2413,7 +2413,7 @@
     if (!button) return;
     button.disabled = true;
     button.textContent = "Running the two-meeting demo…";
-    renderGmaDemoReport({}, "处理中");
+    renderGmaDemoReport({}, "Processing");
     try {
       const report = await api("/api/demo/getting-more-accurate", {
         method: "POST",
