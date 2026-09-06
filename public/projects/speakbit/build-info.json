@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "built_at": "2026-09-06T01:15:10.958392+00:00",
+  "built_at": "2026-09-06T01:28:24.504615+00:00",
   "route": "/projects/speakbit/",
   "demo_route": "/projects/speakbit/demo/",
   "legacy_alias": "/projects/voiceweave/",
@@ -8,14 +8,14 @@
   "source_frontend": "frontend",
   "video": {
     "path": "media/SPEAKBIT_Functions_and_Difference_EN.mp4",
-    "bytes": 21794792,
-    "sha256": "f204539cdc4cebb03b8111328485e34ce997454f6faff156397fc5f274e8d01b"
+    "bytes": 23252326,
+    "sha256": "57c4fbd00b87b3e085575709c44cdec0ac2b38e5aa194c000e53baf433fc04e9"
   },
   "files": [
     {
       "path": "build-info.json",
-      "bytes": 2891,
-      "sha256": "eeb718e44a4d7e161e5a331e404151c40b765dbb36f7194d31367d29fb5b686e"
+      "bytes": 2893,
+      "sha256": "7ecb3461543f251212ee8ee75a4136d4365abd03ba0b277893a48dbba5735d9b"
     },
     {
       "path": "demo/index.html",
@@ -74,13 +74,13 @@
     },
     {
       "path": "media/SPEAKBIT_Functions_and_Difference_EN.mp4",
-      "bytes": 21794792,
-      "sha256": "f204539cdc4cebb03b8111328485e34ce997454f6faff156397fc5f274e8d01b"
+      "bytes": 23252326,
+      "sha256": "57c4fbd00b87b3e085575709c44cdec0ac2b38e5aa194c000e53baf433fc04e9"
     },
     {
       "path": "media/speakbit-poster.jpg",
-      "bytes": 100051,
-      "sha256": "609fe3ccdd6158778795247f1b269b21ffb3380829adc9c7eb4fdba6c5646d42"
+      "bytes": 88058,
+      "sha256": "e3dd794fc261f8b0760dbc405c54ce9f24452db85bf3a60cae7b77d9d67d567f"
     },
     {
       "path": "speakbit.css",
