@@ -7,8 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&amp;display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="./static/style.css?v=20260829-project-consultant" />
-  <link rel="stylesheet" href="./static/demo-mode.css?v=20260903-speakbit" />
+  <link rel="stylesheet" href="./static/style.css?v=20260906-project-agent" />
+  <link rel="stylesheet" href="./static/demo-mode.css?v=20260906-project-agent" />
 </head>
 <body>
 
@@ -111,38 +111,38 @@
             <article id="icanHardware"><span>硬件盒子</span><strong id="icanHardwareState">RK3588 · 已接入</strong><small>硬件已接入，端侧模型与真机指标待验收</small></article>
           </section>
 
-          <section id="projectConsultant" class="project-consultant ican-only" aria-labelledby="projectConsultantTitle">
+          <section id="projectConsultant" class="project-consultant" aria-labelledby="projectConsultantTitle">
             <header class="project-consultant-head">
               <div>
-                <div class="eyebrow">PROJECT CONSULTANT · GROUNDED Q&amp;A</div>
-                <h2 id="projectConsultantTitle">项目咨询 Agent</h2>
-                <p>提出项目问题，Agent 检索当前项目中的会议记录并用原句证据回答。</p>
+                <div class="eyebrow" data-i18n="projectAgent.eyebrow">PROJECT AGENT · 已存数据问答</div>
+                <h2 id="projectConsultantTitle" data-i18n="projectAgent.title">向项目 Agent 提问</h2>
+                <p data-i18n="projectAgent.description">针对所选项目提问；回答只依据已保存的会议记录。</p>
               </div>
               <label class="project-consultant-scope">
-                <span>咨询范围</span>
-                <select id="projectConsultantProject" aria-label="选择咨询项目"></select>
+                <span data-i18n="projectAgent.scope">数据范围</span>
+                <select id="projectConsultantProject" data-i18n-aria-label="projectAgent.scopeAria" aria-label="选择问答项目"></select>
               </label>
             </header>
             <div id="projectConsultantMessages" class="project-consultant-messages" role="log" aria-live="polite">
               <article class="consultant-message agent">
-                <span class="consultant-avatar">智</span>
+                <span class="consultant-avatar">A</span>
                 <div>
-                  <strong>智会 Agent</strong>
-                  <p>请选择项目并提出问题。我会回答项目阶段、风险、负责人、下一步或查找相关会议原句。</p>
+                  <strong data-i18n="projectAgent.agentName">SpeakBit 项目 Agent</strong>
+                  <p data-i18n="projectAgent.greeting">选择项目后，可以询问最新计划、变更、负责人、下一步或原始会议证据。</p>
                 </div>
               </article>
             </div>
-            <div class="project-consultant-presets" aria-label="项目咨询快捷问题">
-              <button type="button" data-project-question="请总结一下这个项目目前处于什么阶段？">项目阶段总结</button>
-              <button type="button" data-project-question="当前最需要关注的风险是什么？">风险与阻塞</button>
-              <button type="button" data-project-question="下一步由谁负责什么？">负责人和下一步</button>
-              <button type="button" data-project-question="最近会议形成了哪些明确结论？">最近会议结论</button>
+            <div class="project-consultant-presets" data-i18n-aria-label="projectAgent.presetsAria" aria-label="项目问答快捷问题">
+              <button type="button" data-project-question-key="projectAgent.questionLatest" data-i18n="projectAgent.presetLatest">最新计划</button>
+              <button type="button" data-project-question-key="projectAgent.questionOwners" data-i18n="projectAgent.presetOwners">负责人和下一步</button>
+              <button type="button" data-project-question-key="projectAgent.questionChanges" data-i18n="projectAgent.presetChanges">项目发生了什么变化</button>
+              <button type="button" data-project-question-key="projectAgent.questionEvidence" data-i18n="projectAgent.presetEvidence">查看来源证据</button>
             </div>
             <form id="projectConsultantForm" class="project-consultant-form">
-              <textarea id="projectConsultantInput" rows="2" maxlength="300" placeholder="例如：请总结一下这个项目目前处于什么阶段？" aria-label="输入项目咨询问题"></textarea>
-              <button id="projectConsultantSend" class="btn primary" type="submit">发送问题</button>
+              <textarea id="projectConsultantInput" rows="2" maxlength="300" data-i18n-placeholder="projectAgent.inputPlaceholder" data-i18n-aria-label="projectAgent.inputAria" placeholder="询问已保存的项目数据……" aria-label="输入项目问题"></textarea>
+              <button id="projectConsultantSend" class="btn primary" type="submit" data-i18n="projectAgent.send">发送问题</button>
             </form>
-            <p class="project-consultant-note">只读咨询：回答不会修改会议、人员声纹或长期记忆。</p>
+            <p class="project-consultant-note" data-i18n="projectAgent.readOnlyNote">只读问答：回答使用已保存的会议记录，不会修改声纹或项目记忆。</p>
           </section>
 
           <h2 data-i18n="home.recentMeetings">最近会议</h2>
@@ -844,10 +844,10 @@
   </div>
 
   <script>try { localStorage.setItem("voice-graph.locale", "en-US"); } catch (_) {}</script>
-  <script src="./static/i18n.js?v=20260826-auto-translate"></script>
-  <script src="./static/locales/zh-CN.js?v=20260826-auto-translate"></script>
-  <script src="./static/locales/en-US.js?v=20260826-auto-translate"></script>
-  <script src="./static/demo-api.js?v=20260903-speakbit"></script>
-  <script src="./static/app.js?v=20260829-project-consultant"></script>
+  <script src="./static/i18n.js?v=20260906-project-agent"></script>
+  <script src="./static/locales/zh-CN.js?v=20260906-project-agent"></script>
+  <script src="./static/locales/en-US.js?v=20260906-project-agent"></script>
+  <script src="./static/demo-api.js?v=20260906-project-agent"></script>
+  <script src="./static/app.js?v=20260906-project-agent"></script>
 </body>
 </html>

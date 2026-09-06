@@ -492,6 +492,75 @@
     return null;
   }
 
+  function projectQueryResponse(question) {
+    const normalized = String(question || "").trim().toLowerCase();
+    const roomEvidence = {
+      meeting_title: "Meeting 2 · Plan changes",
+      time_label: "00:00",
+      speaker: "Jordan",
+      text: learnedUtterances[0].source_text,
+      source: "Saved transcript",
+    };
+    const planEvidence = {
+      meeting_title: "Meeting 2 · Plan changes",
+      time_label: "00:04",
+      speaker: "Maya",
+      text: learnedUtterances[1].source_text,
+      source: "Saved transcript",
+    };
+    const floorPlanEvidence = {
+      meeting_title: "Meeting 2 · Plan changes",
+      time_label: "00:10",
+      speaker: "Ava",
+      text: learnedUtterances[2].source_text,
+      source: "Saved transcript",
+    };
+    const budgetEvidence = {
+      meeting_title: "Meeting 2 · Plan changes",
+      time_label: "00:15",
+      speaker: "Jordan",
+      text: learnedUtterances[3].text,
+      source: "Saved transcript",
+    };
+    const checklistEvidence = {
+      meeting_title: "Meeting 2 · Plan changes",
+      time_label: "00:21",
+      speaker: "Maya",
+      text: learnedUtterances[4].source_text,
+      source: "Saved transcript",
+    };
+    const dateEvidence = {
+      meeting_title: "Meeting 3 · Final date update",
+      time_label: "00:00",
+      speaker: "Maya",
+      text: "The auditorium is available on March 22, so that is our final event date.",
+      source: "Saved transcript",
+    };
+
+    if (/who|owner|responsib|next step|负责|下一步/.test(normalized)) {
+      return {
+        answer: "Jordan owns the posters. Ava will update the auditorium floor plan, and Maya will confirm the final checklist.",
+        evidence: [planEvidence, floorPlanEvidence, checklistEvidence],
+      };
+    }
+    if (/change|changed|different|previous|变更|变化/.test(normalized)) {
+      return {
+        answer: "Across the saved meetings, the room changed from the cafeteria to the auditorium, the event date moved from March 15 to March 22, the poster owner became Jordan, the food plan became packaged food, and the budget increased from $200 to $280.",
+        evidence: [roomEvidence, planEvidence, budgetEvidence, dateEvidence],
+      };
+    }
+    if (/evidence|source|proof|said|原句|证据|来源/.test(normalized)) {
+      return {
+        answer: "The latest plan is supported by the saved meeting lines below. Select any meeting in the product interface to review its full transcript.",
+        evidence: [dateEvidence, roomEvidence, planEvidence, budgetEvidence],
+      };
+    }
+    return {
+      answer: "The latest confirmed Cultural Night plan is March 22 in the auditorium. Jordan owns the posters, packaged food is required, and the current budget is $280.",
+      evidence: [dateEvidence, roomEvidence, planEvidence, budgetEvidence],
+    };
+  }
+
   async function request(rawPath, options) {
     await wait(55);
     const method = String((options && options.method) || "GET").toUpperCase();
@@ -604,13 +673,7 @@
       return { ok: true, memory };
     }
     if (parts[0] === "api" && parts[1] === "projects" && parts[3] === "query") {
-      return {
-        answer: "Cultural Night is scheduled for March 22 in the auditorium. Jordan owns the posters, packaged food is required, and the current budget is $280.",
-        evidence: [
-          { meeting_title: "Meeting 2 · Plan changes", time_label: "00:15", speaker: "Ava", text: learnedUtterances[3].source_text, source: "ASR" },
-          { meeting_title: "Meeting 3 · Final date update", time_label: "00:00", speaker: "Maya", text: "The auditorium is available on March 22, so that is our final event date.", source: "ASR" },
-        ],
-      };
+      return projectQueryResponse(bodyFrom(options).question);
     }
     if (path === "/api/graph") return graphSnapshot();
     if (path === "/api/knowledge") return knowledgeSnapshot();

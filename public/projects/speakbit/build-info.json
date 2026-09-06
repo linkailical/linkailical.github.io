@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "built_at": "2026-09-06T07:57:42.500504+00:00",
+  "built_at": "2026-09-06T09:54:33.066960+00:00",
   "route": "/projects/speakbit/",
   "demo_route": "/projects/speakbit/demo/",
   "walkthrough_route": "/projects/speakbit/walkthrough/",
@@ -16,17 +16,17 @@
     {
       "path": "build-info.json",
       "bytes": 4457,
-      "sha256": "db6b831fee534fbc96377f1a791feca8fd8c7fb79f29b710d6276c8e73041d01"
+      "sha256": "0d2d684eb051c4510f771193d541b3b3ec3db198b06f755de315468b62686c36"
     },
     {
       "path": "demo/index.html",
-      "bytes": 56371,
-      "sha256": "5e1ff12f24e591479e3ee8fbfc64c7f0fdb75442715594c8dd1e014ddd334e5e"
+      "bytes": 56892,
+      "sha256": "135cbcd52719a59c7bc71b6a049a53955e49f009a1502b4c8f1b5cda04dd8d13"
     },
     {
       "path": "demo/static/app.js",
-      "bytes": 152709,
-      "sha256": "f4f249135358276d420fb4dcd6086e30a23690d2bbc2c24477e7dd464916dfbe"
+      "bytes": 152902,
+      "sha256": "ca58f90f9c3989af818689decdbf1011e497a6db0eb806106dfee93d36d28dda"
     },
     {
       "path": "demo/static/assets/confirmvoice-positioning-en.svg",
@@ -40,8 +40,8 @@
     },
     {
       "path": "demo/static/demo-api.js",
-      "bytes": 31064,
-      "sha256": "0032ae5b358c48ec11bc5ae89ed66a8424b009037197bbedbe258509d60b6ba9"
+      "bytes": 33386,
+      "sha256": "cd0e34bd22c03663aeac37da75c8f3b3b7d9a258d75c193490c860615617bc09"
     },
     {
       "path": "demo/static/demo-mode.css",
@@ -55,13 +55,13 @@
     },
     {
       "path": "demo/static/locales/en-US.js",
-      "bytes": 37147,
-      "sha256": "3aeee00f84563ab5941020550292295258a4ec35b55b4dbfc5b2fd67f33272f8"
+      "bytes": 38935,
+      "sha256": "08f0db147342443ff7bbd8090781f10a5d268f0b79486d414d63c27b711c39bf"
     },
     {
       "path": "demo/static/locales/zh-CN.js",
-      "bytes": 34166,
-      "sha256": "1c2d3433e7a547f3ecec2637fb9c9f597c2a7a6dd1184b84a0d881a29c5338a1"
+      "bytes": 35984,
+      "sha256": "0c840ed6a9b318b3f7862b17325c8b910bfed1e554bdc54d05bd34a7a43d78c6"
     },
     {
       "path": "demo/static/style.css",

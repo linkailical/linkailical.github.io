@@ -703,7 +703,7 @@
     state.tree.forEach((node) => {
       const option = document.createElement("option");
       option.value = node.project.project_id;
-      option.textContent = `${localizedProjectName(node.project)} · ${node.meetings.length} 场会议`;
+      option.textContent = `${localizedProjectName(node.project)} · ${t("projectAgent.meetingCount", { count: node.meetings.length })}`;
       projectConsultantProject.append(option);
     });
     const preferred = state.project && state.project.project_id;
@@ -723,7 +723,7 @@
     if (!body) return;
     body.replaceChildren();
     const title = document.createElement("strong");
-    title.textContent = error ? "咨询失败" : "智会 Agent";
+    title.textContent = error ? t("projectAgent.failed") : t("projectAgent.agentName");
     const text = document.createElement("p");
     text.textContent = answer;
     body.append(title, text);
@@ -733,8 +733,8 @@
       evidence.slice(0, 4).forEach((item) => {
         const row = document.createElement("li");
         const meta = document.createElement("b");
-        const meetingTitle = item.meeting_title || "相关会议";
-        meta.textContent = `${meetingTitle} · ${item.time_label || "00:00"} · ${item.speaker || "未知说话人"}`;
+        const meetingTitle = item.meeting_title || t("projectAgent.relatedMeeting");
+        meta.textContent = `${meetingTitle} · ${item.time_label || "00:00"} · ${item.speaker || t("result.unknownPerson")}`;
         const quote = document.createElement("span");
         quote.textContent = item.text || "";
         row.append(meta, quote);
@@ -751,10 +751,10 @@
     message.className = `consultant-message ${role}`;
     const avatar = document.createElement("span");
     avatar.className = "consultant-avatar";
-    avatar.textContent = role === "user" ? "我" : "智";
+    avatar.textContent = role === "user" ? t("projectAgent.youAvatar") : "A";
     const body = document.createElement("div");
     const title = document.createElement("strong");
-    title.textContent = role === "user" ? "我的问题" : "智会 Agent";
+    title.textContent = role === "user" ? t("projectAgent.yourQuestion") : t("projectAgent.agentName");
     const content = document.createElement("p");
     content.textContent = text;
     body.append(title, content);
@@ -769,7 +769,7 @@
     const question = String((projectConsultantInput && projectConsultantInput.value) || "").trim();
     if (!projectId || !question || !projectConsultantSend) return;
     appendConsultantMessage("user", question);
-    const pending = appendConsultantMessage("agent", "正在理解问题并检索项目会议证据……");
+    const pending = appendConsultantMessage("agent", t("projectAgent.working"));
     projectConsultantSend.disabled = true;
     projectConsultantInput.disabled = true;
     try {
@@ -779,7 +779,7 @@
         body: JSON.stringify({ question }),
       });
       renderConsultantMessage(pending, {
-        answer: payload.answer || "没有生成可展示的回答。",
+        answer: payload.answer || t("projectAgent.noAnswer"),
         evidence: payload.evidence || [],
       });
       projectConsultantInput.value = "";
@@ -3639,10 +3639,11 @@
       renderTree();
     });
   }
-  document.querySelectorAll("[data-project-question]").forEach((button) => {
+  document.querySelectorAll("[data-project-question], [data-project-question-key]").forEach((button) => {
     button.addEventListener("click", () => {
       if (!projectConsultantInput) return;
-      projectConsultantInput.value = button.dataset.projectQuestion || "";
+      const key = button.dataset.projectQuestionKey;
+      projectConsultantInput.value = key ? t(key) : (button.dataset.projectQuestion || "");
       projectConsultantInput.focus();
     });
   });
