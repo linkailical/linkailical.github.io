@@ -2394,7 +2394,7 @@
           : step.matched_person_id
             ? `Matched ${step.matched_person_id}`
             : step.adapter_id
-              ? `Promoted ${step.adapter_id}`
+              ? `Checked and ready`
               : "";
         return `<div class="gma-demo-step ${step.ok ? "ok" : "fail"}">
           <span class="gma-demo-mark">${step.ok ? "OK" : "FAIL"}</span>

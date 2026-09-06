@@ -625,14 +625,14 @@
         person_name: personName,
         before: { people: 10, samples: 60 },
         after: { people: 11, samples: 62 },
-        note: "Pages runs the same interaction flow with simulated data. Use the portable edition for real local voiceprint inference.",
+        note: "This sample stays in your browser. The downloadable version works with real meeting audio.",
         steps: [
-          { id: 1, title: "Before confirmation: long-term memory is unchanged", ok: true, counts: { people: 10, samples: 60, graph_nodes: 12, graph_edges: 5 } },
-          { id: 2, title: "Meeting 1: processing pauses for identity review", ok: true, counts: { people: 10, samples: 60, graph_nodes: 12, graph_edges: 5 } },
-          { id: 3, title: "Confirm Jordan: add the person and voice sample", ok: true, counts: { people: 11, samples: 61, graph_nodes: 13, graph_edges: 6 } },
-          { id: 4, title: "Meeting 2: recognize Jordan without another introduction", ok: true, matched_person_id: "demo_person_jordan" },
-          { id: 5, title: "Confirm again: add more evidence for the same person", ok: true, counts: { people: 11, samples: 62, graph_nodes: 13, graph_edges: 6 } },
-          { id: 6, title: "Slow path: fine_tune → evaluate → promote", ok: true, adapter_id: "A_demo_v2" },
+          { id: 1, title: "Before confirmation: nothing new is saved", ok: true, counts: { people: 10, samples: 60, graph_nodes: 12, graph_edges: 5 } },
+          { id: 2, title: "Meeting 1: the voice is still unknown", ok: true, counts: { people: 10, samples: 60, graph_nodes: 12, graph_edges: 5 } },
+          { id: 3, title: "A person confirms the name Jordan", ok: true, counts: { people: 11, samples: 61, graph_nodes: 13, graph_edges: 6 } },
+          { id: 4, title: "Meeting 2: SpeakBit recognizes Jordan", ok: true, matched_person_id: "Jordan" },
+          { id: 5, title: "Another confirmation adds stronger evidence", ok: true, counts: { people: 11, samples: 62, graph_nodes: 13, graph_edges: 6 } },
+          { id: 6, title: "The checked update is ready to use", ok: true, adapter_id: "A_demo_v2" },
         ],
       };
     }
@@ -670,7 +670,7 @@
     document.body.classList.toggle("pages-demo-recording", active);
     if (elements.run) {
       elements.run.disabled = active;
-      elements.run.textContent = active ? "Demo running…" : "Run meeting demo";
+      elements.run.textContent = active ? "1 · Running sample…" : "1 · Run sample meeting";
     }
     if (elements.record) {
       elements.record.disabled = active;

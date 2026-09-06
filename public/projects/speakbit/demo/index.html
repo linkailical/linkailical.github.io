@@ -14,13 +14,13 @@
 
   <section class="pages-demo-notice" aria-label="SpeakBit browser demo notice">
     <div class="pages-demo-notice-copy">
-      <span class="pages-demo-badge">Browser demo</span>
-      <strong>SpeakBit interactive demo</strong>
-      <span>Sample data stays in this browser. Use the portable edition for real local AI models.</span>
+      <span class="pages-demo-badge">1-minute demo</span>
+      <strong>Try a sample school meeting</strong>
+      <span>Start with step 1. No account, microphone, or upload.</span>
     </div>
     <div class="pages-demo-actions">
-      <button id="demoRunButton" class="pages-demo-action primary" type="button">Run meeting demo</button>
-      <button id="demoGraphButton" class="pages-demo-action" type="button">See how it learns</button>
+      <button id="demoRunButton" class="pages-demo-action primary" type="button"><b>1</b> Run sample meeting</button>
+      <button id="demoGraphButton" class="pages-demo-action" type="button"><b>2</b> See how names are learned</button>
     </div>
   </section>
   <div class="shell">
@@ -384,16 +384,16 @@
             <div class="row-between">
               <div>
                 <div class="eyebrow">GETTING MORE ACCURATE</div>
-                <h2>Gets smarter · a two-meeting demo</h2>
-                <p class="eval-lead">Confirm a new speaker in meeting one, recognize the same person in meeting two, then evaluate the new evidence before promotion.</p>
+                <h2>How SpeakBit remembers a name</h2>
+                <p class="eval-lead">Watch an unknown voice become Jordan only after a person confirms it.</p>
               </div>
               <button id="btnRunGmaDemo" class="btn primary" type="button">Run the full loop</button>
             </div>
             <ol id="gmaDemoSteps" class="gma-demo-steps">
-              <li>Process meeting one; long-term memory stays unchanged</li>
-              <li>Confirm Jordan; add the person and voice sample</li>
-              <li>Process meeting two; recognize Jordan without another introduction</li>
-              <li>Add confirmed evidence, then fine_tune → evaluate → promote</li>
+              <li>Meeting 1 starts with an unknown voice</li>
+              <li>A person confirms the name Jordan</li>
+              <li>Meeting 2 recognizes Jordan automatically</li>
+              <li>New evidence is checked before it is used</li>
             </ol>
             <div id="gmaDemoResult" class="gma-demo-result" hidden></div>
           </section>
