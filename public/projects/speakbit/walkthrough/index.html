@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="A guided, step-by-step walkthrough of the SpeakBit student meeting demo." />
+  <meta name="theme-color" content="#071d1a" />
+  <title>SpeakBit · Guided Walkthrough</title>
+  <link rel="stylesheet" href="./walkthrough.css?v=20260906" />
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="Back to the SpeakBit project page">
+      <span class="brand-mark" aria-hidden="true">S</span>
+      <span>SpeakBit</span>
+      <small>Guided walkthrough</small>
+    </a>
+    <nav aria-label="Walkthrough navigation">
+      <a href="../">Project page</a>
+      <a class="nav-cta" href="../demo/">Open <span>product </span>demo</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="intro" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">EXTRA DEMONSTRATION LAYER</p>
+        <h1 id="page-title">See what happens before, during, and after a meeting.</h1>
+      </div>
+      <div class="intro-copy">
+        <p>Move through seven short steps. You can also replay a made-up Cultural Night recording and watch each processing stage advance with the audio.</p>
+        <p class="separation-note"><strong>This guide is not part of the product interface.</strong> The full demo stays clean and opens separately.</p>
+      </div>
+    </section>
+
+    <section class="walkthrough" aria-label="SpeakBit guided demonstration">
+      <aside class="step-list" aria-label="Walkthrough steps">
+        <div class="step-list-heading">
+          <span>THE STORY</span>
+          <strong>7 steps · about 1 minute</strong>
+        </div>
+        <button class="step-button active" type="button" data-step="0"><b>01</b><span><strong>Home</strong><small>Choose a meeting</small></span></button>
+        <button class="step-button" type="button" data-step="1"><b>02</b><span><strong>Start recording</strong><small>SpeakBit begins listening</small></span></button>
+        <button class="step-button" type="button" data-step="2"><b>03</b><span><strong>Live processing</strong><small>Text, language, and people</small></span></button>
+        <button class="step-button" type="button" data-step="3"><b>04</b><span><strong>Meeting ready</strong><small>Review the complete result</small></span></button>
+        <button class="step-button" type="button" data-step="4"><b>05</b><span><strong>Replay recording</strong><small>Watch the pipeline move</small></span></button>
+        <button class="step-button" type="button" data-step="5"><b>06</b><span><strong>Confirm Jordan</strong><small>A person checks the name</small></span></button>
+        <button class="step-button" type="button" data-step="6"><b>07</b><span><strong>Recognized next time</strong><small>Confirmed evidence is reused</small></span></button>
+      </aside>
+
+      <div class="stage">
+        <div class="stage-topbar">
+          <span id="stepCounter">Step 1 of 7</span>
+          <span class="guide-only"><i></i> Guided view</span>
+        </div>
+
+        <section id="playbackLab" class="playback-lab" hidden aria-labelledby="playbackTitle">
+          <div class="playback-heading">
+            <div>
+              <p class="eyebrow">INTERACTIVE REPLAY</p>
+              <h2 id="playbackTitle">Play the recording and watch the work happen</h2>
+            </div>
+            <span class="sample-pill">Made-up sample audio</span>
+          </div>
+          <audio id="sampleAudio" controls preload="metadata">
+            <source src="./media/cultural-night-sample.mp3" type="audio/mpeg" />
+            Your browser does not support audio playback.
+          </audio>
+          <div class="pipeline" aria-label="Playback processing stages">
+            <span class="pipeline-step" data-pipeline="0">Audio</span><i>→</i>
+            <span class="pipeline-step" data-pipeline="1">Transcript</span><i>→</i>
+            <span class="pipeline-step" data-pipeline="2">Translation</span><i>→</i>
+            <span class="pipeline-step" data-pipeline="3">Speaker</span><i>→</i>
+            <span class="pipeline-step" data-pipeline="4">Notes</span>
+          </div>
+          <div class="replay-progress" aria-hidden="true"><div id="replayProgress"></div></div>
+          <div class="replay-meta">
+            <strong id="replayStatus" aria-live="polite">Press play to start the guided replay</strong>
+            <button id="restartReplay" type="button">Restart replay</button>
+          </div>
+          <div class="replay-transcript" aria-label="Transcript synchronized with sample audio">
+            <article data-start="0" data-end="3.67"><span>Jordan</span><div><p>The cafeteria is booked. Let’s use the auditorium.</p><small>食堂已被预订，我们用礼堂吧。</small></div></article>
+            <article data-start="3.67" data-end="7.76"><span>Maya</span><div><p>Jordan can make the posters, and we should use packaged food.</p><small>Jordan 可以制作海报，食物只使用包装食品。</small></div></article>
+            <article data-start="7.76" data-end="10.87"><span>Ava</span><div><p>I will update the floor plan for the auditorium.</p><small>我会更新礼堂平面图。</small></div></article>
+            <article data-start="10.87" data-end="13.54"><span>Jordan</span><div><p>The new budget is two hundred eighty dollars.</p><small>新预算是 280 美元。</small></div></article>
+            <article data-start="13.54" data-end="16.4"><span>Maya</span><div><p>I will confirm everything in the final checklist.</p><small>我会在最终清单中确认全部内容。</small></div></article>
+          </div>
+        </section>
+
+        <div class="screen-shell">
+          <img id="stepImage" src="./media/01-home.png" alt="SpeakBit meeting home screen" />
+          <div class="screen-label"><span>PRODUCT SCREEN</span><strong id="screenLabel">Meeting home</strong></div>
+        </div>
+
+        <section class="explanation" aria-live="polite">
+          <div class="explanation-copy">
+            <p id="stepKicker" class="eyebrow">STEP 1 · BEGIN</p>
+            <h2 id="stepTitle">Start from the meeting home</h2>
+            <p id="stepBody">The student sees recent Cultural Night meetings and chooses where to begin.</p>
+            <p id="stepNotice" class="notice"><strong>Look for:</strong> the sample meetings and their completion status.</p>
+          </div>
+          <div class="step-controls">
+            <button id="previousStep" type="button" disabled>Previous</button>
+            <button id="restartWalkthrough" type="button">Start over</button>
+            <button id="nextStep" class="primary" type="button">Next step</button>
+          </div>
+        </section>
+      </div>
+    </section>
+
+    <section class="boundary" aria-labelledby="boundary-title">
+      <div>
+        <p class="eyebrow">CLEAR SEPARATION</p>
+        <h2 id="boundary-title">The lesson stays outside the product.</h2>
+      </div>
+      <article><span>Walkthrough page</span><p>Step numbers, explanations, playback teaching controls, and Previous/Next navigation.</p></article>
+      <article><span>Product demo</span><p>Only the SpeakBit meeting interface and its normal meeting actions.</p><a href="../demo/">Open the clean demo →</a></article>
+    </section>
+  </main>
+
+  <footer>
+    <span>SpeakBit · Guided browser demonstration</span>
+    <span>Sample audio and results are provided for demonstration only.</span>
+  </footer>
+
+  <script src="./walkthrough.js?v=20260906"></script>
+</body>
+</html>

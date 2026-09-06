@@ -1,8 +1,9 @@
 {
   "schema_version": 2,
-  "built_at": "2026-09-06T03:01:28.892970+00:00",
+  "built_at": "2026-09-06T07:57:42.500504+00:00",
   "route": "/projects/speakbit/",
   "demo_route": "/projects/speakbit/demo/",
+  "walkthrough_route": "/projects/speakbit/walkthrough/",
   "legacy_alias": "/projects/voiceweave/",
   "mode": "static-browser-simulation",
   "source_frontend": "frontend",
@@ -14,8 +15,8 @@
   "files": [
     {
       "path": "build-info.json",
-      "bytes": 2893,
-      "sha256": "957199ac9b99f9c80a3e9d26d8d7ad09affb5a0045938cb51cfbcc17c796b7ea"
+      "bytes": 4457,
+      "sha256": "db6b831fee534fbc96377f1a791feca8fd8c7fb79f29b710d6276c8e73041d01"
     },
     {
       "path": "demo/index.html",
@@ -69,8 +70,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 7929,
-      "sha256": "406948b2ca1f1dc801c9be03f9faa8feaa725a33dfa025d91540d4db84a3be76"
+      "bytes": 8015,
+      "sha256": "96531f85a8209e54ad8b8cc7096be9d139f52799ab22e0d0083981046433603a"
     },
     {
       "path": "media/SPEAKBIT_Functions_and_Difference_EN.mp4",
@@ -86,6 +87,51 @@
       "path": "speakbit.css",
       "bytes": 11789,
       "sha256": "5feaaaa80c85920918b83a6d9e50937f2ca636c9903da15e197acaf35832c184"
+    },
+    {
+      "path": "walkthrough/index.html",
+      "bytes": 7614,
+      "sha256": "978e98994ebf5edabc911af973ede967fd0a9db0ff0eb4262d80893335c8a610"
+    },
+    {
+      "path": "walkthrough/media/01-home.png",
+      "bytes": 208512,
+      "sha256": "8c2c912c25ad1ed92c6bee7cf4b31b28ca9e3767f4ee9c007c69637f4eaf87f2"
+    },
+    {
+      "path": "walkthrough/media/02-recording.png",
+      "bytes": 291533,
+      "sha256": "11b045585d299684da288a0ab4bb9a0275ef898d705327109b356eaae8cf926f"
+    },
+    {
+      "path": "walkthrough/media/03-complete.png",
+      "bytes": 349832,
+      "sha256": "06a23e71e96a0fd30ba717eb17f2a88f475a177e5364a7866851af5a96ceae21"
+    },
+    {
+      "path": "walkthrough/media/04-confirm.png",
+      "bytes": 287462,
+      "sha256": "0e18e986930fb6dc9e147c2e0e1a5b4ce9c7ba9be8ea3dc3ade3afb8ff66ff7c"
+    },
+    {
+      "path": "walkthrough/media/05-learned.png",
+      "bytes": 386064,
+      "sha256": "ebcd54b4f5763b2adebfab6cf7358ddef878bdf033c394ecd9e02c0aed90065e"
+    },
+    {
+      "path": "walkthrough/media/cultural-night-sample.mp3",
+      "bytes": 261267,
+      "sha256": "1eed6bfb70c163e45308db04217c7aa8815b9ee9f244fe6265e5302458e5630e"
+    },
+    {
+      "path": "walkthrough/walkthrough.css",
+      "bytes": 11945,
+      "sha256": "44e288bb6bb28f81ca4deb396da52f45e77abad609c7992a58445747955df6db"
+    },
+    {
+      "path": "walkthrough/walkthrough.js",
+      "bytes": 8447,
+      "sha256": "3d4058cee8846fced48e25d6d27bc4458f9c49e6f881acad9457b6ed5e27157d"
     }
   ]
 }
