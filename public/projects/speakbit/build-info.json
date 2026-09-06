@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "built_at": "2026-09-06T01:28:24.504615+00:00",
+  "built_at": "2026-09-06T01:30:59.261055+00:00",
   "route": "/projects/speakbit/",
   "demo_route": "/projects/speakbit/demo/",
   "legacy_alias": "/projects/voiceweave/",
@@ -14,8 +14,8 @@
   "files": [
     {
       "path": "build-info.json",
-      "bytes": 2893,
-      "sha256": "7ecb3461543f251212ee8ee75a4136d4365abd03ba0b277893a48dbba5735d9b"
+      "bytes": 2892,
+      "sha256": "53729a9f5d00edf38131987ef0ebea066560cede1ae7630633ae194ff778ec91"
     },
     {
       "path": "demo/index.html",
@@ -69,8 +69,8 @@
     },
     {
       "path": "index.html",
-      "bytes": 7210,
-      "sha256": "3de5f7d5d29d7c2fff614669d8deeca70e1538f3e90f317773531e94fae528c5"
+      "bytes": 7267,
+      "sha256": "ec7c6cb17dad49e63f09292a2cd34c5b3c4602fcb01ab7568b404a6fd208930b"
     },
     {
       "path": "media/SPEAKBIT_Functions_and_Difference_EN.mp4",
