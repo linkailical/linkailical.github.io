@@ -78,6 +78,43 @@
     .gallery img { width: 100%; height: 120px; object-fit: cover; display: block; }
     .gallery figcaption { font-size: .78rem; padding: 6px 8px; color: var(--muted); }
     .credit { font-size: .72rem; color: var(--muted); margin-top: 6px; }
+    .uscmp { background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 14px; margin-bottom: 14px; }
+    .uscmp .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .uscmp figure { margin: 0; }
+    .uscmp img { width: 100%; height: 180px; object-fit: cover; border-radius: 8px; display: block; }
+    .uscmp .cap { font-size: .82rem; margin-top: 6px; }
+    .uscmp .cap b { color: var(--text); }
+    .uscmp .find { color: var(--muted); }
+    .uscmp .teach { font-size: .85rem; margin-top: 10px; padding: 8px 10px; background: rgba(20,184,166,.12); border-left: 3px solid var(--teal); border-radius: 6px; }
+    .uslearn { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 10px; }
+    .uslearn .c { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 12px; }
+    .uslearn .c h5 { margin: 0 0 6px; font-size: .92rem; }
+    .uslearn .c p { margin: 0; font-size: .84rem; color: var(--muted); }
+    .usq { background: var(--panel2); border: 1px solid var(--line); border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+    .usq .opt { display: block; width: 100%; text-align: left; margin: 5px 0; }
+    .usq .opt.right { background: rgba(34,197,94,.18); border-color: rgba(34,197,94,.6); color: #bbf7d0; }
+    .usq .opt.wrong { background: rgba(239,68,68,.16); border-color: rgba(239,68,68,.6); color: #fecaca; }
+    .usq .why { font-size: .82rem; color: var(--muted); margin-top: 6px; }
+    
+    .stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 10px; margin: 14px 0; }
+    .stat { background: var(--panel2); border: 1px solid var(--line); border-radius: 12px; padding: 12px; }
+    .stat .n { font-size: 1.45rem; font-weight: 800; color: var(--teal); }
+    .stat .l { font-size: .78rem; color: var(--muted); margin-top: 2px; }
+    .bar-row { display: grid; grid-template-columns: 110px 1fr 40px; gap: 8px; align-items: center; margin: 6px 0; font-size: .85rem; }
+    .bar-track { background: #0b1220; border-radius: 6px; height: 12px; overflow: hidden; border: 1px solid var(--line); }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, var(--teal), #2563eb); border-radius: 6px; }
+    .bar-fill.green { background: #22c55e; } .bar-fill.yellow { background: #eab308; }
+    .bar-fill.orange { background: #f97316; } .bar-fill.red { background: #ef4444; }
+    table.an { width: 100%; border-collapse: collapse; font-size: .8rem; margin-top: 10px; }
+    table.an th, table.an td { border-bottom: 1px solid var(--line); padding: 7px 6px; text-align: left; vertical-align: top; }
+    table.an th { color: var(--muted); font-weight: 600; }
+    .pass { color: #86efac; } .fail { color: #fca5a5; }
+    .pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: .75rem; font-weight: 700; }
+    .pill.green { background: rgba(34,197,94,.18); color: #bbf7d0; }
+    .pill.yellow { background: rgba(234,179,8,.18); color: #fef08a; }
+    .pill.orange { background: rgba(249,115,22,.18); color: #fed7aa; }
+    .pill.red { background: rgba(239,68,68,.18); color: #fecaca; }
+
     footer { color: var(--muted); font-size: .8rem; text-align: center; margin-top: 28px; }
     a { color: var(--teal); }
     .hidden { display: none; }
@@ -95,6 +132,8 @@
       <div class="langbtn" style="display:flex; gap:8px;">
         <button class="btn ghost sm" id="nav-checker"></button>
         <button class="btn ghost sm" id="nav-dataset"></button>
+        <button class="btn ghost sm" id="nav-ultrasound"></button>
+        <button class="btn ghost sm" id="nav-analysis"></button>
         <button class="btn ghost sm" id="lang-toggle">中文</button>
       </div>
     </header>
@@ -109,6 +148,37 @@
       <div id="dataset-body"></div>
       <div class="section"><h4 id="dataset-related-h"></h4><ul id="dataset-related"></ul></div>
       <div class="credit" id="dataset-extend"></div>
+    </div>
+
+    <!-- Ultrasound (B超) view -->
+    <div class="card hidden" id="ultrasound-view">
+      <div class="step-label">Ultrasound · B超</div>
+      <h2 id="us-title"></h2>
+      <p class="tag" id="us-intro"></p>
+
+      <div class="section"><h4 id="us-learn-h"></h4><div id="us-learn"></div></div>
+      <div class="section"><h4 id="us-compare-h"></h4><div id="us-compare"></div></div>
+      <div class="section"><h4 id="us-quiz-h"></h4><div id="us-quiz"></div></div>
+
+      <div class="credit" id="us-credit"></div>
+      <p class="tag" id="us-tool-link" style="margin-top:10px;"></p>
+    </div>
+
+
+    <!-- Analysis view -->
+    <div class="card hidden" id="analysis-view">
+      <div class="step-label">Analysis</div>
+      <h2 id="an-title"></h2>
+      <p class="tag" id="an-desc"></p>
+      <div class="stats" id="an-stats"></div>
+      <div class="section"><h4 id="an-kb-h"></h4><div id="an-kb"></div></div>
+      <div class="section"><h4 id="an-dental-h"></h4><div id="an-dental"></div></div>
+      <div class="section"><h4 id="an-level-h"></h4><div id="an-level"></div></div>
+      <div class="section"><h4 id="an-tests-h"></h4>
+        <p class="tag" id="an-tests-sum"></p>
+        <div style="overflow-x:auto"><table class="an" id="an-table"></table></div>
+      </div>
+      <div class="credit" id="an-note"></div>
     </div>
 
     <div class="card" id="step1">
@@ -139,10 +209,12 @@
   </div>
 
   <script src="data/dataset.js"></script>
+  <script src="data/ultrasound.js"></script>
+  <script src="data/analysis.js"></script>
   <script>
     // ===== i18n strings =================================================
     const UI = {
-      subtitle: { en: "Educational symptom checker · runs fully offline in your browser", zh: "教育用症状自查 · 完全在浏览器本地离线运行" },
+      subtitle: { en: "Symptom checker · dental dataset · offline data analysis", zh: "症状自查 · 牙科数据集 · 离线数据分析" },
       disclaimer: { en: "⚠️ <b>Not medical advice.</b> This is a student-built educational demo using simple rules, not a real diagnosis. In an emergency, call your local emergency number immediately.",
                     zh: "⚠️ <b>非医疗建议。</b>这是学生制作的教育演示，使用简单规则，并非真实诊断。如遇紧急情况，请立即拨打当地急救电话。" },
       step1Title: { en: "What is your main symptom?", zh: "你的主要症状是什么？" },
@@ -171,6 +243,29 @@
       gallery: { en: "Reference photos (educational)", zh: "参考照片（科普）" },
       navChecker: { en: "Checker", zh: "自查" },
       navDataset: { en: "Dataset", zh: "数据集" },
+      navUltrasound: { en: "B-Ultrasound", zh: "B超" },
+      navAnalysis: { en: "Analysis", zh: "分析" },
+      anTitle: { en: "Data analysis — rules, dataset & tests", zh: "数据分析 —— 规则、数据集与测试" },
+      anDesc: { en: "Offline analysis of the knowledge base, dental starter dataset, and a labeled triage test set. Pass rate measures rule consistency — not clinical accuracy.",
+               zh: "对知识库、牙科起始数据集与标注分诊测试集做离线分析。通过率衡量规则一致性，不是临床准确率。" },
+      anKbH: { en: "Knowledge-base coverage", zh: "知识库覆盖" },
+      anDentalH: { en: "Dental dataset class distribution", zh: "牙科数据集类别分布" },
+      anLevelH: { en: "Expected triage levels in test set", zh: "测试集中的期望分诊等级" },
+      anTestsH: { en: "Triage rule tests (expected vs actual)", zh: "分诊规则测试（期望 vs 实际）" },
+      anNote: { en: "Educational validation only. Extensible: add cases in data/analysis.js.", zh: "仅供教育验证。可扩展：在 data/analysis.js 中添加用例。" },
+      anPass: { en: "pass", zh: "通过" },
+      anFail: { en: "fail", zh: "失败" },
+      anSympt: { en: "Symptoms", zh: "症状数" },
+      anFlags: { en: "Red-flag entries", zh: "红旗条目" },
+      anImages: { en: "Dental images", zh: "牙科图片" },
+      anCases: { en: "Test cases", zh: "测试用例" },
+      anRate: { en: "Rule pass rate", zh: "规则通过率" },
+
+      usTitle: { en: "B-Ultrasound — Learn & Compare", zh: "B超 —— 科普与对比" },
+      usLearnH: { en: "How to read a B-mode image", zh: "如何读 B 型超声图" },
+      usCompareH: { en: "Normal vs abnormal (compare)", zh: "正常 vs 异常（对比）" },
+      usQuizH: { en: "Quick understanding check", zh: "理解小测" },
+      usToolLink: { en: "Want to annotate ultrasound images yourself? Open the annotation tool →", zh: "想自己标注超声图？打开标注工具 →" },
       datasetRelated: { en: "Related public datasets (import & annotate)", zh: "相关公开数据集（可导入并标注）" },
       datasetExtend: { en: "Extensible: add an image to /assets and one entry in data/dataset.js — the gallery updates automatically.", zh: "可扩展：把图片放进 /assets，并在 data/dataset.js 加一条记录，画廊会自动更新。" },
       footer: { en: "AI Doctor · offline rule-based demo · for learning & portfolio purposes only.", zh: "AI Doctor · 离线规则化演示 · 仅供学习与作品集用途。" },
@@ -257,6 +352,8 @@
       $("lang-toggle").textContent = lang === "en" ? "中文" : "EN";
       $("nav-checker").textContent = t(UI.navChecker);
       $("nav-dataset").textContent = t(UI.navDataset);
+      $("nav-ultrasound").textContent = t(UI.navUltrasound);
+      $("nav-analysis").textContent = t(UI.navAnalysis);
       document.documentElement.lang = lang === "en" ? "en" : "zh";
     }
 
@@ -297,17 +394,193 @@
       });
     }
 
-    function showView(which) {
-      const dataset = which === "dataset";
-      $("dataset-view").classList.toggle("hidden", !dataset);
-      ["step1", "step2", "step3"].forEach((id) => $(id).classList.toggle("hidden", dataset));
-      if (dataset) { renderDataset(); }
-      else { // back to checker — show step1 fresh
-        $("step1").classList.remove("hidden");
-        $("step2").classList.add("hidden"); $("step3").classList.add("hidden");
+    // ===== Ultrasound (B超) view ========================================
+    function renderUltrasound() {
+      const u = window.ULTRASOUND;
+      if (!u) return;
+      $("us-title").textContent = t(UI.usTitle);
+      $("us-intro").textContent = t(u.intro);
+      $("us-learn-h").textContent = t(UI.usLearnH);
+      $("us-compare-h").textContent = t(UI.usCompareH);
+      $("us-quiz-h").textContent = t(UI.usQuizH);
+      $("us-credit").textContent = u.credit;
+      $("us-tool-link").innerHTML = `<a href="/projects/ultrasound-tool/" target="_blank" rel="noopener">${t(UI.usToolLink)}</a>`;
+
+      // learn cards
+      const learn = $("us-learn"); learn.className = "uslearn"; learn.innerHTML = "";
+      u.learn.forEach((c) => {
+        const d = document.createElement("div"); d.className = "c";
+        d.innerHTML = `<h5>${t(c.title)}</h5><p>${t(c.body)}</p>`;
+        learn.appendChild(d);
+      });
+
+      // comparisons
+      const cmp = $("us-compare"); cmp.innerHTML = "";
+      u.comparisons.forEach((c) => {
+        const box = document.createElement("div"); box.className = "uscmp";
+        box.innerHTML =
+          `<div style="font-weight:600;margin-bottom:8px">${t(c.topic)}</div>` +
+          `<div class="pair">` +
+            `<figure><img src="${c.left.img}" loading="lazy" alt="${t(c.left.label)}">` +
+              `<div class="cap"><b>${t(c.left.label)}</b><br><span class="find">${t(c.left.find)}</span></div></figure>` +
+            `<figure><img src="${c.right.img}" loading="lazy" alt="${t(c.right.label)}">` +
+              `<div class="cap"><b>${t(c.right.label)}</b><br><span class="find">${t(c.right.find)}</span></div></figure>` +
+          `</div>` +
+          `<div class="teach">${t(c.teach)}</div>`;
+        cmp.appendChild(box);
+      });
+
+      // quiz
+      const quiz = $("us-quiz"); quiz.innerHTML = "";
+      u.quiz.forEach((item, qi) => {
+        const d = document.createElement("div"); d.className = "usq";
+        const q = document.createElement("p"); q.style.fontWeight = "600"; q.textContent = `${qi + 1}. ${t(item.q)}`;
+        d.appendChild(q);
+        const why = document.createElement("div"); why.className = "why"; why.style.display = "none";
+        item.options.forEach((o, oi) => {
+          const b = document.createElement("button"); b.className = "opt"; b.textContent = t(o);
+          b.onclick = () => {
+            if (d.dataset.done) return;
+            d.dataset.done = "1";
+            [...d.querySelectorAll(".opt")].forEach((x, xi) => {
+              if (xi === item.answer) x.classList.add("right");
+              else if (xi === oi) x.classList.add("wrong");
+            });
+            why.textContent = (oi === item.answer ? "✓ " : "✗ ") + t(item.why);
+            why.style.display = "block";
+          };
+          d.appendChild(b);
+        });
+        d.appendChild(why);
+        quiz.appendChild(d);
+      });
+    }
+
+
+    // ===== Pure triage (shared by UI + Analysis tests) ==================
+    function computeTriageLevel(symptomKey, severity, duration, flagIdxArr) {
+      const s = SYMPTOMS[symptomKey];
+      if (!s) return null;
+      const selFlags = (flagIdxArr || []).map((i) => s.redFlags[i]).filter(Boolean);
+      const hasEmergency = selFlags.some((f) => f.emergency);
+      const hasAnyFlag = selFlags.length > 0;
+      if (hasEmergency) return "red";
+      if (hasAnyFlag || severity === "severe") return "orange";
+      if (duration === "long" || severity === "moderate") return "yellow";
+      return "green";
+    }
+
+    function barRows(entries, colorFn) {
+      const max = Math.max(1, ...entries.map((e) => e.count));
+      return entries.map((e) => {
+        const pct = Math.round((e.count / max) * 100);
+        const color = colorFn ? colorFn(e.key) : "";
+        return `<div class="bar-row"><div>${e.label}</div>` +
+          `<div class="bar-track"><div class="bar-fill ${color}" style="width:${pct}%"></div></div>` +
+          `<div>${e.count}</div></div>`;
+      }).join("");
+    }
+
+    function renderAnalysis() {
+      const cases = window.TRIAGE_CASES || [];
+      const ds = window.DENTAL_DATASET;
+      $("an-title").textContent = t(UI.anTitle);
+      $("an-desc").textContent = t(UI.anDesc);
+      $("an-kb-h").textContent = t(UI.anKbH);
+      $("an-dental-h").textContent = t(UI.anDentalH);
+      $("an-level-h").textContent = t(UI.anLevelH);
+      $("an-tests-h").textContent = t(UI.anTestsH);
+      $("an-note").textContent = t(UI.anNote);
+
+      const symptomCount = Object.keys(SYMPTOMS).length;
+      const flagCount = Object.values(SYMPTOMS).reduce((n, s) => n + s.redFlags.length, 0);
+      const imageCount = ds ? ds.items.length : 0;
+
+      const results = cases.map((c) => {
+        const actual = computeTriageLevel(c.symptom, c.severity, c.duration, c.flagIdx);
+        return { ...c, actual, ok: actual === c.expected };
+      });
+      const pass = results.filter((r) => r.ok).length;
+      const rate = cases.length ? Math.round((pass / cases.length) * 100) : 0;
+
+      $("an-stats").innerHTML =
+        `<div class="stat"><div class="n">${symptomCount}</div><div class="l">${t(UI.anSympt)}</div></div>` +
+        `<div class="stat"><div class="n">${flagCount}</div><div class="l">${t(UI.anFlags)}</div></div>` +
+        `<div class="stat"><div class="n">${imageCount}</div><div class="l">${t(UI.anImages)}</div></div>` +
+        `<div class="stat"><div class="n">${cases.length}</div><div class="l">${t(UI.anCases)}</div></div>` +
+        `<div class="stat"><div class="n">${rate}%</div><div class="l">${t(UI.anRate)} (${pass}/${cases.length || 0})</div></div>`;
+
+      // KB coverage bars
+      const kbEntries = Object.entries(SYMPTOMS).map(([key, s]) => ({
+        key, label: t(s.label), count: s.redFlags.length
+      }));
+      $("an-kb").innerHTML = barRows(kbEntries);
+
+      // Dental class distribution
+      if (ds) {
+        const dentalEntries = ds.classes.map((cls) => ({
+          key: cls.key,
+          label: t(cls.label),
+          count: ds.items.filter((i) => i.classKey === cls.key).length,
+        }));
+        $("an-dental").innerHTML = barRows(dentalEntries);
+      } else {
+        $("an-dental").innerHTML = "";
       }
-      $("nav-checker").classList.toggle("btn", !dataset);
-      $("nav-dataset").classList.toggle("btn", dataset);
+
+      // Expected level distribution
+      const levels = ["green", "yellow", "orange", "red"];
+      const levelLabels = {
+        green: { en: "Self-care", zh: "居家" },
+        yellow: { en: "Routine", zh: "常规" },
+        orange: { en: "Urgent", zh: "尽快" },
+        red: { en: "Emergency", zh: "急诊" },
+      };
+      const levelEntries = levels.map((lv) => ({
+        key: lv,
+        label: `<span class="pill ${lv}">${t(levelLabels[lv])}</span>`,
+        count: cases.filter((c) => c.expected === lv).length,
+      }));
+      // barRows escapes labels as text via template - we're putting HTML in label.
+      // Need custom render for level bars:
+      const maxL = Math.max(1, ...levelEntries.map((e) => e.count));
+      $("an-level").innerHTML = levelEntries.map((e) => {
+        const pct = Math.round((e.count / maxL) * 100);
+        return `<div class="bar-row"><div>${e.label}</div>` +
+          `<div class="bar-track"><div class="bar-fill ${e.key}" style="width:${pct}%"></div></div>` +
+          `<div>${e.count}</div></div>`;
+      }).join("");
+
+      $("an-tests-sum").textContent =
+        lang === "zh"
+          ? `共 ${cases.length} 条标注用例；通过 ${pass}，失败 ${cases.length - pass}。`
+          : `${cases.length} labeled cases; ${pass} passed, ${cases.length - pass} failed.`;
+
+      const tbl = $("an-table");
+      tbl.innerHTML =
+        `<thead><tr><th>ID</th><th>${lang === "zh" ? "说明" : "Note"}</th><th>${lang === "zh" ? "期望" : "Expected"}</th>` +
+        `<th>${lang === "zh" ? "实际" : "Actual"}</th><th></th></tr></thead><tbody>` +
+        results.map((r) => {
+          const note = t(r.note) || r.id;
+          return `<tr><td>${r.id}</td><td>${note}</td>` +
+            `<td><span class="pill ${r.expected}">${r.expected}</span></td>` +
+            `<td><span class="pill ${r.actual || "red"}">${r.actual || "?"}</span></td>` +
+            `<td class="${r.ok ? "pass" : "fail"}">${r.ok ? "✓ " + t(UI.anPass) : "✗ " + t(UI.anFail)}</td></tr>`;
+        }).join("") +
+        `</tbody>`;
+    }
+
+    function showView(which) {
+      const isChecker = which === "checker";
+      ["dataset-view", "ultrasound-view", "analysis-view", "step1", "step2", "step3"].forEach((id) => $(id).classList.add("hidden"));
+      if (which === "dataset") { $("dataset-view").classList.remove("hidden"); renderDataset(); }
+      else if (which === "ultrasound") { $("ultrasound-view").classList.remove("hidden"); renderUltrasound(); }
+      else if (which === "analysis") { $("analysis-view").classList.remove("hidden"); renderAnalysis(); }
+      else { $("step1").classList.remove("hidden"); }
+      $("nav-checker").classList.toggle("btn", isChecker);
+      $("nav-dataset").classList.toggle("btn", which === "dataset");
+      $("nav-ultrasound").classList.toggle("btn", which === "ultrasound");
+      $("nav-analysis").classList.toggle("btn", which === "analysis");
     }
 
     // ===== Step 1 ========================================================
@@ -379,14 +652,8 @@
     function triage() {
       const s = SYMPTOMS[state.symptom];
       const selFlags = [...state.flagIdx].map((i) => s.redFlags[i]);
-      const hasEmergency = selFlags.some((f) => f.emergency);
       const hasAnyFlag = selFlags.length > 0;
-
-      let level;
-      if (hasEmergency) level = "red";
-      else if (hasAnyFlag || state.severity === "severe") level = "orange";
-      else if (state.duration === "long" || state.severity === "moderate") level = "yellow";
-      else level = "green";
+      const level = computeTriageLevel(state.symptom, state.severity, state.duration, [...state.flagIdx]);
 
       const tr = UI.triage[level];
       const sevLabel = UI.sevOpts.find((o) => o.key === state.severity)[lang];
@@ -426,12 +693,16 @@
     };
     $("nav-checker").onclick = () => showView("checker");
     $("nav-dataset").onclick = () => showView("dataset");
+    $("nav-ultrasound").onclick = () => showView("ultrasound");
+    $("nav-analysis").onclick = () => showView("analysis");
     $("lang-toggle").onclick = () => {
       lang = lang === "en" ? "zh" : "en";
       paintStatic(); renderSymptoms();
       if (!$("step2").classList.contains("hidden")) renderQuestions();
       if (state.hasResult && !$("step3").classList.contains("hidden")) triage();
       if (!$("dataset-view").classList.contains("hidden")) renderDataset();
+      if (!$("ultrasound-view").classList.contains("hidden")) renderUltrasound();
+      if (!$("analysis-view").classList.contains("hidden")) renderAnalysis();
     };
 
     // ===== Init ==========================================================
